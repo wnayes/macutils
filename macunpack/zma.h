@@ -42,7 +42,7 @@ typedef struct fileHdr {		/* 78 bytes */
 	unsigned char	fName[32];	/* a STR32 */
 	/* The following are overlayed in the original structure */
 	unsigned long	conts;		/* Pointer to directory contents */
-};
+} fileHdr;
 
 /* zma types (see what) */
 #define	z_noth	0	/* ??? */

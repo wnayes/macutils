@@ -1,5 +1,7 @@
 #include "macunpack.h"
 #ifdef DIA
+#include <stdlib.h>
+#include <string.h>
 #include "globals.h"
 #include "dia.h"
 #include "../util/curtime.h"
@@ -8,9 +10,6 @@
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
 #include "../util/util.h"
-
-extern char *malloc();
-extern char *realloc();
 
 static unsigned char *dia_archive;
 static int dia_archive_size;

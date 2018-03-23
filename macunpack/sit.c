@@ -1,5 +1,6 @@
 #include "macunpack.h"
 #ifdef SIT
+#include <string.h>
 #include "globals.h"
 #include "sit.h"
 #include "crc.h"
@@ -22,7 +23,7 @@ extern unsigned char (*lzah_getbyte)();
 typedef struct methodinfo {
 	char *name;
 	int number;
-};
+} methodinfo;
 
 static struct methodinfo methods[] = {
     {"NoComp",  nocomp},

@@ -77,10 +77,10 @@ lint:
 	lint $(CF) $(LFLAGS) $(SRCS) $(XSRCS) $(CRCS)
 
 clean:
-	-rm -f *.o
+	rm -f *.o
 
 clobber:clean
-	-rm -f macunpack
+	rm -f macunpack
 
 macunpack.o:	macunpack.h
 macunpack.o:	globals.h

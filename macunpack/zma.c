@@ -1,5 +1,7 @@
 #include "macunpack.h"
 #ifdef ZMA
+#include <stdlib.h>
+#include <string.h>
 #include "globals.h"
 #include "zma.h"
 #include "crc.h"
@@ -9,8 +11,6 @@
 #include "../util/masks.h"
 #include "../util/util.h"
 
-extern char *malloc();
-extern char *realloc();
 extern void de_lzh();
 
 /* We do allow for possible backpointing, so we allocate the archive in core */

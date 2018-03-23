@@ -1,5 +1,4 @@
-SHELL =	/bin/sh
-BINDIR =	/ufs/dik/tmpbin
+BINDIR =	bin
 # Use the following flags on the CF macro definition as needed.
 #
 # -DBSD if you are on a BSD system

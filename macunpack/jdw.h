@@ -19,5 +19,5 @@ typedef struct fileHdr {
 	unsigned long	mtime;
 	char		flength;
 	char		fname[32];	/* actually flength */
-};
+} fileHdr;
 

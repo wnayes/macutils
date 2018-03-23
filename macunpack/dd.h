@@ -71,7 +71,7 @@ typedef struct fileHdr {		/* 124 bytes */
 	unsigned short	datacrc;	/* checksum */
 	unsigned short	rsrccrc;
 	unsigned short	hdrcrc;		/* true crc */
-};
+} fileHdr;
 
 typedef struct fileCHdr {		/* 84 bytes */
 	unsigned char	magic[4];	/* "\253\315\000\124" */
@@ -101,7 +101,7 @@ typedef struct fileCHdr {		/* 84 bytes */
 	unsigned short	datacrc2;	/* other checksum */
 	unsigned short	rsrccrc2;
 	unsigned short	hdrcrc;		/* true crc */
-};
+} fileCHdr;
 
 #define	DD_FILE	0
 #define	DD_COPY	1

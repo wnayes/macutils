@@ -11,5 +11,4 @@ typedef struct fileHdr {
 	char		fname[32];	/* actually flength */
 	unsigned long	rsrcLength;
 	unsigned long	dataLength;
-};
-
+} fileHdr;

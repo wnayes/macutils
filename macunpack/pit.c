@@ -1,5 +1,6 @@
 #include "macunpack.h"
 #ifdef PIT
+#include <string.h>
 #include "../fileio/wrfile.h"
 #include "../fileio/fileglob.h"
 #include "../fileio/kind.h"

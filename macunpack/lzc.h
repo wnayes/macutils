@@ -25,5 +25,4 @@ typedef struct fileHdr {
 	unsigned long	fileauth;
 	unsigned long	flag1;
 	unsigned long	flag2;
-};
-
+} fileHdr;

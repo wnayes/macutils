@@ -1,5 +1,7 @@
 #include "macunpack.h"
 #ifdef DD
+#include <stdlib.h>
+#include <string.h>
 #include "globals.h"
 #include "dd.h"
 #include "crc.h"
@@ -9,10 +11,6 @@
 #include "../util/masks.h"
 #include "../util/util.h"
 
-extern char *malloc();
-extern char *realloc();
-extern char *strcpy();
-extern char *strncpy();
 extern void cpt_wrfile1();
 extern void core_compress();
 extern void de_compress();
@@ -48,7 +46,7 @@ static void dd_cpt_compat();
 typedef struct methodinfo {
 	char *name;
 	int number;
-};
+} methodinfo;
 
 static struct methodinfo methods[] = {
     {"NoComp",  nocomp},

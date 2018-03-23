@@ -1,5 +1,6 @@
 #include "macunpack.h"
 #ifdef BIN
+#include <string.h>
 #include "globals.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"

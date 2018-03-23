@@ -1,5 +1,6 @@
 #include "macunpack.h"
 #ifdef LZC
+#include <string.h>
 #include "globals.h"
 #include "lzc.h"
 #include "../util/util.h"

@@ -40,7 +40,7 @@ typedef struct cptHdr {			/* 8 bytes */
 	unsigned long	hdrcrc;		/* header crc */
 	unsigned short	entries;	/* number of index entries */
 	unsigned char	commentsize;	/* number of bytes comment that follow*/
-};
+} cptHdr;
 
 typedef struct fileHdr {		/* 78 bytes */
 	unsigned char	fName[32];	/* a STR32 */
@@ -61,7 +61,7 @@ typedef struct fileHdr {		/* 78 bytes */
 	unsigned long	dataLength;
 	unsigned long	compRLength;	/* compressed lengths */
 	unsigned long	compDLength;
-};
+} fileHdr;
 
 
 /* file format is:

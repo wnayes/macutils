@@ -1,5 +1,6 @@
 #include "macunpack.h"
 #ifdef STF
+#include <string.h>
 #include "stf.h"
 #include "globals.h"
 #include "huffman.h"
