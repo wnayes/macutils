@@ -28,9 +28,7 @@ static void usage();
 
 static char options[128];
 
-int main(argc, argv)
-int argc;
-char *argv[];
+int main(int argc, char **argv)
 {
     int c;
     extern int optind;
@@ -67,62 +65,62 @@ char *argv[];
 		break;
 	    case 'H':
 		give_wrfileopt();
-		(void)fprintf(stderr, "Macunpack specific options:\n");
-		(void)fprintf(stderr,
+		fprintf(stderr, "Macunpack specific options:\n");
+		fprintf(stderr,
 			"-i:\tgive information only, do not unpack\n");
-		(void)fprintf(stderr, "-l:\tgive listing\n");
-		(void)fprintf(stderr, "-v:\tgive verbose listing\n");
-		(void)fprintf(stderr,
+		fprintf(stderr, "-l:\tgive listing\n");
+		fprintf(stderr, "-v:\tgive verbose listing\n");
+		fprintf(stderr,
 			"-q:\tquery for every file/folder before unpacking\n");
-		(void)fprintf(stderr,
+		fprintf(stderr,
 			"-V:\tgive information about this version\n");
-		(void)fprintf(stderr, "-H:\tthis message\n");
-		(void)fprintf(stderr, "Default is silent unpacking\n");
+		fprintf(stderr, "-H:\tthis message\n");
+		fprintf(stderr, "Default is silent unpacking\n");
 		exit(0);
 	    case 'V':
-		(void)fprintf(stderr, "Version %s, ", VERSION);
-		(void)fprintf(stderr, "patchlevel %d", PATCHLEVEL);
-		(void)fprintf(stderr, "%s.\n", get_mina());
-		(void)fprintf(stderr, "Archive/file types recognized:\n");
+		fprintf(stderr, "Version %s, ", VERSION);
+		fprintf(stderr, "patchlevel %d", PATCHLEVEL);
+		fprintf(stderr, "%s.\n", get_mina());
+		fprintf(stderr, "Archive/file types recognized:\n");
 #ifdef BIN
-		(void)fprintf(stderr,
+		fprintf(stderr,
 			"\tBinHex 5.0, MacBinary 1.0 and UMCP (with caveat)\n");
 #endif /* BIN */
 #ifdef JDW
-		(void)fprintf(stderr, "\tCompress It\n");
+		fprintf(stderr, "\tCompress It\n");
 #endif /* JDW */
 #ifdef STF
-		(void)fprintf(stderr, "\tShrinkToFit\n");
+		fprintf(stderr, "\tShrinkToFit\n");
 #endif /* STF */
 #ifdef LZC
-		(void)fprintf(stderr, "\tMacCompress\n");
+		fprintf(stderr, "\tMacCompress\n");
 #endif /* LZC */
 #ifdef ASQ
-		(void)fprintf(stderr, "\tAutoSqueeze\n");
+		fprintf(stderr, "\tAutoSqueeze\n");
 #endif /* ASQ */
 #ifdef ARC
-		(void)fprintf(stderr, "\tArcMac\n");
+		fprintf(stderr, "\tArcMac\n");
 #endif /* ARC */
 #ifdef PIT
-		(void)fprintf(stderr, "\tPackIt\n");
+		fprintf(stderr, "\tPackIt\n");
 #endif /* PIT */
 #ifdef SIT
-		(void)fprintf(stderr, "\tStuffIt and StuffIt Deluxe\n");
+		fprintf(stderr, "\tStuffIt and StuffIt Deluxe\n");
 #endif /* SIT */
 #ifdef DIA
-		(void)fprintf(stderr, "\tDiamond\n");
+		fprintf(stderr, "\tDiamond\n");
 #endif /* DIA */
 #ifdef CPT
-		(void)fprintf(stderr, "\tCompactor\n");
+		fprintf(stderr, "\tCompactor\n");
 #endif /* CPT */
 #ifdef ZMA
-		(void)fprintf(stderr, "\tZoom\n");
+		fprintf(stderr, "\tZoom\n");
 #endif /* ZMA */
 #ifdef LZH
-		(void)fprintf(stderr, "\tMacLHa\n");
+		fprintf(stderr, "\tMacLHa\n");
 #endif /* LZH */
 #ifdef DD
-		(void)fprintf(stderr, "\tDiskDoubler and AutoDoubler\n");
+		fprintf(stderr, "\tDiskDoubler and AutoDoubler\n");
 #endif /* DD */
 		exit(0);
 	    }
@@ -137,7 +135,7 @@ char *argv[];
 	infp = stdin;
     } else {
 	if((infp = fopen(argv[optind], "r")) == NULL) {
-	    (void)fprintf(stderr,"Can't open input file \"%s\"\n",argv[optind]);
+	    fprintf(stderr,"Can't open input file \"%s\"\n",argv[optind]);
 	    exit(1);
 	}
 #ifdef SCAN
@@ -157,7 +155,7 @@ char *argv[];
 #ifdef STF
     case 'R':
 	if(verbose) {
-	    (void)fprintf(stderr, "This is a \"ShrinkToFit\" packed file.\n");
+	    fprintf(stderr, "This is a \"ShrinkToFit\" packed file.\n");
 	}
 	stf(~(unsigned long)1);
 	break;
@@ -165,7 +163,7 @@ char *argv[];
 #ifdef PIT
     case 'P':
 	if(verbose) {
-	    (void)fprintf(stderr, "This is a \"PackIt\" archive.\n");
+	    fprintf(stderr, "This is a \"PackIt\" archive.\n");
 	}
 	pit();
 	break;
@@ -173,7 +171,7 @@ char *argv[];
 #ifdef SIT
     case 'S':
 	if(verbose) {
-	    (void)fprintf(stderr, "This is a \"StuffIt\" archive.\n");
+	    fprintf(stderr, "This is a \"StuffIt\" archive.\n");
 	}
 	sit();
 	break;
@@ -181,13 +179,13 @@ char *argv[];
 #ifdef CPT
     case 1:
 	if(verbose) {
-	    (void)fprintf(stderr, "This is a \"Compactor\" archive.\n");
+	    fprintf(stderr, "This is a \"Compactor\" archive.\n");
 	}
 	cpt();
 	break;
 #endif /* CPT */
     default:
-	(void)fprintf(stderr, "Unrecognized archive type\n");
+	fprintf(stderr, "Unrecognized archive type\n");
 	exit(1);
     }
     exit(0);
@@ -196,7 +194,6 @@ char *argv[];
 
 static void usage()
 {
-    (void)fprintf(stderr, "Usage: macunpack [-%s] [filename]\n", options);
-    (void)fprintf(stderr, "Use \"macunpack -H\" for help.\n");
+    fprintf(stderr, "Usage: macunpack [-%s] [filename]\n", options);
+    fprintf(stderr, "Use \"macunpack -H\" for help.\n");
 }
-

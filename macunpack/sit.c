@@ -133,19 +133,19 @@ void sit()
     }
 }
 
-static int readsithdr(s)
-struct sitHdr *s;
+static int readsithdr(sitHdr *s)
 {
     char temp[SITHDRSIZE];
 
-    if(fread(temp, 1, SITHDRSIZE, infp) != SITHDRSIZE) {
-	return 0;
+    if (fread(temp, 1, SITHDRSIZE, infp) != SITHDRSIZE) {
+		return 0;
     }
 
-    if(strncmp(temp + S_SIGNATURE,  "SIT!", 4) != 0 ||
-	strncmp(temp + S_SIGNATURE2, "rLau", 4) != 0) {
-	(void)fprintf(stderr, "Not a StuffIt file\n");
-	return 0;
+    if (strncmp(temp + S_SIGNATURE, "SIT!", 4) != 0
+		|| strncmp(temp + S_SIGNATURE2, "rLau", 4) != 0)
+	{
+		fprintf(stderr, "Not a StuffIt file\n");
+		return 0;
     }
 
     s->numFiles = get2(temp + S_NUMFILES);
@@ -154,9 +154,7 @@ struct sitHdr *s;
     return 1;
 }
 
-static int sit_filehdr(f, skip)
-struct fileHdr *f;
-int skip;
+static int sit_filehdr(struct fileHdr *f, int skip)
 {
     register int i;
     unsigned long crc;
