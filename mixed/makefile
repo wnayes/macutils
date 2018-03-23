@@ -59,10 +59,10 @@ lint:
 	lint $(CF) $(LFLAGS) $(SRCS2) $(XSRCS2)
 
 clean:
-	-rm -f *.o
+	rm -f *.o
 
 clobber:clean
-	-rm -f all macsave macstream
+	rm -f all macsave macstream
 
 macsave.o:	globals.h
 macsave.o:	../util/patchlevel.h
@@ -89,4 +89,3 @@ macstream.o:	../fileio/machdr.h
 macstream.o:	../fileio/rdfile.h
 macstream.o:	../fileio/rdfileopt.h
 macstream.o:	../util/patchlevel.h
-

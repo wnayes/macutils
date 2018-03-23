@@ -5,6 +5,7 @@
 #include "../util/masks.h"
 #include "globals.h"
 #include "protocol.h"
+#include "tty.h"
 
 extern int tgetc();
 extern void tputc();

@@ -57,10 +57,10 @@ lint:
 	lint $(CF) $(LFLAGS) $(SRCS) $(XSRCS) $(CRCS)
 
 clean:
-	-rm -f *.o
+	rm -f *.o
 
 clobber:clean
-	-rm -f hexbin
+	rm -f hexbin
 
 hexbin.o:	globals.h
 hexbin.o:	crc.h

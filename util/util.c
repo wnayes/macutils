@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "../fileio/fileglob.h"
 #include "masks.h"
 #include "util.h"
@@ -9,8 +10,7 @@ extern void exit();
 
 static int mlength[] = {0, 31, 61, 92, 122, 153, 184, 214, 245, 275, 306, 337};
 
-unsigned long get4(bp)
-char *bp;
+unsigned long get4(char *bp)
 {
     register int i;
     long value = 0;
@@ -24,14 +24,13 @@ char *bp;
 }
 
 /* For if integers are stored wrong-endian. */
-unsigned long get4i(bp)
-char *bp;
+unsigned long get4i(char *bp)
 {
     register int i;
     long value = 0;
 
     bp += 3;
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         value <<= 8;
         value |= (*bp & BYTEMASK);
         bp--;
@@ -39,8 +38,7 @@ char *bp;
     return value;
 }
 
-unsigned long get2(bp)
-char *bp;
+unsigned long get2(char *bp)
 {
     register int i;
     int value = 0;
@@ -54,8 +52,7 @@ char *bp;
 }
 
 /* For if integers are stored wrong-endian. */
-unsigned long get2i(bp)
-char *bp;
+unsigned long get2i(char *bp)
 {
     register int i;
     long value = 0;

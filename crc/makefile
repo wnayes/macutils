@@ -10,7 +10,7 @@ libcrc.a:	$(CRCO)
 	fi
 
 clean:
-	-rm -f $(CRCC) $(CRCO) libcrc.a makecrc makecrc.o
+	rm -f $(CRCC) $(CRCO) libcrc.a makecrc makecrc.o
 
 $(CRCC):	makecrc
 	./makecrc

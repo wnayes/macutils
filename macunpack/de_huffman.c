@@ -33,8 +33,7 @@ static node *nodeptr, *read_sub_tree();
 
 static int bit;
 
-void de_huffman(obytes)
-unsigned long obytes;
+void de_huffman(unsigned long obytes)
 {
     while(obytes != 0) {
 	*out_ptr++ = gethuffbyte(nodelist);
@@ -43,8 +42,7 @@ unsigned long obytes;
     return;
 }
 
-void de_huffman_end(term)
-unsigned int term;
+void de_huffman_end(unsigned int term)
 {
     int c;
 
@@ -53,8 +51,7 @@ unsigned int term;
     }
 }
 
-void set_huffman(endian)
-int endian;
+void set_huffman(int endian)
 {
     if(endian == HUFF_LE) {
 	get_bit = getbit_le;
@@ -121,8 +118,7 @@ void clrhuff()
     bit = 0;
 }
 
-int gethuffbyte(l_nodelist)
-node *l_nodelist;
+int gethuffbyte(node *l_nodelist)
 {
     register node *np;
 

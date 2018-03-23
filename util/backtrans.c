@@ -54,8 +54,7 @@ static char char_mapping[] = {
 	0277, 0235, 0234, 0236, 0237,  '_',  '_', 0330};
 #endif /* LATIN1 */
 
-void backtrans(macname, name)
-char *macname, *name;
+void backtrans(char *macname, char *name)
 {
     char *in, *out;
     int c, count = 0;

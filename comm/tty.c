@@ -1,5 +1,7 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
+#include <unistd.h>
 #ifndef TERMIOS_H
 #include <sgtty.h>
 #else /* TERMIOS_H */
@@ -66,7 +68,7 @@ void reset_tty()
 #endif /* TERMIOS_H */
 }
 
-void cleanup(sig) int sig;
+void cleanup(int sig)
 {
     reset_tty();
     exit(sig);
@@ -101,37 +103,34 @@ int i;
     }
 }
 
-tgetrec(buf, count, timeout)
-char *buf;
-int count, timeout;
+int tgetrec(char *buf, int count, int timeout)
 {
-int i, tot = 0, cc = count;
+    int i, tot = 0, cc = count;
 
-    if(time_out) {
-	if(setjmp(timobuf)) {
-	    return TMO;
-	}
-	(void)alarm(timeout);
+    if (time_out) {
+        if (setjmp(timobuf)) {
+            return TMO;
+        }
+        (void)alarm(timeout);
     }
-    while(tot < count) {
-	i = read(ttyfd, buf, cc);
-	if(i < 0) {
-	    continue;
-	}
-	tot += i;
-	cc -= i;
-	buf += i;
+    while (tot < count) {
+        i = read(ttyfd, buf, cc);
+        if (i < 0) {
+            continue;
+        }
+        tot += i;
+        cc -= i;
+        buf += i;
     }
-    if(time_out) {
-	(void)alarm(0);
+    if (time_out) {
+	    (void)alarm(0);
     }
     return 0;
 }
 
-void tputc(c)
-int c;
+void tputc(int c)
 {
-char cc;
+    char cc;
 
     cc = c & BYTEMASK;
     (void)write(ttyfd, &cc, 1);

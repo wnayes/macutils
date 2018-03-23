@@ -5,4 +5,3 @@
 extern int xfertype;
 extern int pre_beta;
 extern int time_out;
-

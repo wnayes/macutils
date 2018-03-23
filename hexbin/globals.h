@@ -22,7 +22,7 @@ typedef struct macheader {
 	long m_rsrclen;
 	long m_createtime;
 	long m_modifytime;
-};
+} macheader;
 
 extern struct macheader mh;
 

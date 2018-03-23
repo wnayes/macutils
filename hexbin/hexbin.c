@@ -2,6 +2,9 @@
 #include <sys/types.h>
 #endif /* TYPES_H */
 #include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "globals.h"
 #include "crc.h"
 #include "readline.h"
@@ -17,7 +20,6 @@
 
 #define LOCALOPT	"ilvcn:qVH"
 
-extern void exit();
 extern void backtrans();
 #ifdef DL
 extern void dl();

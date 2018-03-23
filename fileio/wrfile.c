@@ -2,8 +2,11 @@
 #include <sys/types.h>
 #endif /* TYPES_H */
 #include <sys/stat.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "machdr.h"
 #include "wrfile.h"
 #include "wrfileopt.h"
@@ -34,13 +37,6 @@
 #ifdef SCAN
 #define MACI 9
 #endif /* SCAN */
-
-extern char *malloc();
-extern char *realloc();
-extern char *strcpy();
-extern char *strncpy();
-extern char *strcat();
-extern void exit();
 
 #ifdef UNDEF /* Do not declare sprintf; not portable (but lint will complain) */
 char *sprintf();
@@ -802,12 +798,12 @@ void give_wrfileopt()
 #endif /* APPLESHARE */
 }
 
-void set_wrfileopt(restricted)
+void set_wrfileopt(int restricted)
 {
     mode_restricted = restricted;
 }
 
-void set_s_wrfileopt(restricted)
+void set_s_wrfileopt(int restricted)
 {
     mode_s_restricted = restricted;
 }

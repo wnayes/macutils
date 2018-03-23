@@ -8,7 +8,8 @@ typedef struct node {
 
 extern int (*get_bit)();
 extern void clrhuff();
+int gethuffbyte(node *l_nodelist);
+int getihuffbyte();
 
 extern struct node nodelist[];
 extern int bytesread;
-

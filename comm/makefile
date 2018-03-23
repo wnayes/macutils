@@ -52,10 +52,10 @@ lint:
 	lint $(CF) $(LFLAGS) $(SRCS1) $(XSRCS)
 
 clean:
-	-rm -f *.o
+	rm -f *.o
 
 clobber:clean
-	-rm -f all tomac frommac
+	rm -f all tomac frommac
 
 tomac.o:	comm.h
 tomac.o:	../fileio/machdr.h
@@ -88,4 +88,3 @@ globals.o:	globals.h
 tty.o:	../util/masks.h
 tty.o:	protocol.h
 tty.o:	globals.h
-

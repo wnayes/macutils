@@ -83,9 +83,7 @@ static char char_mapping[] = {
 	 '_',  '_',  '_',  '_',  '_',  '_',  '_',  '_',
 	 '_',  '_',  '_',  '_',  '_',  '_',  '_',  '_'};
 
-void transname(name, namebuf, n)
-char *name, *namebuf;
-int n;
+void transname(char *name, char *namebuf, int n)
 {
     char *np;
 

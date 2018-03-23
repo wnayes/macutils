@@ -1,5 +1,6 @@
 #include "hexbin.h"
 #ifdef HQX
+#include <stdlib.h>
 #include "globals.h"
 #include "readline.h"
 #include "crc.h"
@@ -9,14 +10,12 @@
 #include "../util/util.h"
 #include "printhdr.h"
 
-extern void exit();
-
 static void get_header();
 static void oflush();
 static int getq();
 static long get2q();
 static long get4q();
-static getqbuf();
+static void getqbuf();
 
 static char *g_macname;
 
@@ -380,15 +379,12 @@ static long get4q()
 }
 
 /* getqbuf(); q format -- read n characters from input into buf */
-static getqbuf(buf, n)
-    char *buf;
-    int n;
+static void getqbuf(char *buf, int n)
 {
-    int i;
-
-    for(i = 0; i < n; i++) {
-	*buf++ = getq();
-    }
+	int i;
+	for (i = 0; i < n; i++) {
+		*buf++ = getq();
+	}
 }
 #else /* HQX */
 int hqx; /* keep lint and some compilers happy */

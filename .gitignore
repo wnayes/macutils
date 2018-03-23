@@ -1,3 +1,4 @@
 *.o
+all
 macunpack/macunpack
 

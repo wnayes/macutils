@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "../fileio/machdr.h"
 #include "../fileio/rdfile.h"
 

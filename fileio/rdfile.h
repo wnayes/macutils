@@ -10,4 +10,3 @@ extern int data_size, rsrc_size;
 extern void setup();
 extern int nextfile();
 extern char *get_minb();
-

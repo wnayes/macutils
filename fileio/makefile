@@ -8,10 +8,10 @@ wrfile.o:	wrfile.c
 rdfile.o:	rdfile.c
 
 clean:
-	-rm -f wrfile.o
-	-rm -f rdfile.o
-	-rm -f fileglob.o
-	-rm -f all
+	rm -f wrfile.o
+	rm -f rdfile.o
+	rm -f fileglob.o
+	rm -f all
 
 wrfile.o:	machdr.h
 wrfile.o:	wrfile.h

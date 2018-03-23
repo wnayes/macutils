@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #ifdef TYPES_H
 #include <sys/types.h>
 #endif /* TYPES_H */
@@ -13,6 +16,7 @@
 #include <dirent.h>
 #define dirstruct dirent
 #endif /* DIRENT_H */
+#include "../util/backtrans.h"
 #include "../util/curtime.h"
 #include "../util/masks.h"
 #include "../util/util.h"
@@ -41,13 +45,6 @@
 #define DATA_FORMAT	1
 #define RSRC_FORMAT	2
 #define UNIX_FORMAT	3
-
-extern char *malloc();
-extern char *realloc();
-extern char *strcpy();
-extern char *strncpy();
-extern char *strcat();
-extern void exit();
 
 static void check_files();
 static void read_file();

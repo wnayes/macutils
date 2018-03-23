@@ -31,13 +31,12 @@
 /* ZIP used by COMPACTOR						*/
 
 #include <stdio.h>
-
-extern void exit();
-extern char *strcat();
+#include <stdlib.h>
+#include <string.h>
 
 static void initcrctab();
 
-main()
+int main()
 {
     initcrctab("ccitt", 0x1021, 0xffff, 0, 16);
     initcrctab("kermit", 0x8408, 0, 1, 16);
@@ -46,7 +45,6 @@ main()
     initcrctab("ccitt32",0x04c11db7,0xffffffff,0,32);
     initcrctab("zip",0xedb88320,0xffffffff,1,32);
     exit(0);
-    /*NOTREACHED*/
 }
 
 static void initcrctab(name, poly, init, swapped, bits)
@@ -58,7 +56,7 @@ int poly, init, swapped, bits;
     unsigned long vv;
     FILE *fd;
     char buf[20];
-    
+
     buf[0] = 0;
     (void)strcat(buf, name);
     (void)strcat(buf, ".c");

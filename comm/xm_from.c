@@ -4,8 +4,11 @@
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
+#include "../util/util.h"
 #include "globals.h"
 #include "protocol.h"
+#include "tty.h"
 
 extern int tgetc();
 extern int tgetrec();
@@ -89,7 +92,7 @@ int c;
 	case ESC:
 	    break;
 	case CAN:
-	    cleanup();
+	    cleanup(0);
 	    break;
 	case EOT:
 	case TMO:

@@ -38,10 +38,10 @@ lint:
 	lint $(CF) $(LFLAGS) $(SRCS) $(XSRCS)
 
 clean:
-	-rm -f *.o
+	rm -f *.o
 
 clobber:clean
-	-rm -f binhex
+	rm -f binhex
 
 binhex.o:	../fileio/machdr.h
 binhex.o:	../fileio/rdfile.h

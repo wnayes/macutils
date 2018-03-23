@@ -1,14 +1,22 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include "comm.h"
 #include "../util/patchlevel.h"
+#include "../util/transname.h"
+#include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "globals.h"
 #include "../fileio/fileglob.h"
 #include "../fileio/wrfile.h"
+#include "../fileio/wrfileopt.h"
+#ifdef XM
+#include "xm_from.h"
+#endif /* XM */
 
 #define LOCALOPT	"lmxyzoTVH"
 
-extern void exit();
 extern void setup_tty();
 extern void reset_tty();
 
@@ -20,9 +28,7 @@ static char options[128];
 static int multi_file = 0;
 static int listmode = 0;
 
-int main(argc, argv)
-int argc;
-char **argv;
+int main(int argc, char **argv)
 {
     extern int optind;
     extern char *optarg;
