@@ -1,11 +1,3 @@
 .vscode
 *.o
-all
-binhex/binhex
-comm/frommac
-comm/tomac
-frommac/frommac
-hexbin/hexbin
-macunpack/macunpack
-mixed/macsave
-mixed/macstream
+/builddir
