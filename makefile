@@ -1,4 +1,4 @@
-BINDIR =	bin
+BINDIR ?=	bin
 # Use the following flags on the CF macro definition as needed.
 #
 # -DBSD if you are on a BSD system
@@ -23,7 +23,7 @@ BINDIR =	bin
 #
 # -DAPPLEDOUBLE if you want to be able to use an AppleDouble file system
 #
-CF =	-DBSD -DTYPES_H -DDIRENT_H -DTERMIOS_H -DNODOT -DAPPLEDOUBLE
+CF ?=	-DBSD -DTYPES_H -DDIRENT_H -DTERMIOS_H -DNODOT -DAPPLEDOUBLE
 
 all:
 	(cd crc; make CF='$(CF)')
