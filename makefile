@@ -23,7 +23,7 @@ BINDIR ?=	bin
 #
 # -DAPPLEDOUBLE if you want to be able to use an AppleDouble file system
 #
-CF ?=	-DBSD -DTYPES_H -DDIRENT_H -DTERMIOS_H -DNODOT -DAPPLEDOUBLE
+CF ?= -DBSD -DTYPES_H -DDIRENT_H -DTERMIOS_H -DNODOT -DAPPLEDOUBLE
 
 all:
 	(cd crc; $(MAKE) CF='$(CF)')
