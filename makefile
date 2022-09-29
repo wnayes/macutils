@@ -63,13 +63,14 @@ lint:
 	(cd comm; make CF='$(CF)' lint)
 
 install:
-	cp macunpack/macunpack $(BINDIR)/.
-	cp hexbin/hexbin $(BINDIR)/.
-	cp mixed/macsave $(BINDIR)/.
-	cp mixed/macstream $(BINDIR)/.
-	cp binhex/binhex $(BINDIR)/.
-	cp comm/tomac $(BINDIR)/.
-	cp comm/frommac $(BINDIR)/.
+	mkdir -p "$(BINDIR)"
+	install macunpack/macunpack "$(BINDIR)/."
+	install hexbin/hexbin "$(BINDIR)/."
+	install mixed/macsave "$(BINDIR)/."
+	install mixed/macstream "$(BINDIR)/."
+	install binhex/binhex "$(BINDIR)/."
+	install comm/tomac "$(BINDIR)/."
+	install comm/frommac "$(BINDIR)/."
 
 distr:
 	shar -a README makefile crc util fileio macunpack hexbin mixed binhex  \
