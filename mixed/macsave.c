@@ -87,7 +87,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     (void)fprintf(stderr, "Usage: macsave [-%s]\n", options);
     (void)fprintf(stderr, "Use \"macsave -H\" for help.\n");

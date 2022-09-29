@@ -6,9 +6,9 @@
 #include "../fileio/rdfile.h"
 #include "../fileio/rdfileopt.h"
 #include "../util/patchlevel.h"
+#include "../util/transname.h"
 #include "../util/util.h"
 
-extern void transname();
 extern void do_indent();
 
 #define LOCALOPT	"ilqVH"
@@ -173,7 +173,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     (void)fprintf(stderr, "Usage: macstream [-%s] files\n", options);
     (void)fprintf(stderr, "Use \"macstream -H\" for help.\n");

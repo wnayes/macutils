@@ -7,17 +7,15 @@
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/masks.h"
-
-extern void de_compress();
-extern void core_compress();
-extern void mcb();
+#include "de_compress.h"
+#include "mcb.h"
 
 static void lzc_zivm();
 static void lzc_wrfile();
 static void lzc_zivu();
 
-void lzc(ohdr)
-char *ohdr;
+void 
+lzc (char *ohdr)
 {
     core_compress((char *)NULL);
     if(!strncmp(ohdr + I_TYPEOFF, "ZIVM", 4)) {
@@ -27,8 +25,8 @@ char *ohdr;
     }
 }
 
-static void lzc_zivm(ohdr)
-char *ohdr;
+static void 
+lzc_zivm (char *ohdr)
 {
     char hdr[HEADERBYTES];
     unsigned long dataLength, rsrcLength, dataCLength, rsrcCLength;
@@ -109,8 +107,8 @@ char *ohdr;
     }
 }
 
-static void lzc_wrfile(obytes, ibytes)
-unsigned long obytes, ibytes;
+static void 
+lzc_wrfile (unsigned long obytes, unsigned long ibytes)
 {
     int n, nbits;
     char subheader[3];
@@ -183,8 +181,8 @@ unsigned long obytes, ibytes;
     }
 }
 
-static void lzc_zivu(ohdr)
-char *ohdr;
+static void 
+lzc_zivu (char *ohdr)
 {
     (void)fprintf(stderr,
 	    "\tMacCompress(Unix) not yet implemented, copied as MacBinary\n");

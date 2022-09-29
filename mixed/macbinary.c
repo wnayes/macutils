@@ -12,7 +12,8 @@ static void skip_file();
 static void get_idf();
 #endif /* SCAN */
 
-void macbinary()
+void 
+macbinary (void)
 {
     char header[INFOBYTES];
     int c;
@@ -58,8 +59,8 @@ void macbinary()
     }
 }
 
-static void skip_file(skip)
-    int skip;
+static void 
+skip_file (int skip)
 {
     char buff[1024];
     int n;
@@ -75,8 +76,8 @@ static void skip_file(skip)
 }
 
 #ifdef SCAN
-static void get_idf(kind)
-    int kind;
+static void 
+get_idf (int kind)
 {
     char filename[1024], filename1[255];
 

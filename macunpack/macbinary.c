@@ -6,18 +6,16 @@
 #include "../fileio/kind.h"
 #include "zmahdr.h"
 #include "../util/util.h"
+#include "stf.h"
+#include "mcb.h"
+#include "bin.h"
+#include "dd.h"
+#include "sit.h"
 
-extern void dir();
-extern void mcb();
-#ifdef BIN
-extern void bin();
-#endif /* BIN */
+extern void dir(char *hdr);
 #ifdef JDW
 extern void jdw();
 #endif /* JDW */
-#ifdef STF
-extern void stf();
-#endif /* STF */
 #ifdef LZC
 extern void lzc();
 #endif /* LZC */
@@ -30,9 +28,6 @@ extern void arc();
 #ifdef PIT
 extern void pit();
 #endif /* PIT */
-#ifdef SIT
-extern void sit();
-#endif /* SIT */
 #ifdef DIA
 extern void dia();
 #endif /* DIA */
@@ -45,10 +40,6 @@ extern void zma();
 #ifdef LZH
 extern void lzh();
 #endif /* LZH */
-#ifdef DD
-extern void dd_file();
-extern void dd_arch();
-#endif /* DD */
 
 static void skip_file();
 #ifdef SCAN
@@ -59,7 +50,8 @@ static void get_idf();
 
 static int info_given;
 
-void macbinary()
+void 
+macbinary (void)
 {
     char header[INFOBYTES];
     int c;
@@ -517,8 +509,8 @@ void macbinary()
     }
 }
 
-static void skip_file(skip)
-int skip;
+static void 
+skip_file (int skip)
 {
     char buff[1024];
     int n;
@@ -537,8 +529,8 @@ int skip;
 }
 
 #ifdef SCAN
-static void get_idf(kind)
-int kind;
+static void 
+get_idf (int kind)
 {
     char filename[255];
 

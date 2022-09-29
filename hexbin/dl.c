@@ -9,7 +9,7 @@
 #include "buffer.h"
 #include "printhdr.h"
 
-extern void exit();
+#include <stdlib.h>
 
 static long dl_fork();
 static int nchar();
@@ -18,8 +18,8 @@ static int nextc();
 static char *icp = &line[0];
 
 /* oldest format -- process .dl files */
-void dl(macname, filename)
-char *macname, *filename;
+void 
+dl (char *macname, char *filename)
 {
     int n;
 
@@ -75,7 +75,8 @@ char *macname, *filename;
     end_put();
 }
 
-static long dl_fork()
+static long 
+dl_fork (void)
 {
     register unsigned long i, v, c;
     register unsigned long n, bytes;
@@ -104,7 +105,8 @@ static long dl_fork()
     return bytes;
 }
 
-static int nchar()
+static int 
+nchar (void)
 {
     int i;
 
@@ -118,7 +120,8 @@ static int nchar()
     return i & 0177;
 }
 
-static int nextc()
+static int 
+nextc (void)
 {
     while(*icp == 0) {
 	if(readline() == 0) {

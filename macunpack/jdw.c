@@ -3,22 +3,18 @@
 #include "jdw.h"
 #include "globals.h"
 #include "huffman.h"
+#include "de_huffman.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/machdr.h"
 #include "../util/util.h"
 #include "../util/masks.h"
 
-extern void de_huffman();
-extern void set_huffman();
-extern void read_tree();
-extern void clrhuff();
-
 static void jdw_wrfile();
 static void jdw_wrfork();
 static void jdw_block();
 
-void jdw(ibytes)
-unsigned long ibytes;
+void 
+jdw (unsigned long ibytes)
 {
     char fauth[5], ftype[5];
     int filel, i;
@@ -81,8 +77,8 @@ unsigned long ibytes;
     jdw_wrfile((unsigned long)rsrcLength, (unsigned long)dataLength);
 }
 
-static void jdw_wrfile(rsrcLength, dataLength)
-unsigned long rsrcLength, dataLength;
+static void 
+jdw_wrfile (unsigned long rsrcLength, unsigned long dataLength)
 {
     if(write_it) {
 	define_name(text);
@@ -108,8 +104,8 @@ unsigned long rsrcLength, dataLength;
     }
 }
 
-static void jdw_wrfork(length)
-unsigned long length;
+static void 
+jdw_wrfork (unsigned long length)
 {
     int olength, ilength, i;
     unsigned long origlength, comprlength;
@@ -141,8 +137,8 @@ unsigned long length;
     }
 }
 
-static void jdw_block(olength)
-int olength;
+static void 
+jdw_block (int olength)
 {
     bytesread = 0;
     read_tree();

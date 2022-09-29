@@ -36,7 +36,8 @@
 
 static void initcrctab();
 
-int main()
+int 
+main (void)
 {
     initcrctab("ccitt", 0x1021, 0xffff, 0, 16);
     initcrctab("kermit", 0x8408, 0, 1, 16);
@@ -47,9 +48,8 @@ int main()
     exit(0);
 }
 
-static void initcrctab(name, poly, init, swapped, bits)
-char *name;
-int poly, init, swapped, bits;
+static void 
+initcrctab (char *name, int poly, int init, int swapped, int bits)
 {
     register  int b, i;
     unsigned short v;
@@ -99,7 +99,7 @@ int poly, init, swapped, bits;
 		for(vv = b<<24, i = 8; --i >= 0;)
 		    vv = vv & 0x80000000 ? (vv<<1)^poly : vv<<1;
 	    }
-	    (void)fprintf(fd, "0x%.8x,", vv & 0xffffffff);
+	    (void)fprintf(fd, "0x%.8lx,", vv & 0xffffffff);
 	    if((b&3) == 3) {
 		(void)fprintf(fd, "\n");
 		if(b != 255) (void)fprintf(fd, "    ");

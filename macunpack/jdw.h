@@ -8,7 +8,7 @@
 #define	J_MTIME		34
 #define	J_FLENGTH	38
 
-typedef struct fileHdr {
+typedef struct jdw_fileHdr {
 	char		magic[6];
 	unsigned long	type;
 	unsigned long	auth;
@@ -19,5 +19,5 @@ typedef struct fileHdr {
 	unsigned long	mtime;
 	char		flength;
 	char		fname[32];	/* actually flength */
-} fileHdr;
+} jdw_fileHdr;
 

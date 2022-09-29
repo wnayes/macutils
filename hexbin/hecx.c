@@ -10,7 +10,7 @@
 #include "buffer.h"
 #include "printhdr.h"
 
-extern void exit();
+#include <stdlib.h>
 
 static void do_o_forks();
 static long make_file();
@@ -23,8 +23,8 @@ static int hexit();
 static int compressed;
 
 /* old format -- process .hex and .hcx files */
-void hecx(macname, filename)
-char *macname, *filename;
+void 
+hecx (char *macname, char *filename)
 {
     int n;
 
@@ -95,7 +95,8 @@ char *macname, *filename;
     end_put();
 }
 
-static void do_o_forks()
+static void 
+do_o_forks (void)
 {
     int forks = 0, found_crc = 0;
     unsigned long calc_crc, file_crc;
@@ -150,8 +151,8 @@ static void do_o_forks()
     }
 }
 
-static long make_file(compressed)
-int compressed;
+static long 
+make_file (int compressed)
 {
     register long nbytes = 0L;
 
@@ -171,22 +172,23 @@ int compressed;
     return nbytes;
 }
 
-static void comp_c_crc(c)
-unsigned char c;
+static void 
+comp_c_crc (int c)
 {
     crc = (crc + c) & WORDMASK;
     crc = ((crc << 3) & WORDMASK) | (crc >> 13);
 }
 
-static void comp_e_crc(c)
-unsigned char c;
+static void 
+comp_e_crc (int c)
 {
     crc += c;
 }
 
 #define SIXB(c) (((c)-0x20) & 0x3f)
 
-static int comp_to_bin()
+static int 
+comp_to_bin (void)
 {
     char obuf[BUFSIZ];
     register char *ip = line;
@@ -217,7 +219,8 @@ static int comp_to_bin()
     return outcount;
 }
 
-static int hex_to_bin()
+static int 
+hex_to_bin (void)
 {
     register char *ip = line;
     register int n, outcount;
@@ -233,8 +236,8 @@ static int hex_to_bin()
     return outcount;
 }
 
-static int hexit(c)
-int c;
+static int 
+hexit (int c)
 {
     if('0' <= c && c <= '9') {
 	return c - '0';

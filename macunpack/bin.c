@@ -1,4 +1,5 @@
 #include "macunpack.h"
+#include "bin.h"
 #ifdef BIN
 #include <string.h>
 #include "globals.h"
@@ -7,12 +8,10 @@
 #include "../fileio/kind.h"
 #include "../util/util.h"
 #include "../util/masks.h"
+#include "mcb.h"
 
-extern void mcb();
-
-void bin(header, data_size, UMcp)
-char *header;
-int data_size, UMcp;
+void 
+bin (char *header, int data_size, int UMcp)
 {
     char hdr[INFOBYTES];
     unsigned long rsrcLength, dataLength;

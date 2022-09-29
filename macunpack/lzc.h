@@ -12,7 +12,7 @@
 #define C_AUTHOFF	36
 #define C_FLAGOFF	40
 
-typedef struct fileHdr {
+typedef struct lzc_fileHdr {
 	unsigned long	magic1;
 	unsigned long	dataLength;
 	unsigned long	dataCLength;
@@ -25,4 +25,4 @@ typedef struct fileHdr {
 	unsigned long	fileauth;
 	unsigned long	flag1;
 	unsigned long	flag2;
-} fileHdr;
+} lzc_fileHdr;

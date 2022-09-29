@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef SIT
+
+#ifdef SIT_INTERNAL
 #define S_SIGNATURE    0
 #define S_NUMFILES     4
 #define S_ARCLENGTH    6
@@ -34,7 +38,7 @@ typedef struct sitHdr {			/* 22 bytes */
 	char reserved[7];
 } sitHdr;
 
-typedef struct fileHdr {		/* 112 bytes */
+typedef struct sit_fileHdr {		/* 112 bytes */
 	unsigned char	compRMethod;	/* rsrc fork compression method */
 	unsigned char	compDMethod;	/* data fork compression method */
 	unsigned char	fName[64];	/* a STR63 */
@@ -53,7 +57,7 @@ typedef struct fileHdr {		/* 112 bytes */
 	unsigned short dataCRC;		/* crc of data fork */
 	char reserved[6];
 	unsigned short hdrCRC;		/* crc of file header */
-} fileHdr;
+} sit_fileHdr;
 
 /* file format is:
 	sitArchiveHdr
@@ -70,7 +74,6 @@ typedef struct fileHdr {		/* 112 bytes */
 			fileNRsrcFork
 			fileNDataFork
 */
-
 
 
 /* compression methods */
@@ -91,3 +94,9 @@ typedef struct fileHdr {		/* 112 bytes */
 /* all other numbers are reserved */
 
 #define	ESC	0x90	/* repeat packing escape */
+
+#endif
+
+void sit (void);
+
+#endif

@@ -1,7 +1,6 @@
+#include <string.h>
 #include <sys/types.h>
 #include <sys/dir.h>
-
-char *strncpy();
 
 #ifdef MAXNAMLEN	/* 4.2 BSD */
 #define FNAMELEN MAXNAMLEN
@@ -83,7 +82,7 @@ static char char_mapping[] = {
 	 '_',  '_',  '_',  '_',  '_',  '_',  '_',  '_',
 	 '_',  '_',  '_',  '_',  '_',  '_',  '_',  '_'};
 
-void transname(char *name, char *namebuf, int n)
+void transname(char *name, char *namebuf, size_t n)
 {
     char *np;
 

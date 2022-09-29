@@ -1,3 +1,5 @@
+#include "wrfile.h"
+
 #ifdef TYPES_H
 #include <sys/types.h>
 #endif /* TYPES_H */
@@ -8,7 +10,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "machdr.h"
-#include "wrfile.h"
 #include "wrfileopt.h"
 #include "../util/util.h"
 #ifdef AUFSPLUS
@@ -102,8 +103,8 @@ static char *rbuffer = NULL, *dbuffer = NULL;
 static char *ptr;
 static unsigned long rsz, dsz, totsize, maxsize;
 
-void define_name(text)
-char *text;
+void 
+define_name (char *text)
 {
     (void)sprintf(f_info, "%s.info", text);
     (void)sprintf(f_rsrc, "%s.rsrc", text);
@@ -118,9 +119,8 @@ char *text;
 #endif /* APPLESHARE */
 }
 
-void start_info(info, rsize, dsize)
-char *info;
-unsigned long rsize, dsize;
+void 
+start_info (char *info, unsigned long rsize, unsigned long dsize)
 {
     int rs, ds;
 
@@ -158,17 +158,20 @@ unsigned long rsize, dsize;
 #endif /* APPLEDOUBLE */
 }
 
-void start_rsrc()
+void 
+start_rsrc (void)
 {
     out_buffer = out_ptr = rbuffer;
 }
 
-void start_data()
+void 
+start_data (void)
 {
     out_buffer = out_ptr = dbuffer;
 }
 
-void end_file()
+void 
+end_file (void)
 {
     FILE *fp;
     int i, c;
@@ -324,9 +327,8 @@ void end_file()
 }
 
 #ifdef SCAN
-void do_idf(name, kind)
-char *name;
-int kind;
+void 
+do_idf (char *name, int kind)
 {
     int n;
 
@@ -348,8 +350,8 @@ int kind;
 }
 #endif /* SCAN */
 
-void do_mkdir(name, header)
-char *name, *header;
+void 
+do_mkdir (char *name, char *header)
 {
 struct stat sbuf;
 FILE *fp;
@@ -507,7 +509,7 @@ char dirinfo[I_NAMELEN*3+INFOSZ+10];
 #endif /* APPLESHARE */
 }
 
-void enddir()
+void enddir(void)
 {
 char header[INFOBYTES];
 int i;
@@ -621,8 +623,8 @@ static void check_appledouble()
 static void appledouble_namings()
 {
     mk_share_name();
-    (void)sprintf(f_info_appledouble, "%s/%s", infodir, share_name);
-    (void)sprintf(f_data, "%s", share_name);
+    (void)snprintf(f_info_appledouble, sizeof(f_info_appledouble), "%s/%s", infodir, share_name);
+    (void)snprintf(f_data, sizeof(f_data), "%s", share_name);
 }
 
 static void wr_appledouble_info(fp)
@@ -678,7 +680,7 @@ static void mk_share_name()
 
     mp = buffer + 2;
     up = &(share_name[0]);
-    while(ch = *mp++) {
+    while((ch = *mp++)) {
 	if(isascii(ch) && ! iscntrl(ch) && isprint(ch) && ch != '/') {
 	    *up++ = ch;
 	} else {
@@ -827,7 +829,7 @@ char *get_wrfileopt()
     return options;
 }
 
-char *get_mina()
+char *get_mina(void)
 {
 #ifdef APPLESHARE
 #ifdef AUFS

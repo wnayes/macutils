@@ -9,8 +9,8 @@ static char *dir_stack;
 static int dir_ptr = -64;
 static int dir_max;
 
-void dir(hdr)
-char *hdr;
+void 
+dir (char *hdr)
 {
 int doit;
 

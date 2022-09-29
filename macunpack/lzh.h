@@ -30,7 +30,7 @@
 #define L_EEXTENDSZ	0
 #define L_EEXTEND	1
 
-typedef struct fileHdr { /* 58 bytes */
+typedef struct lzh_fileHdr { /* 58 bytes */
 	unsigned char	hsize;
 	unsigned char	hcrc;
 	char		method[5];
@@ -45,7 +45,7 @@ typedef struct fileHdr { /* 58 bytes */
 	unsigned char	extendsize;
 	char		*extend;
 	char		*data;
-} fileHdr;
+} lzh_fileHdr;
 
 /* Currently known methods: */
 #define	lh0	0

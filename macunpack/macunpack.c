@@ -192,7 +192,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     fprintf(stderr, "Usage: macunpack [-%s] [filename]\n", options);
     fprintf(stderr, "Use \"macunpack -H\" for help.\n");

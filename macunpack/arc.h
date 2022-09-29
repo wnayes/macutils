@@ -18,7 +18,7 @@
 #define	SIZE2		84	/* Not present if KIND == 1 */
 #define	HEADERBYTES	88
 
-typedef struct fileHdr { /* 84 or 88 bytes */
+typedef struct arc_fileHdr { /* 84 or 88 bytes */
 	char		magic1;
 	char		kind;
 	char		fname[31];

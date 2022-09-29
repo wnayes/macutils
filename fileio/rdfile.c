@@ -92,9 +92,8 @@ static void read_appledouble_info();
 static char filename[255];
 static int filekind;
 
-void setup(argc, argv)
-int argc;
-char **argv;
+void 
+setup (int argc, char **argv)
 {
     if(argc == 0) {
 	read_stdin = 1;
@@ -109,8 +108,8 @@ char **argv;
     }
 }
 
-static void check_files(initial)
-int initial;
+static void 
+check_files (int initial)
 {
     struct stat stbuf;
     int i, j, n;
@@ -292,7 +291,8 @@ int initial;
     }
 }
 
-int nextfile()
+int 
+nextfile (void)
 {
     int i;
 
@@ -337,7 +337,8 @@ again:
     }
 }
 
-static void read_file()
+static void 
+read_file (void)
 {
     FILE *fd;
     int c, j, lname, skip;
@@ -652,7 +653,8 @@ static void read_file()
     }
 }
 
-static void enter_dir()
+static void 
+enter_dir (void)
 {
     DIR *directory;
     struct dirstruct *curentry;
@@ -746,7 +748,8 @@ static void enter_dir()
     check_files(0);
 }
 
-static void exit_dir()
+static void 
+exit_dir (void)
 {
     filelist *old_files;
     int i;
@@ -767,8 +770,8 @@ static void exit_dir()
 
 #ifdef APPLESHARE
 #ifdef AUFS
-static void read_aufs_info(fd)
-FILE *fd;
+static void 
+read_aufs_info (FILE *fd)
 {
     FileInfo theinfo;
     int i, n;
@@ -832,8 +835,8 @@ FILE *fd;
    size and format.  I have not yet seen something that will lead me to
    believe different.
 */
-static void read_appledouble_info(fd)
-FILE *fd;
+static void 
+read_appledouble_info (FILE *fd)
 {
     FileInfo theinfo;
     int i, n;
@@ -866,7 +869,8 @@ FILE *fd;
 #endif /* APPLEDOUBLE */
 #endif /* APPLESHARE */
 
-static int get_stdin_file()
+static int 
+get_stdin_file (void)
 {
     int i, skip;
 
@@ -934,10 +938,9 @@ static int get_stdin_file()
     return ISFILE;
 }
 
-int rdfileopt(c)
-char c;
+int 
+rdfileopt (int c)
 {
-extern char *optarg;
 char name[32];
 
     switch(c) {
@@ -965,7 +968,8 @@ char name[32];
     return 1;
 }
 
-void give_rdfileopt()
+void 
+give_rdfileopt (void)
 {
     (void)fprintf(stderr, "File input options:\n");
     (void)fprintf(stderr, "-r:\tread as resource files\n");
@@ -979,19 +983,22 @@ void give_rdfileopt()
 	"-t ty:\tfiletype if one of the above options is used\n");
 }
 
-void set_norecurse()
+void 
+set_norecurse (void)
 {
     no_recurse = 1;
 }
 
-char *get_rdfileopt()
+char *
+get_rdfileopt (void)
 {
     static char options[] = "rduUc:t:";
 
     return options;
 }
 
-char *get_minb()
+char *
+get_minb (void)
 {
 #ifdef APPLESHARE
 #ifdef AUFS

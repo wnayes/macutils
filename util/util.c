@@ -4,7 +4,7 @@
 #include "masks.h"
 #include "util.h"
 
-extern void exit();
+#include <stdlib.h>
 
 #define MACTIMOFFS    1904
 
@@ -66,8 +66,8 @@ unsigned long get2i(char *bp)
     return value;
 }
 
-unsigned char getb(fp)
-FILE *fp;
+unsigned char 
+getb (FILE *fp)
 {
     int c;
 
@@ -80,16 +80,16 @@ FILE *fp;
     return c & BYTEMASK;
 }
 
-void copy(d, s, n)
-char *d, *s;
-int n;
+void 
+copy (char *d, char *s, int n)
 {
     while(--n >= 0) {
 	*d++ = *s++;
     }
 }
 
-int do_query()
+int 
+do_query (void)
 {
     char *tp, temp[10];
 
@@ -108,9 +108,8 @@ int do_query()
     return 0;
 }
 
-void put4(dest, value)
-char *dest;
-unsigned long value;
+void 
+put4 (char *dest, unsigned long value)
 {
     *dest++ = (value >> 24) & BYTEMASK;
     *dest++ = (value >> 16) & BYTEMASK;
@@ -118,16 +117,15 @@ unsigned long value;
     *dest++ = value & BYTEMASK;
 }
 
-void put2(dest, value)
-char *dest;
-unsigned long value;
+void 
+put2 (char *dest, unsigned long value)
 {
     *dest++ = (value >> 8) & BYTEMASK;
     *dest++ = value & BYTEMASK;
 }
 
-void do_indent(indent)
-int indent;
+void 
+do_indent (int indent)
 {
     int i;
 

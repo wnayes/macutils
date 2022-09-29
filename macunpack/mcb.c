@@ -8,10 +8,7 @@ static int mcb_read;
 
 static void mcb_wrfile();
 
-void mcb(hdr, rsrcLength, dataLength, toread)
-char *hdr;
-unsigned long rsrcLength, dataLength;
-int toread;
+void mcb(char *hdr, unsigned long rsrcLength, unsigned long dataLength, int toread)
 {
     register int i;
     int n;
@@ -79,8 +76,8 @@ int toread;
     }
 }
 
-static void mcb_wrfile(ibytes)
-unsigned long ibytes;
+static void 
+mcb_wrfile (unsigned long ibytes)
 {
     int n;
 

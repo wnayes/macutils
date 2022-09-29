@@ -8,6 +8,7 @@
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "globals.h"
+#include "tty.h"
 #include "../fileio/fileglob.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/wrfileopt.h"
@@ -16,9 +17,6 @@
 #endif /* XM */
 
 #define LOCALOPT	"lmxyzoTVH"
-
-extern void setup_tty();
-extern void reset_tty();
 
 extern char info[];
 
@@ -30,8 +28,6 @@ static int listmode = 0;
 
 int main(int argc, char **argv)
 {
-    extern int optind;
-    extern char *optarg;
     int errflg;
     int c;
     char tname[64];
@@ -165,7 +161,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     (void)fprintf(stderr, "Usage: frommac [-%s]\n", options);
     (void)fprintf(stderr, "Use \"frommac -H\" for help.\n");

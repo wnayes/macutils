@@ -1,4 +1,5 @@
 #include "hexbin.h"
+#include "mu.h"
 #ifdef MU
 #include "globals.h"
 #include "readline.h"
@@ -9,15 +10,15 @@
 #include "buffer.h"
 #include "printhdr.h"
 
-extern void exit();
+#include <stdlib.h>
 
 static void do_mu_fork();
 static int mu_comp_to_bin();
 static int mu_convert();
 
 /* mu format -- process .mu files */
-void mu(macname)
-char *macname;
+void 
+mu (char *macname)
 {
     int n;
 
@@ -143,7 +144,8 @@ char *macname;
     end_put();
 }
 
-static void do_mu_fork()
+static void 
+do_mu_fork (void)
 {
     long newbytes;
 
@@ -179,7 +181,8 @@ static void do_mu_fork()
     /*NOTREACHED*/
 }
 
-static int mu_comp_to_bin()
+static int 
+mu_comp_to_bin (void)
 {
     char obuf[BUFSIZ];
     int outcount, n;
@@ -193,8 +196,8 @@ static int mu_comp_to_bin()
 
 #define SIXB(c) (((c)-0x20) & 0x3f)
 
-static int mu_convert(ibuf, obuf)
-char *ibuf, *obuf;
+static int 
+mu_convert (char *ibuf, char *obuf)
 {
     register char *ip = ibuf;
     register char *op = obuf;

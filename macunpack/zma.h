@@ -20,7 +20,7 @@
 #define	Z_RCRC		44	/* Resource crc */
 #define	Z_FNAME		46	/* File name length and name */
 
-typedef struct fileHdr {		/* 78 bytes */
+typedef struct zma_fileHdr {		/* 78 bytes */
 	char		deleted;	/* Not in original, split off from: */
 	char		what;		/* What kind?  Negative if deleted */
 	unsigned char	hlen ;		/* Header length */
@@ -42,7 +42,7 @@ typedef struct fileHdr {		/* 78 bytes */
 	unsigned char	fName[32];	/* a STR32 */
 	/* The following are overlayed in the original structure */
 	unsigned long	conts;		/* Pointer to directory contents */
-} fileHdr;
+} zma_fileHdr;
 
 /* zma types (see what) */
 #define	z_noth	0	/* ??? */

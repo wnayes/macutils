@@ -13,8 +13,8 @@ int in_rsrc_size = -1;
 int in_ds, in_rs, ds_skip, rs_skip;
 
 #ifdef SCAN
-void do_error(string)
-char *string;
+void 
+do_error (char *string)
 {
     do_idf(string, ERROR);
 }

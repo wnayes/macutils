@@ -1,4 +1,5 @@
 #include "hexbin.h"
+#include "hqx.h"
 #ifdef HQX
 #include <stdlib.h>
 #include "globals.h"
@@ -104,12 +105,12 @@ static long todo;
 
 #define output(c) { *op++ = (c); if(op >= &obuf[BUFSIZ]) oflush(); }
 
-void hqx(macname)
-char *macname;
+void 
+hqx (char *macname)
 {
     int n, normlen, c;
     register char *in, *out;
-    register int b6, b8, data, lastc = 0;
+    register int b6, b8 = 0, data = 0, lastc = 0;
     char state68 = 0, run = 0, linestate, first = 1;
 
     g_macname = macname;
@@ -231,7 +232,8 @@ done:
     print_header2(verbose);
 }
 
-static void get_header()
+static void 
+get_header (void)
 {
     int n;
     unsigned long calc_crc, file_crc;
@@ -282,7 +284,8 @@ static void get_header()
     put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
 }
 
-static void oflush()
+static void 
+oflush (void)
 {
     int n, i;
 
@@ -335,7 +338,7 @@ static void oflush()
 	    ++ostate;
 	    break;
 	case S_EXCESS:
-	    (void)fprintf(stderr, "%d excess bytes ignored\n", op-oq);
+	    (void)fprintf(stderr, "%ld excess bytes ignored\n", op-oq);
 	    oq = op;
 	    break;
 	}
@@ -343,7 +346,8 @@ static void oflush()
     op = obuf;
 }
 
-static int getq()
+static int 
+getq (void)
 {
     int c;
 
@@ -360,14 +364,16 @@ static int getq()
 }
 
 /* get2q(); q format -- read 2 bytes from input, return short */
-static long get2q()
+static long 
+get2q (void)
 {
     short high = getq() << 8;
     return high | getq();
 }
 
 /* get4q(); q format -- read 4 bytes from input, return long */
-static long get4q()
+static long 
+get4q (void)
 {
     int i;
     long value = 0;

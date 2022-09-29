@@ -1,3 +1,4 @@
+#include "dofile.h"
 #include <stdio.h>
 #include "../fileio/machdr.h"
 #include "../fileio/rdfile.h"
@@ -23,7 +24,8 @@ void outbyte1();
 void out6bit();
 void outchar();
 
-void dofile()
+void 
+dofile (void)
 {
     (void)printf("(This file must be converted; you knew that already.)\n");
     (void)printf("\n");
@@ -40,7 +42,8 @@ void dofile()
     (void)putchar('\n');
 }
 
-void doheader()
+void 
+doheader (void)
 {
 uint32_t crc;
 int i, n;
@@ -78,9 +81,8 @@ int i, n;
     outbyte((int)(crc & 0xff));
 }
 
-void dofork(fork, size)
-char *fork;
-int size;
+void 
+dofork (char *fork, int size)
 {
 uint32_t crc;
 int i;
@@ -93,8 +95,8 @@ int i;
     outbyte((int)(crc & 0xff));
 }
 
-void outbyte(b)
-int b;
+void 
+outbyte (int b)
 {
     b &= 0xff;
     if(dorep && (b == rep_char)) {
@@ -126,7 +128,8 @@ int b;
     }
 }
 
-void finish()
+void 
+finish (void)
 {
     if(rep_count > 0) {
 	if(rep_count > 3) {
@@ -150,8 +153,8 @@ void finish()
     }
 }
 
-void outbyte1(b)
-int b;
+void 
+outbyte1 (int b)
 {
     switch(state) {
     case 0:
@@ -174,14 +177,14 @@ int b;
     }
 }
 
-void out6bit(c)
-char c;
+void 
+out6bit (int c)
 {
     outchar(codes[c & 0x3f]);
 }
 
-void outchar(c)
-char c;
+void 
+outchar (int c)
 {
     (void)putchar(c);
     if(++pos_ptr > 64) {

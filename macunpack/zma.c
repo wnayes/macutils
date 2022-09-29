@@ -27,11 +27,10 @@ static void zma_wrfile();
 static void zma_nocomp();
 static void zma_lzh();
 
-void zma(start, length)
-    char *start;
-    unsigned long length;
+void 
+zma (char *start, unsigned long length)
 {
-    struct fileHdr filehdr;
+    struct zma_fileHdr filehdr;
     int i, toread;
 
     if(length != 0) {
@@ -122,9 +121,8 @@ void zma(start, length)
     }
 }
 
-static int zma_filehdr(f, skip)
-struct fileHdr *f;
-int skip;
+static int 
+zma_filehdr (struct zma_fileHdr *f, int skip)
 {
     register int i;
     int n;
@@ -228,12 +226,12 @@ int skip;
     return 1;
 }
 
-static void zma_folder(fhdr)
-struct fileHdr fhdr;
+static void 
+zma_folder (struct zma_fileHdr fhdr)
 {
     int i;
     char loc_name[64];
-    struct fileHdr filehdr;
+    struct zma_fileHdr filehdr;
 
     for(i = 0; i < 64; i++) {
 	loc_name[i] = text[i];
@@ -271,8 +269,8 @@ struct fileHdr fhdr;
     }
 }
 
-static void zma_mooz(filehdr)
-struct fileHdr filehdr;
+static void 
+zma_mooz (struct zma_fileHdr filehdr)
 {
     uint32_t crc;
 
@@ -323,9 +321,8 @@ struct fileHdr filehdr;
     }
 }
 
-static void zma_wrfile(ibytes, obytes, type)
-unsigned long ibytes, obytes;
-char type;
+static void 
+zma_wrfile (unsigned long ibytes, unsigned long obytes, int type)
 {
     if(ibytes == 0) {
 	if(verbose) {
@@ -363,8 +360,8 @@ char type;
 /*---------------------------------------------------------------------------*/
 /*	No compression							     */
 /*---------------------------------------------------------------------------*/
-static void zma_nocomp(ibytes)
-unsigned long ibytes;
+static void 
+zma_nocomp (unsigned long ibytes)
 {
     int n = ibytes;
     char *ptr = out_buffer;
@@ -377,8 +374,8 @@ unsigned long ibytes;
 /*---------------------------------------------------------------------------*/
 /*	LZ compression plus Huffman encoding				     */
 /*---------------------------------------------------------------------------*/
-static void zma_lzh(ibytes)
-unsigned long ibytes;
+static void 
+zma_lzh (unsigned long ibytes)
 {
     /* Controlled by ibutes only */
     de_lzh((long)ibytes, (long)(-1), &zma_filestart, 13);

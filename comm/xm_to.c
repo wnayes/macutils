@@ -7,15 +7,12 @@
 #include "protocol.h"
 #include "tty.h"
 
-extern int tgetc();
-extern void tputc();
-extern void tputrec();
-
 static void send_part();
 static int send_sync();
 static void send_rec();
 
-void xm_to()
+void 
+xm_to (void)
 {
     if(send_sync() == ACK) {
 	send_part(file_info, DATABYTES, 1);
@@ -24,9 +21,8 @@ void xm_to()
     }
 }
 
-static void send_part(info, size, more)
-char *info;
-int size, more;
+static void 
+send_part (char *info, int size, int more)
 {
 int recno = 1, i, status;
 
@@ -54,7 +50,8 @@ int recno = 1, i, status;
     }
 }
 
-static int send_sync()
+static int 
+send_sync (void)
 {
 int c, i;
 
@@ -75,9 +72,8 @@ int c, i;
     return CAN;
 }
 
-static void send_rec(buf, bufsize, recno)
-char *buf;
-int bufsize, recno;
+static void 
+send_rec (char *buf, int bufsize, int recno)
 {
 int i, cksum;
 char *bp;

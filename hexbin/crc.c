@@ -6,28 +6,28 @@
 #include "../util/masks.h"
 #include "globals.h"
 
-extern void exit();
+#include <stdlib.h>
 
 uint32_t crc;
 
 #ifdef HQX
-void comp_q_crc(c)
-register unsigned int c;
+void 
+comp_q_crc (register unsigned int c)
 {
     unsigned char cc = c;
 
     crc = binhex_updcrc(crc, &cc, 1);
 }
 
-void comp_q_crc_n(s, e)
-register unsigned char *s, *e;
+void 
+comp_q_crc_n (register unsigned char *s, register unsigned char *e)
 {
     crc = binhex_updcrc(crc, s, e - s);
 }
 #endif /* HQX */
 
-void verify_crc(calc_crc, file_crc)
-unsigned long calc_crc, file_crc;
+void 
+verify_crc (unsigned long calc_crc, unsigned long file_crc)
 {
     calc_crc &= WORDMASK;
     file_crc &= WORDMASK;

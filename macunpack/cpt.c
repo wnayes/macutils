@@ -47,7 +47,6 @@ static int cpt_filehdr();
 static void cpt_folder();
 static void cpt_uncompact();
 static void cpt_wrfile();
-void cpt_wrfile1();
 static void cpt_outch();
 static void cpt_rle();
 static void cpt_rle_lzh();
@@ -55,10 +54,11 @@ static void cpt_readHuff();
 static int cpt_get6bits();
 static int cpt_getbit();
 
-void cpt()
+void 
+cpt (void)
 {
     struct cptHdr cpthdr;
-    struct fileHdr filehdr;
+    struct cpt_fileHdr filehdr;
     char *cptindex;
     int cptindsize;
     char *cptptr;
@@ -75,7 +75,7 @@ void cpt()
 	exit(1);
     }
 
-    cptindsize = cpthdr.entries * FILEHDRSIZE;
+    cptindsize = cpthdr.entries * CPT_FILEHDRSIZE;
     if(cpthdr.commentsize > cptindsize) {
 	cptindsize = cpthdr.commentsize;
     }
@@ -121,8 +121,8 @@ void cpt()
 	    }
 	    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(cptptr + F_FOLDERSIZE), 2);
 	} else {
-	    if(fread(cptptr + F_VOLUME, 1, FILEHDRSIZE - F_VOLUME, infp) !=
-		FILEHDRSIZE - F_VOLUME) {
+	    if(fread(cptptr + F_VOLUME, 1, CPT_FILEHDRSIZE - F_VOLUME, infp) !=
+		CPT_FILEHDRSIZE - F_VOLUME) {
 		(void)fprintf(stderr, "Can't read file header #%d\n", i+1);
 #ifdef SCAN
 		do_error("macunpack: Can't read file header");
@@ -130,9 +130,9 @@ void cpt()
 		exit(1);
 	    }
 	    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(cptptr + F_VOLUME),
-				FILEHDRSIZE - F_VOLUME);
+				CPT_FILEHDRSIZE - F_VOLUME);
 	}
-	cptptr += FILEHDRSIZE;
+	cptptr += CPT_FILEHDRSIZE;
     }
     if(cpt_crc != cpthdr.hdrcrc) {
 	(void)fprintf(stderr, "Header CRC mismatch: got 0x%08x, need 0x%08x\n",
@@ -155,17 +155,17 @@ void cpt()
 	if(filehdr.folder) {
 	    cpt_folder(text, filehdr, cptptr);
 	    i += filehdr.foldersize;
-	    cptptr += filehdr.foldersize * FILEHDRSIZE;
+	    cptptr += filehdr.foldersize * CPT_FILEHDRSIZE;
 	} else {
 	    cpt_uncompact(filehdr);
 	}
-	cptptr += FILEHDRSIZE;
+	cptptr += CPT_FILEHDRSIZE;
     }
     (void)free(cptindex);
 }
 
-static int readcpthdr(s)
-struct cptHdr *s;
+static int 
+readcpthdr (struct cptHdr *s)
 {
     char temp[CHDRSIZE];
 
@@ -204,16 +204,15 @@ struct cptHdr *s;
     }
 
     cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(temp + CPTHDRSIZE + C_ENTRIES), 3);
-    s->hdrcrc = get4(temp + CPTHDRSIZE + C_HDRCRC);
+    s->hdrcrc = get4(temp + CPTHDRSIZE + CPT_C_HDRCRC);
     s->entries = get2(temp + CPTHDRSIZE + C_ENTRIES);
     s->commentsize = temp[CPTHDRSIZE + C_COMMENT];
 
     return 1;
 }
 
-static int cpt_filehdr(f, hdr)
-struct fileHdr *f;
-char *hdr;
+static int 
+cpt_filehdr (struct cpt_fileHdr *f, char *hdr)
 {
     register int i;
     int n;
@@ -286,20 +285,18 @@ char *hdr;
     return 1;
 }
 
-static void cpt_folder(name, fileh, cptptr)
-char *name;
-struct fileHdr fileh;
-char *cptptr;
+static void 
+cpt_folder (char *name, struct cpt_fileHdr fileh, char *cptptr)
 {
     int i, nfiles;
     char loc_name[64];
-    struct fileHdr filehdr;
+    struct cpt_fileHdr filehdr;
 
     for(i = 0; i < 64; i++) {
 	loc_name[i] = name[i];
     }
     if(write_it || info_only) {
-	cptptr += FILEHDRSIZE;
+	cptptr += CPT_FILEHDRSIZE;
 	nfiles = fileh.foldersize;
 	if(write_it) {
 	    do_mkdir(text, info);
@@ -316,11 +313,11 @@ char *cptptr;
 	    if(filehdr.folder) {
 		cpt_folder(text, filehdr, cptptr);
 		i += filehdr.foldersize;
-		cptptr += filehdr.foldersize * FILEHDRSIZE;
+		cptptr += filehdr.foldersize * CPT_FILEHDRSIZE;
 	    } else {
 		cpt_uncompact(filehdr);
 	    }
-	    cptptr += FILEHDRSIZE;
+	    cptptr += CPT_FILEHDRSIZE;
 	}
 	if(write_it) {
 	    enddir();
@@ -333,8 +330,8 @@ char *cptptr;
     }
 }
 
-static void cpt_uncompact(filehdr)
-struct fileHdr filehdr;
+static void 
+cpt_uncompact (struct cpt_fileHdr filehdr)
 {
     if(filehdr.cptFlag & 1) {
 	(void)fprintf(stderr, "\tFile is password protected, skipping file\n");
@@ -398,9 +395,8 @@ struct fileHdr filehdr;
     }
 }
 
-static void cpt_wrfile(ibytes, obytes, type)
-unsigned long ibytes, obytes;
-unsigned short type;
+static void 
+cpt_wrfile (unsigned long ibytes, unsigned long obytes, int type)
 {
     if(ibytes == 0) {
 	return;
@@ -418,10 +414,8 @@ unsigned short type;
     cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)out_buffer, obytes);
 }
 
-void cpt_wrfile1(in_char, ibytes, obytes, type, blocksize)
-unsigned char *in_char;
-unsigned long ibytes, obytes, blocksize;
-int type;
+void 
+cpt_wrfile1 (unsigned char *in_char, unsigned long ibytes, unsigned long obytes, int type, unsigned long blocksize)
 {
     cpt_char = in_char;
     if(ibytes == 0) {
@@ -439,8 +433,8 @@ int type;
     }
 }
 
-static void cpt_outch(ch)
-unsigned char ch;
+static void 
+cpt_outch (int ch)
 {
     cpt_LZbuff[cpt_LZptr++ & (CIRCSIZE - 1)] = ch;
     switch(cpt_outstat) {
@@ -498,7 +492,8 @@ unsigned char ch;
 /*---------------------------------------------------------------------------*/
 /*	Run length encoding						     */
 /*---------------------------------------------------------------------------*/
-static void cpt_rle()
+static void 
+cpt_rle (void)
 {
     while(cpt_inlength-- > 0) {
 	cpt_outch(*cpt_char++);
@@ -508,7 +503,8 @@ static void cpt_rle()
 /*---------------------------------------------------------------------------*/
 /*	Run length encoding plus LZ compression plus Huffman encoding	     */
 /*---------------------------------------------------------------------------*/
-static void cpt_rle_lzh()
+static void 
+cpt_rle_lzh (void)
 {
     int block_count;
     unsigned int bptr;
@@ -556,9 +552,8 @@ typedef struct sf_entry {
 /* See routine LoadTree.  The parameter tree (actually an array and
    two integers) are only used locally in this version and hence locally
    declared.  The parameter nodes has been renamed Hufftree.... */
-static void cpt_readHuff(size, Hufftree)
-int size;
-struct node *Hufftree;
+static void 
+cpt_readHuff (int size, struct node *Hufftree)
 {
     sf_entry tree_entry[256 + SLACK]; /* maximal number of elements */
     int tree_entries;
@@ -680,7 +675,8 @@ struct node *Hufftree;
     Hufftree[0].flag = 0;
 }
 
-static int cpt_get6bits()
+static int 
+cpt_get6bits (void)
 {
 int b = 0, cn;
 
@@ -696,7 +692,8 @@ int b = 0, cn;
     return b;
 }
 
-static int cpt_getbit()
+static int 
+cpt_getbit (void)
 {
 int b;
 

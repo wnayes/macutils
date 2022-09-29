@@ -1,3 +1,5 @@
+#include "de_huffman.h"
+
 #include "macunpack.h"
 #ifdef JDW
 #define DEHUFFMAN
@@ -60,7 +62,8 @@ void set_huffman(int endian)
     }
 }
 
-void read_tree()
+void 
+read_tree (void)
 {
     nodeptr = nodelist;
     bit = 0;		/* put us on a boundary */
@@ -86,7 +89,8 @@ static node *read_sub_tree()
 }
 
 /* This routine returns the next bit in the input stream (MSB first) */
-static int getbit_be()
+static int 
+getbit_be (void)
 {
     static int b;
 
@@ -100,7 +104,8 @@ static int getbit_be()
 }
 
 /* This routine returns the next bit in the input stream (LSB first) */
-static int getbit_le()
+static int 
+getbit_le (void)
 {
     static int b;
 
@@ -113,7 +118,8 @@ static int getbit_le()
     return (b >> (7 - bit)) & 1;
 }
 
-void clrhuff()
+void 
+clrhuff (void)
 {
     bit = 0;
 }
@@ -129,12 +135,14 @@ int gethuffbyte(node *l_nodelist)
     return np->byte;
 }
 
-int getihuffbyte()
+int 
+getihuffbyte (void)
 {
     return gethuffbyte(nodelist);
 }
 
-static int getdecodebyte()
+static int 
+getdecodebyte (void)
 {
     register int i, b;
 
