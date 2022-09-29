@@ -24,7 +24,7 @@ pit (void)
     struct pit_header filehdr;
     char pithdr[4];
     int decode, synced, ch;
-    unsigned long data_crc, crc;
+    uint32_t data_crc, crc;
 
     updcrc = binhex_updcrc;
     crcinit = binhex_crcinit;
@@ -207,8 +207,8 @@ pit_filehdr (struct pit_header *f, int compr)
 	transname(hdr + H_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)f->dlen, (long)f->rlen);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)f->dlen, (int32_t)f->rlen);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -236,7 +236,7 @@ pit_filehdr (struct pit_header *f, int compr)
 }
 
 static void 
-pit_wrfile (unsigned long bytes, int type)
+pit_wrfile (uint32_t bytes, int type)
 {
     if(bytes == 0) {
 	return;
@@ -254,7 +254,7 @@ pit_wrfile (unsigned long bytes, int type)
 /*	No compression							     */
 /*---------------------------------------------------------------------------*/
 static void 
-pit_nocomp (unsigned long ibytes)
+pit_nocomp (uint32_t ibytes)
 {
     int n;
 
@@ -272,7 +272,7 @@ pit_nocomp (unsigned long ibytes)
 /*	Huffman compression						     */
 /*---------------------------------------------------------------------------*/
 static void 
-pit_huffman (unsigned long obytes)
+pit_huffman (uint32_t obytes)
 {
     de_huffman(obytes);
 }

@@ -19,7 +19,7 @@ char info[INFOBYTES];
 void 
 xm_from (void)
 {
-unsigned long data_size, rsrc_size;
+uint32_t data_size, rsrc_size;
 char text[64];
 
     if(receive_sync() == ACK) {

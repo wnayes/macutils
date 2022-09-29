@@ -1,6 +1,9 @@
 #include "macunpack.h"
 
 #ifdef DD
+
+#include <stdint.h>
+
 #ifdef DD_INTERNAL
 
 #define	MAGIC1		"DDAR"
@@ -55,7 +58,7 @@
 #define	DD_C_HDRCRC	82
 #define	CDD_FILEHDRSIZE	84
 
-typedef long OSType;
+typedef int32_t OSType;
 
 typedef struct dd_fileHdr {		/* 124 bytes */
 	unsigned char	magic[4];	/* "DDAR" */
@@ -63,10 +66,10 @@ typedef struct dd_fileHdr {		/* 124 bytes */
 	unsigned char	fName[64];	/* a STR63 */
 	unsigned char	isdir;		/* starts a directory? */
 	unsigned char	enddir;		/* terminates a directory? */
-	unsigned long	dataLength;	/* lengths */
-	unsigned long	rsrcLength;
-	unsigned long	creationDate;
-	unsigned long	modDate;
+	uint32_t	dataLength;	/* lengths */
+	uint32_t	rsrcLength;
+	uint32_t	creationDate;
+	uint32_t	modDate;
 	OSType	fType;			/* file type */
 	OSType	fCreator;		/* er... */
 	unsigned short FndrFlags;	/* copy of Finder flags.  For our
@@ -80,16 +83,16 @@ typedef struct dd_fileHdr {		/* 124 bytes */
 
 typedef struct dd_fileCHdr {		/* 84 bytes */
 	unsigned char	magic[4];	/* "\253\315\000\124" */
-	unsigned long	dataLength;	/* lengths */
-	unsigned long	dataCLength;
-	unsigned long	rsrcLength;
-	unsigned long	rsrcCLength;
+	uint32_t	dataLength;	/* lengths */
+	uint32_t	dataCLength;
+	uint32_t	rsrcLength;
+	uint32_t	rsrcCLength;
 	unsigned char	datamethod;	/* compression method used */
 	unsigned char	rsrcmethod;
 	unsigned char	info1;		/* flags ??? */
 	unsigned char	fill3;
-	unsigned long	modDate;
-	unsigned long	creationDate;
+	uint32_t	modDate;
+	uint32_t	creationDate;
 	OSType	fType;			/* file type */
 	OSType	fCreator;		/* er... */
 	unsigned short FndrFlags;	/* copy of Finder flags.  For our

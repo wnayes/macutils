@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 	if(verbose) {
 	    fprintf(stderr, "This is a \"ShrinkToFit\" packed file.\n");
 	}
-	stf(~(unsigned long)1);
+	stf(~(uint32_t)1);
 	break;
 #endif /* STF */
 #ifdef PIT

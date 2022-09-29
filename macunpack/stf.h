@@ -1,5 +1,8 @@
 #include "macunpack.h"
 #ifdef STF
+
+#include <stdint.h>
+
 #define MAGIC	"RTH"
 
 #define	S_MAGIC		0
@@ -11,9 +14,9 @@ typedef struct stf_fileHdr {
 	char		magic[3];
 	char		flength;
 	char		fname[32];	/* actually flength */
-	unsigned long	rsrcLength;
-	unsigned long	dataLength;
+	uint32_t	rsrcLength;
+	uint32_t	dataLength;
 } stf_fileHdr;
 
-void stf (unsigned long ibytes);
+void stf (uint32_t ibytes);
 #endif

@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define	MAGIC1		0	/* Should be 0x1b, marks Mac extension */
 #define	KIND		1	/* KIND == 0 marks end of archive */
 #define	FNAME		2
@@ -26,17 +28,17 @@ typedef struct arc_fileHdr { /* 84 or 88 bytes */
 	char		ftype[4];
 	char		fauth[4];
 	char		finfo[8];
-	unsigned long	dataLength;
-	unsigned long	rsrcLength;
+	uint32_t	dataLength;
+	uint32_t	rsrcLength;
 	char		filler;
 	char		magic2;
 	char		kind2;
 	char		fname2[13];
-	unsigned long	size;
-	unsigned short	date;
-	unsigned short	time;
-	unsigned short	crc;
-	unsigned long	size2;	/* Identical to size; this is wrong for Arc! */
+	uint32_t	size;
+	uint16_t	date;
+	uint16_t	time;
+	uint16_t	crc;
+	uint32_t	size2;	/* Identical to size; this is wrong for Arc! */
 };
 
 #define	smallstored	1

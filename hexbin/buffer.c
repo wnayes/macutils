@@ -60,7 +60,7 @@ end_put (void)
     if(info_only) {
 	return;
     }
-    start_info(info, (unsigned long)rsrc_size, (unsigned long)data_size);
+    start_info(info, (uint32_t)rsrc_size, (uint32_t)data_size);
     if(data_size != 0) {
 	start_data();
 	copy(out_ptr, data_fork, data_size);

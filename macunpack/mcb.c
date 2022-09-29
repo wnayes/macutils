@@ -8,7 +8,7 @@ static int mcb_read;
 
 static void mcb_wrfile();
 
-void mcb(char *hdr, unsigned long rsrcLength, unsigned long dataLength, int toread)
+void mcb(char *hdr, uint32_t rsrcLength, uint32_t dataLength, int toread)
 {
     register int i;
     int n;
@@ -36,8 +36,8 @@ void mcb(char *hdr, unsigned long rsrcLength, unsigned long dataLength, int tore
 	transname(hdr + I_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -77,7 +77,7 @@ void mcb(char *hdr, unsigned long rsrcLength, unsigned long dataLength, int tore
 }
 
 static void 
-mcb_wrfile (unsigned long ibytes)
+mcb_wrfile (uint32_t ibytes)
 {
     int n;
 

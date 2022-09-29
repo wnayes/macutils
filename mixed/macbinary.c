@@ -49,8 +49,8 @@ macbinary (void)
 	}
 #endif /* SCAN */
 	if(header[0] == 0 /* MORE CHECKS HERE! */) {
-	    mcb(header, (unsigned long)in_rsrc_size,
-			(unsigned long)in_data_size, in_ds + in_rs);
+	    mcb(header, (uint32_t)in_rsrc_size,
+			(uint32_t)in_data_size, in_ds + in_rs);
 	    continue;
 	} else {
 	    (void)fprintf(stderr, "Unrecognized header.\n");

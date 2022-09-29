@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 static void do_o_forks();
-static long make_file();
+static int32_t make_file();
 static void comp_c_crc();
 static void comp_e_crc();
 static int comp_to_bin();
@@ -86,11 +86,11 @@ hecx (char *macname, char *filename)
     (void)strncpy(info + I_NAMEOFF + 1, mh.m_name, n);
     (void)strncpy(info + I_TYPEOFF, mh.m_type, 4);
     (void)strncpy(info + I_AUTHOFF, mh.m_author, 4);
-    put2(info + I_FLAGOFF, (unsigned long)mh.m_flags);
-    put4(info + I_DLENOFF, (unsigned long)mh.m_datalen);
-    put4(info + I_RLENOFF, (unsigned long)mh.m_rsrclen);
-    put4(info + I_CTIMOFF, (unsigned long)mh.m_createtime);
-    put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
+    put2(info + I_FLAGOFF, (uint32_t)mh.m_flags);
+    put4(info + I_DLENOFF, (uint32_t)mh.m_datalen);
+    put4(info + I_RLENOFF, (uint32_t)mh.m_rsrclen);
+    put4(info + I_CTIMOFF, (uint32_t)mh.m_createtime);
+    put4(info + I_MTIMOFF, (uint32_t)mh.m_modifytime);
     print_header2(0);
     end_put();
 }
@@ -99,7 +99,7 @@ static void
 do_o_forks (void)
 {
     int forks = 0, found_crc = 0;
-    unsigned long calc_crc, file_crc;
+    uint32_t calc_crc, file_crc;
 
     crc = 0;    /* calculate a crc for both forks */
 
@@ -128,13 +128,13 @@ do_o_forks (void)
 	if(compressed && strncmp(line, "***CRC:", 7) == 0) {
 	    found_crc++;
 	    calc_crc = crc;
-	    (void)sscanf(&line[7], "%lx", &file_crc);
+	    (void)sscanf(&line[7], "%x", &file_crc);
 	    break;
 	}
 	if(!compressed && strncmp(line, "***CHECKSUM:", 12) == 0) {
 	    found_crc++;
 	    calc_crc = crc & BYTEMASK;
-	    (void)sscanf(&line[12], "%lx", &file_crc);
+	    (void)sscanf(&line[12], "%x", &file_crc);
 	    file_crc &= BYTEMASK;
 	    break;
 	}
@@ -151,10 +151,10 @@ do_o_forks (void)
     }
 }
 
-static long 
+static int32_t 
 make_file (int compressed)
 {
-    register long nbytes = 0L;
+    register int32_t nbytes = 0L;
 
     while(readline()) {
 	if(line[0] == 0) {

@@ -24,17 +24,17 @@
 
 static void cpt_uncompact();
 static unsigned char *cpt_data;
-static unsigned long cpt_datamax;
-static unsigned long cpt_datasize;
+static uint32_t cpt_datamax;
+static uint32_t cpt_datasize;
 static unsigned char cpt_LZbuff[CIRCSIZE];
 static unsigned int cpt_LZptr;
 static unsigned char *cpt_char;
-static unsigned long cpt_crc;
-static unsigned long cpt_inlength;
-static unsigned long cpt_outlength;
+static uint32_t cpt_crc;
+static uint32_t cpt_inlength;
+static uint32_t cpt_outlength;
 static int cpt_outstat;
 static unsigned char cpt_savechar;
-static unsigned long cpt_newbits;
+static uint32_t cpt_newbits;
 static int cpt_bitsavail;
 static int cpt_blocksize;
 /* Lengths is twice the max number of entries, and include slack. */
@@ -254,9 +254,9 @@ cpt_filehdr (struct cpt_fileHdr *f, char *hdr)
 	    transname(hdr + F_FTYPE, ftype, 4);
 	    transname(hdr + F_CREATOR, fauth, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
 		    text, ftype, fauth,
-		    (long)f->dataLength, (long)f->rsrcLength);
+		    (int32_t)f->dataLength, (int32_t)f->rsrcLength);
 	}
 	if(info_only) {
 	    write_it = 0;
@@ -381,8 +381,8 @@ cpt_uncompact (struct cpt_fileHdr filehdr)
 		   filehdr.cptFlag & 4);
 	if(filehdr.fileCRC != cpt_crc) {
 	    (void)fprintf(stderr,
-		"CRC error on file: need 0x%08lx, got 0x%08lx\n",
-		(long)filehdr.fileCRC, (long)cpt_crc);
+		"CRC error on file: need 0x%08x, got 0x%08x\n",
+		(int32_t)filehdr.fileCRC, (int32_t)cpt_crc);
 #ifdef SCAN
 	    do_error("macunpack: CRC error on file");
 #endif /* SCAN */
@@ -396,7 +396,7 @@ cpt_uncompact (struct cpt_fileHdr filehdr)
 }
 
 static void 
-cpt_wrfile (unsigned long ibytes, unsigned long obytes, int type)
+cpt_wrfile (uint32_t ibytes, uint32_t obytes, int type)
 {
     if(ibytes == 0) {
 	return;
@@ -415,7 +415,7 @@ cpt_wrfile (unsigned long ibytes, unsigned long obytes, int type)
 }
 
 void 
-cpt_wrfile1 (unsigned char *in_char, unsigned long ibytes, unsigned long obytes, int type, unsigned long blocksize)
+cpt_wrfile1 (unsigned char *in_char, uint32_t ibytes, uint32_t obytes, int type, uint32_t blocksize)
 {
     cpt_char = in_char;
     if(ibytes == 0) {

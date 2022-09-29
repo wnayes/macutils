@@ -1,5 +1,7 @@
 #include "zmahdr.h"
 
+#include <stdint.h>
+
 #define	Z_HDRSIZE	78
 
 #define	Z_WHAT		0	/* What kind of data? */
@@ -25,15 +27,15 @@ typedef struct zma_fileHdr {		/* 78 bytes */
 	char		what;		/* What kind?  Negative if deleted */
 	unsigned char	hlen ;		/* Header length */
 	unsigned short	boolFlags;	/* Boolean flags */
-	unsigned long	next;		/* Next entry */
-	unsigned long	compRLength;	/* The compressed lengths. */
-	unsigned long	compDLength;	/* For dirs, the second is # entries */
-	unsigned long	rsrcLength;	/* The uncompressed lengths. */
-	unsigned long	dataLength;
-	unsigned long	fType;		/* file type */
-	unsigned long	fCreator;	/* er... */
-	unsigned long	modDate;	/* !restored-compat w/backup prgms */
-	unsigned long	comment;	/* Comment offset */
+	uint32_t	next;		/* Next entry */
+	uint32_t	compRLength;	/* The compressed lengths. */
+	uint32_t	compDLength;	/* For dirs, the second is # entries */
+	uint32_t	rsrcLength;	/* The uncompressed lengths. */
+	uint32_t	dataLength;
+	uint32_t	fType;		/* file type */
+	uint32_t	fCreator;	/* er... */
+	uint32_t	modDate;	/* !restored-compat w/backup prgms */
+	uint32_t	comment;	/* Comment offset */
 	unsigned short	FndrFlags;	/* copy of Finder flags.  For our
 						purposes, we can clear:
 						busy,onDesk */
@@ -41,7 +43,7 @@ typedef struct zma_fileHdr {		/* 78 bytes */
 	unsigned short	rsrcCRC;	/* Resource fork crc */
 	unsigned char	fName[32];	/* a STR32 */
 	/* The following are overlayed in the original structure */
-	unsigned long	conts;		/* Pointer to directory contents */
+	uint32_t	conts;		/* Pointer to directory contents */
 } zma_fileHdr;
 
 /* zma types (see what) */

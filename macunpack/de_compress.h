@@ -1,2 +1,4 @@
-void de_compress(unsigned long ibytes, int mb);
+#include <stdint.h>
+
+void de_compress(uint32_t ibytes, int mb);
 void core_compress(char* ptr);

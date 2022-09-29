@@ -11,12 +11,12 @@
 #include "../util/util.h"
 #include "printhdr.h"
 
-static void get_header();
-static void oflush();
-static int getq();
-static long get2q();
-static long get4q();
-static void getqbuf();
+static void get_header(void);
+static void oflush(void);
+static int getq(void);
+static int32_t get2q(void);
+static int32_t get4q(void);
+static void getqbuf(char *buf, int n);
 
 static char *g_macname;
 
@@ -98,10 +98,10 @@ static unsigned char *oq;
 
 static int ostate = S_HEADER;
 
-static unsigned long calc_crc;
-static unsigned long file_crc;
+static uint32_t calc_crc;
+static uint32_t file_crc;
 
-static long todo;
+static int32_t todo;
 
 #define output(c) { *op++ = (c); if(op >= &obuf[BUFSIZ]) oflush(); }
 
@@ -236,7 +236,7 @@ static void
 get_header (void)
 {
     int n;
-    unsigned long calc_crc, file_crc;
+    uint32_t calc_crc, file_crc;
 
     crc = INITCRC;			/* compute a crc for the header */
 
@@ -277,11 +277,11 @@ get_header (void)
     (void)strncpy(info + I_NAMEOFF + 1, mh.m_name, n);
     (void)strncpy(info + I_TYPEOFF, mh.m_type, 4);
     (void)strncpy(info + I_AUTHOFF, mh.m_author, 4);
-    put2(info + I_FLAGOFF, (unsigned long)mh.m_flags);
-    put4(info + I_DLENOFF, (unsigned long)mh.m_datalen);
-    put4(info + I_RLENOFF, (unsigned long)mh.m_rsrclen);
-    put4(info + I_CTIMOFF, (unsigned long)mh.m_createtime);
-    put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
+    put2(info + I_FLAGOFF, (uint32_t)mh.m_flags);
+    put4(info + I_DLENOFF, (uint32_t)mh.m_datalen);
+    put4(info + I_RLENOFF, (uint32_t)mh.m_rsrclen);
+    put4(info + I_CTIMOFF, (uint32_t)mh.m_createtime);
+    put4(info + I_MTIMOFF, (uint32_t)mh.m_modifytime);
 }
 
 static void 
@@ -364,7 +364,7 @@ getq (void)
 }
 
 /* get2q(); q format -- read 2 bytes from input, return short */
-static long 
+static int32_t 
 get2q (void)
 {
     short high = getq() << 8;
@@ -372,11 +372,11 @@ get2q (void)
 }
 
 /* get4q(); q format -- read 4 bytes from input, return long */
-static long 
+static int32_t 
 get4q (void)
 {
     int i;
-    long value = 0;
+    int32_t value = 0;
 
     for(i = 0; i < 4; i++) {
 	value = (value<<8) | getq();

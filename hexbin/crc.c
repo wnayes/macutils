@@ -27,13 +27,13 @@ comp_q_crc_n (register unsigned char *s, register unsigned char *e)
 #endif /* HQX */
 
 void 
-verify_crc (unsigned long calc_crc, unsigned long file_crc)
+verify_crc (uint32_t calc_crc, uint32_t file_crc)
 {
     calc_crc &= WORDMASK;
     file_crc &= WORDMASK;
 
     if(calc_crc != file_crc) {
-        (void)fprintf(stderr, "CRC mismatch: got 0x%04lx, need 0x%04lx\n",
+        (void)fprintf(stderr, "CRC mismatch: got 0x%04x, need 0x%04x\n",
 		file_crc, calc_crc);
 #ifdef SCAN
 	do_error("hexbin: CRC error");

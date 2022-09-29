@@ -159,7 +159,7 @@ do_files (
     char namebuf[256];
     char **ep;
     struct stat stbuf;
-    long curtime;
+    int32_t curtime;
     int qformat;
     int again;
 
@@ -187,7 +187,7 @@ do_files (
     again = 0;
 nexttry:
     if(ifp == stdin) {
-	curtime = (long)time((time_t *)0) + TIMEDIFF;
+	curtime = (int32_t)time((time_t *)0) + TIMEDIFF;
 	mh.m_createtime = curtime;
 	mh.m_modifytime = curtime;
     } else {

@@ -1,7 +1,9 @@
+#include <stdint.h>
+
 extern char *out_buffer, *out_ptr;
 
 extern void define_name(char *text);
-void start_info(char *info, unsigned long rsize, unsigned long dsize);
+void start_info(char *info, uint32_t rsize, uint32_t dsize);
 extern void start_rsrc(void);
 extern void start_data(void);
 extern void end_file(void);

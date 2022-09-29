@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define C_SIGNATURE    0
 #define C_VOLUME       1
 #define C_XMAGIC       2
@@ -29,15 +31,15 @@
 #define F_COMPDLENGTH   76
 #define CPT_FILEHDRSIZE 80
 
-typedef long	OSType;
+typedef int32_t	OSType;
 
 typedef struct cptHdr {			/* 8 bytes */
     unsigned char	signature;	/* = 1 -- for verification */
     unsigned char	volume;		/* for multi-file archives */
     unsigned short	xmagic;		/* verification multi-file consistency*/
-    unsigned long	offset;		/* index offset */
+    uint32_t	offset;		/* index offset */
 /* The following are really in header2 at offset */
-    unsigned long	hdrcrc;		/* header crc */
+    uint32_t	hdrcrc;		/* header crc */
     unsigned short	entries;	/* number of index entries */
     unsigned char	commentsize;	/* number of bytes comment that follow*/
 } cptHdr;
@@ -47,20 +49,20 @@ typedef struct cpt_fileHdr {		/* 78 bytes */
     unsigned char	folder;		/* set to 1 if a folder */
     unsigned short	foldersize;	/* number of entries in folder */
     unsigned char	volume;		/* for multi-file archives */
-    unsigned long	filepos;	/* position of data in file */
+    uint32_t	filepos;	/* position of data in file */
     OSType	fType;			/* file type */
     OSType	fCreator;		/* er... */
-    unsigned long	creationDate;
-    unsigned long	modDate;	/* !restored-compat w/backup prgms */
+    uint32_t	creationDate;
+    uint32_t	modDate;	/* !restored-compat w/backup prgms */
     unsigned short FndrFlags;	/* copy of Finder flags.  For our
                         purposes, we can clear:
                         busy,onDesk */
-    unsigned long	fileCRC;	/* crc on file */
+    uint32_t	fileCRC;	/* crc on file */
     unsigned short	cptFlag;	/* cpt flags */
-    unsigned long	rsrcLength;	/* decompressed lengths */
-    unsigned long	dataLength;
-    unsigned long	compRLength;	/* compressed lengths */
-    unsigned long	compDLength;
+    uint32_t	rsrcLength;	/* decompressed lengths */
+    uint32_t	dataLength;
+    uint32_t	compRLength;	/* compressed lengths */
+    uint32_t	compDLength;
 } cpt_fileHdr;
 
 
@@ -93,7 +95,7 @@ typedef struct cpt_fileHdr {		/* 78 bytes */
 
 void 
 cpt_wrfile1 (unsigned char *in_char,
-             unsigned long ibytes,
-             unsigned long obytes,
+             uint32_t ibytes,
+             uint32_t obytes,
              int type,
-             unsigned long blocksize);
+             uint32_t blocksize);

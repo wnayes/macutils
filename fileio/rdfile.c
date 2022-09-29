@@ -358,8 +358,8 @@ read_file (void)
 	}
 	(void)strcpy(file_info + I_NAMEOFF + 1, filename);
 	file_info[I_NAMEOFF] = strlen(filename);
-	put4(file_info + I_CTIMOFF, (unsigned long)stbuf.st_ctime + TIMEDIFF);
-	put4(file_info + I_MTIMOFF, (unsigned long)stbuf.st_mtime + TIMEDIFF);
+	put4(file_info + I_CTIMOFF, (uint32_t)stbuf.st_ctime + TIMEDIFF);
+	put4(file_info + I_MTIMOFF, (uint32_t)stbuf.st_mtime + TIMEDIFF);
 	if(data_only == RSRC_FORMAT) {
 	    rsrc_size = stbuf.st_size;
 	    data_size = 0;
@@ -381,7 +381,7 @@ read_file (void)
 	    } else {
 		(void)strncpy(file_info + I_AUTHOFF, f_auth, 4);
 	    }
-	    put4(file_info + I_RLENOFF, (unsigned long)rsrc_size);
+	    put4(file_info + I_RLENOFF, (uint32_t)rsrc_size);
 	    if((fd = fopen(filename, "r")) == NULL) {
 		(void)fprintf(stderr, "Cannot open file %s\n", filename);
 		exit(1);
@@ -412,7 +412,7 @@ read_file (void)
 	    } else {
 		(void)strncpy(file_info + I_AUTHOFF, f_auth, 4);
 	    }
-	    put4(file_info + I_DLENOFF, (unsigned long)data_size);
+	    put4(file_info + I_DLENOFF, (uint32_t)data_size);
 	    if((fd = fopen(filename, "r")) == NULL) {
 		(void)fprintf(stderr, "Cannot open file %s\n", filename);
 		exit(1);
@@ -555,7 +555,7 @@ read_file (void)
 	(void)strcat(filename1, filename);
 	if(stat(filename1, &stbuf) >= 0) {
 	    rsrc_size = stbuf.st_size;
-	    put4(file_info + I_RLENOFF, (unsigned long)rsrc_size);
+	    put4(file_info + I_RLENOFF, (uint32_t)rsrc_size);
 	    if(rsrc_size > 0) {
 		if(rsrc_size > max_rsrc_size) {
 		    if(rsrc_fork == NULL) {
@@ -578,7 +578,7 @@ read_file (void)
 	}
 	if(stat(filename, &stbuf) >= 0) {
 	    data_size = stbuf.st_size;
-	    put4(file_info + I_DLENOFF, (unsigned long)data_size);
+	    put4(file_info + I_DLENOFF, (uint32_t)data_size);
 	    if(data_size > 0) {
 		if(data_size > max_data_size) {
 		    if(data_fork == NULL) {
@@ -626,7 +626,7 @@ read_file (void)
 	(void)fclose(fd);
 	if(stat(filename, &stbuf) >= 0) {
 	    data_size = stbuf.st_size;
-	    put4(file_info + I_DLENOFF, (unsigned long)data_size);
+	    put4(file_info + I_DLENOFF, (uint32_t)data_size);
 	    if(data_size > 0) {
 		if(data_size > max_data_size) {
 		    if(data_fork == NULL) {
@@ -816,15 +816,15 @@ read_aufs_info (FILE *fd)
     } else {
 	if(fstat(fileno(fd), &stbuf) >= 0) {
 	    put4(file_info + I_CTIMOFF,
-		(unsigned long)stbuf.st_ctime + TIMEDIFF);
+		(uint32_t)stbuf.st_ctime + TIMEDIFF);
 	    put4(file_info + I_MTIMOFF,
-		(unsigned long)stbuf.st_mtime + TIMEDIFF);
+		(uint32_t)stbuf.st_mtime + TIMEDIFF);
 	}
     }
 #else /* AUFSPLUS */
     if(fstat(fileno(fd), &stbuf) >= 0) {
-	put4(file_info + I_CTIMOFF, (unsigned long)stbuf.st_ctime + TIMEDIFF);
-	put4(file_info + I_MTIMOFF, (unsigned long)stbuf.st_mtime + TIMEDIFF);
+	put4(file_info + I_CTIMOFF, (uint32_t)stbuf.st_ctime + TIMEDIFF);
+	put4(file_info + I_MTIMOFF, (uint32_t)stbuf.st_mtime + TIMEDIFF);
     }
 #endif /* AUFSPLUS */
 }
@@ -864,7 +864,7 @@ read_appledouble_info (FILE *fd)
     put4(file_info + I_CTIMOFF, get4(theinfo.fi_ctime) + TIMEDIFF);
     put4(file_info + I_MTIMOFF, get4(theinfo.fi_mtime) + TIMEDIFF);
     rsrc_size = get4(theinfo.fi_rsrc);
-    put4(file_info + I_RLENOFF, (unsigned long)rsrc_size);
+    put4(file_info + I_RLENOFF, (uint32_t)rsrc_size);
 }
 #endif /* APPLEDOUBLE */
 #endif /* APPLESHARE */

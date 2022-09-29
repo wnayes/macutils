@@ -37,7 +37,7 @@ void print_header2(int skip)
 		if (skip) {
 			(void)fprintf(stderr, "\t");
 		}
-		(void)fprintf(stderr, "data=%ld, rsrc=%ld\n",
+		(void)fprintf(stderr, "data=%d, rsrc=%d\n",
 			mh.m_datalen, mh.m_rsrclen);
     }
 }

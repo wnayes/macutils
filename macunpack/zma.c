@@ -17,8 +17,8 @@ extern void de_lzh();
 static char *zma_archive;
 static char *zma_current;
 static char *zma_filestart;
-static unsigned long zma_length;
-static long zma_archlength;
+static uint32_t zma_length;
+static int32_t zma_archlength;
 
 static int zma_filehdr();
 static void zma_folder();
@@ -28,7 +28,7 @@ static void zma_nocomp();
 static void zma_lzh();
 
 void 
-zma (char *start, unsigned long length)
+zma (char *start, uint32_t length)
 {
     struct zma_fileHdr filehdr;
     int i, toread;
@@ -175,9 +175,9 @@ zma_filehdr (struct zma_fileHdr *f, int skip)
 	    transname(zma_current + Z_TYPE, ftype, 4);
 	    transname(zma_current + Z_AUTH, fauth, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
 		    text, ftype, fauth,
-		    (long)f->dataLength, (long)f->rsrcLength);
+		    (int32_t)f->dataLength, (int32_t)f->rsrcLength);
 	}
 	switch(f->what) {
 	case z_plug:
@@ -322,7 +322,7 @@ zma_mooz (struct zma_fileHdr filehdr)
 }
 
 static void 
-zma_wrfile (unsigned long ibytes, unsigned long obytes, int type)
+zma_wrfile (uint32_t ibytes, uint32_t obytes, int type)
 {
     if(ibytes == 0) {
 	if(verbose) {
@@ -361,7 +361,7 @@ zma_wrfile (unsigned long ibytes, unsigned long obytes, int type)
 /*	No compression							     */
 /*---------------------------------------------------------------------------*/
 static void 
-zma_nocomp (unsigned long ibytes)
+zma_nocomp (uint32_t ibytes)
 {
     int n = ibytes;
     char *ptr = out_buffer;
@@ -375,10 +375,10 @@ zma_nocomp (unsigned long ibytes)
 /*	LZ compression plus Huffman encoding				     */
 /*---------------------------------------------------------------------------*/
 static void 
-zma_lzh (unsigned long ibytes)
+zma_lzh (uint32_t ibytes)
 {
     /* Controlled by ibutes only */
-    de_lzh((long)ibytes, (long)(-1), &zma_filestart, 13);
+    de_lzh((int32_t)ibytes, (int32_t)(-1), &zma_filestart, 13);
 }
 #else /* ZMA */
 int zma; /* keep lint and some compilers happy */

@@ -95,7 +95,7 @@ static int Frequ[1000];
 static int ForwTree[1000];
 static int BackTree[1000];
 
-void de_lzah(unsigned long obytes)
+void de_lzah(uint32_t obytes)
 {
     int i, i1, j, ch, byte, offs, skip;
 

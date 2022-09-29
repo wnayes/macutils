@@ -101,7 +101,7 @@ static char init_buffer[128];
 static char *buffer = &(init_buffer[0]);
 static char *rbuffer = NULL, *dbuffer = NULL;
 static char *ptr;
-static unsigned long rsz, dsz, totsize, maxsize;
+static uint32_t rsz, dsz, totsize, maxsize;
 
 void 
 define_name (char *text)
@@ -120,7 +120,7 @@ define_name (char *text)
 }
 
 void 
-start_info (char *info, unsigned long rsize, unsigned long dsize)
+start_info (char *info, uint32_t rsize, uint32_t dsize)
 {
     int rs, ds;
 
@@ -338,7 +338,7 @@ do_idf (char *name, int kind)
     n = strlen(name);
     (void)bzero(buffer, INFOBYTES);
     buffer[I_NAMEOFF + 1] = kind;
-    put4(buffer + I_DLENOFF, (unsigned long)n);
+    put4(buffer + I_DLENOFF, (uint32_t)n);
     (void)fwrite(buffer, 1, INFOBYTES, stdout);
     if(n != 0) {
 	(void)fwrite(name, 1, n, stdout);
@@ -583,7 +583,7 @@ FILE *fp;
     theinfo.fi_datevalid = FI_CDATE | FI_MDATE;
     put4(theinfo.fi_ctime, get4(buffer + I_CTIMOFF) - TIMEDIFF);
     put4(theinfo.fi_mtime, get4(buffer + I_MTIMOFF) - TIMEDIFF);
-    put4(theinfo.fi_utime, (unsigned long)time((time_t *)0));
+    put4(theinfo.fi_utime, (uint32_t)time((time_t *)0));
 #endif /* AUFSPLUS */
     bcopy(buffer + I_TYPEOFF, theinfo.fi_fndr, 4);
     bcopy(buffer + I_AUTHOFF, theinfo.fi_fndr + 4, 4);
@@ -634,21 +634,21 @@ FILE *fp;
     int n;
 
     bzero((char *) &theinfo, sizeof theinfo);
-    put4(theinfo.fi_magic, (unsigned long)FI_MAGIC);
-    put2(theinfo.fi_version, (unsigned long)FI_VERSION);
-    put4(theinfo.fi_fill5, (unsigned long)FI_FILL5);
-    put4(theinfo.fi_fill6, (unsigned long)FI_FILL6);
-    put4(theinfo.fi_hlen, (unsigned long)FI_HLEN);
-    put4(theinfo.fi_fill7, (unsigned long)FI_FILL7);
-    put4(theinfo.fi_namptr, (unsigned long)FI_NAMPTR);
-    put4(theinfo.fi_fill9, (unsigned long)FI_FILL9);
-    put4(theinfo.fi_commptr, (unsigned long)FI_COMMPTR);
-    put4(theinfo.fi_fill12, (unsigned long)FI_FILL12);
-    put4(theinfo.fi_timeptr, (unsigned long)FI_TIMEPTR);
-    put4(theinfo.fi_timesize, (unsigned long)FI_TIMESIZE);
-    put4(theinfo.fi_fill15, (unsigned long)FI_FILL15);
-    put4(theinfo.fi_infoptr, (unsigned long)FI_INFOPTR);
-    put4(theinfo.fi_infosize, (unsigned long)FI_INFOSIZE);
+    put4(theinfo.fi_magic, (uint32_t)FI_MAGIC);
+    put2(theinfo.fi_version, (uint32_t)FI_VERSION);
+    put4(theinfo.fi_fill5, (uint32_t)FI_FILL5);
+    put4(theinfo.fi_fill6, (uint32_t)FI_FILL6);
+    put4(theinfo.fi_hlen, (uint32_t)FI_HLEN);
+    put4(theinfo.fi_fill7, (uint32_t)FI_FILL7);
+    put4(theinfo.fi_namptr, (uint32_t)FI_NAMPTR);
+    put4(theinfo.fi_fill9, (uint32_t)FI_FILL9);
+    put4(theinfo.fi_commptr, (uint32_t)FI_COMMPTR);
+    put4(theinfo.fi_fill12, (uint32_t)FI_FILL12);
+    put4(theinfo.fi_timeptr, (uint32_t)FI_TIMEPTR);
+    put4(theinfo.fi_timesize, (uint32_t)FI_TIMESIZE);
+    put4(theinfo.fi_fill15, (uint32_t)FI_FILL15);
+    put4(theinfo.fi_infoptr, (uint32_t)FI_INFOPTR);
+    put4(theinfo.fi_infosize, (uint32_t)FI_INFOSIZE);
 
     bcopy(buffer + I_TYPEOFF, theinfo.fi_type, 4);
     bcopy(buffer + I_AUTHOFF, theinfo.fi_auth, 4);
@@ -659,13 +659,13 @@ FILE *fp;
     if((n = buffer[I_NAMEOFF] & 0xff) > F_NAMELEN) {
 	n = F_NAMELEN;
     }
-    put4(theinfo.fi_namlen, (unsigned long)n);
+    put4(theinfo.fi_namlen, (uint32_t)n);
     (void)strncpy((char *)theinfo.fi_name, buffer + I_NAMEOFF + 1,n);
     /* theinfo.fi_macfilename[n] = '\0'; */
     (void)strcpy((char *)theinfo.fi_comment,
 	"Converted by Unix utility to AppleDouble format");
-    put4(theinfo.fi_commsize, (unsigned long)strlen(theinfo.fi_comment));
-    put4(theinfo.fi_rsrc, (unsigned long)rsz);
+    put4(theinfo.fi_commsize, (uint32_t)strlen(theinfo.fi_comment));
+    put4(theinfo.fi_rsrc, (uint32_t)rsz);
     /*  Still TODO */
     /*  char	fi_ctime[4];	/* Creation time (Unix time) */
     /*  char	fi_mtime[4];	/* Modification time (Unix time) */

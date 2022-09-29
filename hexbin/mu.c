@@ -136,10 +136,10 @@ mu (char *macname)
     (void)strncpy(mh.m_type, info + I_TYPEOFF, 4);
     (void)strncpy(mh.m_author, info + I_AUTHOFF, 4);
     print_header1(0, 0);
-    put4(info + I_DLENOFF, (unsigned long)mh.m_datalen);
-    put4(info + I_RLENOFF, (unsigned long)mh.m_rsrclen);
-    put4(info + I_CTIMOFF, (unsigned long)mh.m_createtime);
-    put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
+    put4(info + I_DLENOFF, (uint32_t)mh.m_datalen);
+    put4(info + I_RLENOFF, (uint32_t)mh.m_rsrclen);
+    put4(info + I_CTIMOFF, (uint32_t)mh.m_createtime);
+    put4(info + I_MTIMOFF, (uint32_t)mh.m_modifytime);
     print_header2(0);
     end_put();
 }
@@ -147,7 +147,7 @@ mu (char *macname)
 static void 
 do_mu_fork (void)
 {
-    long newbytes;
+    int32_t newbytes;
 
     while(readline()) {
 	if(line[0] == 0) {

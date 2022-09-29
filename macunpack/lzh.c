@@ -382,37 +382,37 @@ lzh_wrfile (struct lzh_fileHdr *filehdr, int method)
     }
     switch(method) {
     case lz4:
-	lzh_nocomp((unsigned long)128);
+	lzh_nocomp((uint32_t)128);
 	break;
 #ifdef UNTESTED
     case lz5:
-	lzh_lzss1((unsigned long)128);
+	lzh_lzss1((uint32_t)128);
 	break;
     case lzs:
-	lzh_lzss2((unsigned long)128);
+	lzh_lzss2((uint32_t)128);
 	break;
 #endif /* UNTESTED */
     case lh0:
-	lzh_nocomp((unsigned long)128);
+	lzh_nocomp((uint32_t)128);
 	break;
     case lh1:
-	lzh_lzah((unsigned long)128);
+	lzh_lzah((uint32_t)128);
 	break;
 #ifdef UNDEF
     case lh2:
-	lzh_lh2((unsigned long)128);
+	lzh_lh2((uint32_t)128);
 	break;
     case lh3:
-	lzh_lh3((unsigned long)128);
+	lzh_lh3((uint32_t)128);
 	break;
 #endif /* UNDEF */
 #ifdef UNTESTED
     case lh4:
-	lzh_lzh12((unsigned long)128);
+	lzh_lzh12((uint32_t)128);
 	break;
 #endif /* UNTESTED */
     case lh5:
-	lzh_lzh13((unsigned long)128);
+	lzh_lzh13((uint32_t)128);
 	break;
     default:
 	mname = lzh_methname(method);
@@ -452,8 +452,8 @@ lzh_wrfile (struct lzh_fileHdr *filehdr, int method)
     if(list) {
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
     }
     if(info_only) {
 	doit = 0;
@@ -467,7 +467,7 @@ lzh_wrfile (struct lzh_fileHdr *filehdr, int method)
     }
     if(doit) {
 	define_name(text);
-	start_info(info, (unsigned long)rsrcLength, (unsigned long)dataLength);
+	start_info(info, (uint32_t)rsrcLength, (uint32_t)dataLength);
     }
     switch(method) {
     case lz4:
@@ -589,7 +589,7 @@ lzh_skip (struct lzh_fileHdr *filehdr)
 /*	-lz4- and -lh0: No compression					     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_nocomp (unsigned long obytes)
+lzh_nocomp (uint32_t obytes)
 {
     copy(lzh_file, lzh_data, (int)obytes);
 }
@@ -599,7 +599,7 @@ lzh_nocomp (unsigned long obytes)
 /*	-lz5-: LZSS compression, variant 1				     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lzss1 (unsigned long obytes)
+lzh_lzss1 (uint32_t obytes)
 {
     int mask, ch, lzcnt, lzptr, ptr, count;
     char *p = lzh_lzbuf;
@@ -662,7 +662,7 @@ lzh_lzss1 (unsigned long obytes)
 /*	-lzs-: LZSS compression, variant 2				     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lzss2 (unsigned long obytes)
+lzh_lzss2 (uint32_t obytes)
 {
     int ch, lzcnt, lzptr, ptr, i;
 
@@ -706,7 +706,7 @@ lzh_lzss2 (unsigned long obytes)
 /*	-lh1-: LZ compression plus adaptive Huffman encoding		     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lzah (unsigned long obytes)
+lzh_lzah (uint32_t obytes)
 {
     lzh_current = lzh_data + 2; /* SKIPPING BLOCKSIZE! */
     tmp_out_ptr = out_ptr;
@@ -727,7 +727,7 @@ lzh_getbyte (void)
 /*	-lh2-: LZ** compression						     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lh2 (unsigned long obytes)
+lzh_lh2 (uint32_t obytes)
 {
 }
 
@@ -735,7 +735,7 @@ lzh_lh2 (unsigned long obytes)
 /*	-lh3-: LZ** compression						     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lh3 (unsigned long obytes)
+lzh_lh3 (uint32_t obytes)
 {
 }
 #endif /* UNDEF */
@@ -745,13 +745,13 @@ lzh_lh3 (unsigned long obytes)
 /*	-lh4-: LZ(12) compression plus Huffman encoding			     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lzh12 (unsigned long obytes)
+lzh_lzh12 (uint32_t obytes)
 {
     lzh_current = lzh_data;
     tmp_out_ptr = out_ptr;
     out_ptr = lzh_file;
     /* Controlled by obytes only */
-    de_lzh((long)(-1), (long)obytes, &lzh_current, 12);
+    de_lzh((int32_t)(-1), (int32_t)obytes, &lzh_current, 12);
     out_ptr = tmp_out_ptr;
 }
 #endif /* UNTESTED */
@@ -760,12 +760,12 @@ lzh_lzh12 (unsigned long obytes)
 /*	-lh5-: LZ(13) compression plus Huffman encoding			     */
 /*---------------------------------------------------------------------------*/
 static void 
-lzh_lzh13 (unsigned long obytes)
+lzh_lzh13 (uint32_t obytes)
 {
     lzh_current = lzh_data;
     tmp_out_ptr = out_ptr;
     out_ptr = lzh_file;
     /* Controlled by obytes only */
-    de_lzh((long)(-1), (long)obytes, &lzh_current, 13);
+    de_lzh((int32_t)(-1), (int32_t)obytes, &lzh_current, 13);
     out_ptr = tmp_out_ptr;
 }

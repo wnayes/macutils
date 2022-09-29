@@ -11,9 +11,9 @@
 
 #include <stdlib.h>
 
-static long dl_fork();
-static int nchar();
-static int nextc();
+static int32_t dl_fork(void);
+static int nchar(void);
+static int nextc(void);
 
 static char *icp = &line[0];
 
@@ -67,19 +67,19 @@ dl (char *macname, char *filename)
     (void)strncpy(info + I_NAMEOFF + 1, mh.m_name, n);
     (void)strncpy(info + I_TYPEOFF, mh.m_type, 4);
     (void)strncpy(info + I_AUTHOFF, mh.m_author, 4);
-    put4(info + I_DLENOFF, (unsigned long)mh.m_datalen);
-    put4(info + I_RLENOFF, (unsigned long)mh.m_rsrclen);
-    put4(info + I_CTIMOFF, (unsigned long)mh.m_createtime);
-    put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
+    put4(info + I_DLENOFF, (uint32_t)mh.m_datalen);
+    put4(info + I_RLENOFF, (uint32_t)mh.m_rsrclen);
+    put4(info + I_CTIMOFF, (uint32_t)mh.m_createtime);
+    put4(info + I_MTIMOFF, (uint32_t)mh.m_modifytime);
     print_header2(0);
     end_put();
 }
 
-static long 
+static int32_t 
 dl_fork (void)
 {
-    register unsigned long i, v, c;
-    register unsigned long n, bytes;
+    register uint32_t i, v, c;
+    register uint32_t n, bytes;
 
     n = 0;
     bytes = 0;

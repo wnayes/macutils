@@ -14,7 +14,7 @@ static void jdw_wrfork();
 static void jdw_block();
 
 void 
-jdw (unsigned long ibytes)
+jdw (uint32_t ibytes)
 {
     char fauth[5], ftype[5];
     int filel, i;
@@ -63,8 +63,8 @@ jdw (unsigned long ibytes)
 	transname(info + I_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -74,11 +74,11 @@ jdw (unsigned long ibytes)
 	    (void)fputc('\n', stderr);
 	}
     }
-    jdw_wrfile((unsigned long)rsrcLength, (unsigned long)dataLength);
+    jdw_wrfile((uint32_t)rsrcLength, (uint32_t)dataLength);
 }
 
 static void 
-jdw_wrfile (unsigned long rsrcLength, unsigned long dataLength)
+jdw_wrfile (uint32_t rsrcLength, uint32_t dataLength)
 {
     if(write_it) {
 	define_name(text);
@@ -105,10 +105,10 @@ jdw_wrfile (unsigned long rsrcLength, unsigned long dataLength)
 }
 
 static void 
-jdw_wrfork (unsigned long length)
+jdw_wrfork (uint32_t length)
 {
     int olength, ilength, i;
-    unsigned long origlength, comprlength;
+    uint32_t origlength, comprlength;
 
     if(length == 0) {
 	(void)fprintf(stderr, "empty");
@@ -148,7 +148,7 @@ jdw_block (int olength)
 	bytesread++;
     }
     clrhuff();
-    de_huffman((unsigned long)olength);
+    de_huffman((uint32_t)olength);
 }
 #else /* JDW */
 int jdw; /* keep lint and some compilers happy */

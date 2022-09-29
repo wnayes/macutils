@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 	    transname(info + I_AUTHOFF, fauth, 4);
 	    transname(info + I_TYPEOFF, ftype, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%u, rsrc=%u",
 		    tname, ftype, fauth,
 		    get4(info + I_DLENOFF), get4(info + I_RLENOFF));
 	    (void)fprintf(stderr, "\n");

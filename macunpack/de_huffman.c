@@ -35,7 +35,7 @@ static node *nodeptr, *read_sub_tree();
 
 static int bit;
 
-void de_huffman(unsigned long obytes)
+void de_huffman(uint32_t obytes)
 {
     while(obytes != 0) {
 	*out_ptr++ = gethuffbyte(nodelist);

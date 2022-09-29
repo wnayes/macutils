@@ -29,7 +29,7 @@ static void
 lzc_zivm (char *ohdr)
 {
     char hdr[HEADERBYTES];
-    unsigned long dataLength, rsrcLength, dataCLength, rsrcCLength;
+    uint32_t dataLength, rsrcLength, dataCLength, rsrcCLength;
     char ftype[5], fauth[5];
 
     if(fread(hdr, 1, HEADERBYTES, infp) != HEADERBYTES) {
@@ -67,8 +67,8 @@ lzc_zivm (char *ohdr)
 	transname(hdr + C_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -108,7 +108,7 @@ lzc_zivm (char *ohdr)
 }
 
 static void 
-lzc_wrfile (unsigned long obytes, unsigned long ibytes)
+lzc_wrfile (uint32_t obytes, uint32_t ibytes)
 {
     int n, nbits;
     char subheader[3];
@@ -186,7 +186,7 @@ lzc_zivu (char *ohdr)
 {
     (void)fprintf(stderr,
 	    "\tMacCompress(Unix) not yet implemented, copied as MacBinary\n");
-    mcb(ohdr, (unsigned long)in_rsrc_size, (unsigned long)in_data_size,
+    mcb(ohdr, (uint32_t)in_rsrc_size, (uint32_t)in_data_size,
 	in_ds + in_rs);
 }
 #else /* LZC */

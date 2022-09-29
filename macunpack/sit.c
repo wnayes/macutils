@@ -90,7 +90,7 @@ static short code6[258] = {
       1,    1};
 static char sit_buffer[32768];
 static short sit_dict[16385];
-static unsigned long sit_avail;
+static uint32_t sit_avail;
 static int sit_bits_avail;
 
 void 
@@ -205,9 +205,9 @@ static int sit_filehdr(struct sit_fileHdr *f, int skip)
 	    transname(hdr + F_FTYPE, ftype, 4);
 	    transname(hdr + F_CREATOR, fauth, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
 		    text, ftype, fauth,
-		    (long)f->dataLength, (long)f->rsrcLength);
+		    (int32_t)f->dataLength, (int32_t)f->rsrcLength);
 	}
 	if(info_only) {
 	    write_it = 0;
@@ -438,7 +438,7 @@ sit_unstuff (struct sit_fileHdr filehdr)
 }
 
 static void 
-sit_wrfile (unsigned long ibytes, unsigned long obytes, int type)
+sit_wrfile (uint32_t ibytes, uint32_t obytes, int type)
 {
     if(ibytes == 0) {
 	if(verbose) {
@@ -534,7 +534,7 @@ sit_wrfile (unsigned long ibytes, unsigned long obytes, int type)
 
 /* skip stuffit file */
 static void 
-sit_skip (unsigned long ibytes)
+sit_skip (uint32_t ibytes)
 {
     while(ibytes != 0) {
 	if(getc(infp) == EOF) {
@@ -552,7 +552,7 @@ sit_skip (unsigned long ibytes)
 /*	Method 0: No compression					     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_nocomp (unsigned long ibytes)
+sit_nocomp (uint32_t ibytes)
 {
     int n;
 
@@ -570,7 +570,7 @@ sit_nocomp (unsigned long ibytes)
 /*	Method 1: Run length encoding					     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_rle (unsigned long ibytes)
+sit_rle (uint32_t ibytes)
 {
     int ch, lastch = 0, n, i;
 
@@ -600,7 +600,7 @@ sit_rle (unsigned long ibytes)
 /*	Method 2: LZC compressed					     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_lzc (unsigned long ibytes)
+sit_lzc (uint32_t ibytes)
 {
     de_compress(ibytes, 14);
 }
@@ -609,7 +609,7 @@ sit_lzc (unsigned long ibytes)
 /*	Method 3: Huffman compressed					     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_huffman (unsigned long obytes)
+sit_huffman (uint32_t obytes)
 {
     read_tree();
     de_huffman(obytes);
@@ -619,7 +619,7 @@ sit_huffman (unsigned long obytes)
 /*	Method 5: LZ compression plus adaptive Huffman encoding		     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_lzah (unsigned long obytes)
+sit_lzah (uint32_t obytes)
 {
     lzah_getbyte = sit_getbyte;
     de_lzah(obytes);
@@ -635,11 +635,11 @@ sit_getbyte (void)
 /*	Method 6: Compression with a fixed Huffman encoding		     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_fixhuf (unsigned long ibytes)
+sit_fixhuf (uint32_t ibytes)
 {
     int i, sum, codes, sym, num;
     char byte_int[4], byte_short[2];
-    long size;
+    int32_t size;
     int sign;
     char *tmp_ptr, *ptr, *end_ptr;
 
@@ -659,7 +659,7 @@ sit_fixhuf (unsigned long ibytes)
 	    exit(1);
 	}
 	ibytes -= 4;
-	size = (long)get4(byte_int);
+	size = (int32_t)get4(byte_int);
 	sign = 0;
 	if(size < 0) {
 	    size = - size;
@@ -759,7 +759,7 @@ sit_dosplit (int ptr, int sum, int low, int upp)
 /*	Method 8: Compression with a MW encoding			     */
 /*---------------------------------------------------------------------------*/
 static void 
-sit_mw (unsigned long ibytes)
+sit_mw (uint32_t ibytes)
 {
     int ptr;
     int max, max1, bits;
@@ -819,7 +819,7 @@ sit_mw_out (int ptr)
 }
 
 static int 
-sit_mw_in (int bits, unsigned long *ibytes)
+sit_mw_in (int bits, uint32_t *ibytes)
 {
     int res, res1;
 

@@ -154,8 +154,8 @@ int main(int argc, char **argv)
 	    if(i == ISFILE) {
 		do_indent(indent);
 		(void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		    text, ftype, fauth, (long)data_size, (long)rsrc_size);
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		    text, ftype, fauth, (int32_t)data_size, (int32_t)rsrc_size);
 	    } else if(i == ISDIR) {
 		do_indent(indent);
 		dir_ptr += 64;

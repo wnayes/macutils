@@ -202,7 +202,7 @@ dia_file (int indicator, unsigned char *name)
     int dataLength, rsrcLength;
     int cdataLength, crsrcLength;
     int dataMethod, rsrcMethod;
-    unsigned long curtime;
+    uint32_t curtime;
 
     if(name != NULL) {
 	for(i = 0; i < INFOBYTES; i++) {
@@ -230,7 +230,7 @@ dia_file (int indicator, unsigned char *name)
 	    info[I_MTIMOFF + i] = *dia_header_ptr++;
 	}
     } else {
-	curtime = (unsigned long)time((time_t *)0) + TIMEDIFF;
+	curtime = (uint32_t)time((time_t *)0) + TIMEDIFF;
 	put4(info + I_CTIMOFF, curtime);
 	put4(info + I_MTIMOFF, curtime);
     }
@@ -266,16 +266,16 @@ dia_file (int indicator, unsigned char *name)
 	crsrcLength = dia_cforklength;
 	rsrcMethod = dia_method;
 	dia_archive_ptr = old_archive_ptr;
-	put4(info + I_DLENOFF, (unsigned long)dataLength);
-	put4(info + I_RLENOFF, (unsigned long)rsrcLength);
+	put4(info + I_DLENOFF, (uint32_t)dataLength);
+	put4(info + I_RLENOFF, (uint32_t)rsrcLength);
 	if(list) {
 	    transname(info + I_NAMEOFF + 1, (char *)lname, length);
 	    do_indent(indent);
 	    transname(info + I_TYPEOFF, ftype, 4);
 	    transname(info + I_AUTHOFF, fauth, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		    lname, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		    lname, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	    if(info_only) {
 		doit = 0;
 	    } else {
@@ -296,7 +296,7 @@ dia_file (int indicator, unsigned char *name)
     }
     if(doit) {
 	define_name((char *)lname);
-	start_info(info, (unsigned long)rsrcLength, (unsigned long)dataLength);
+	start_info(info, (uint32_t)rsrcLength, (uint32_t)dataLength);
     }
     if(verbose) {
 	(void)fprintf(stderr, "\tData: ");

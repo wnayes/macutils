@@ -24,7 +24,7 @@ static unsigned int decode_p();
 static void make_table();
 
 /* lzh compression */
-void de_lzh(long ibytes, long obytes, char **data, int bits)
+void de_lzh(int32_t ibytes, int32_t obytes, char **data, int bits)
 {
     unsigned int i, r, c;
     int remains;
