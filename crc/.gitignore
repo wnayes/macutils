@@ -1,0 +1,8 @@
+arc.c
+binhex.c
+ccitt.c
+ccitt32.c
+kermit.c
+libcrc.a
+makecrc
+zip.c

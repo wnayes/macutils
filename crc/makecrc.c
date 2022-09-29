@@ -109,10 +109,7 @@ int poly, init, swapped, bits;
     }
     (void)fprintf(fd, "};\n");
     (void)fprintf(fd, "\n");
-    (void)fprintf(fd, "unsigned long %s_updcrc(icrc, icp, icnt)\n", name);
-    (void)fprintf(fd, "    unsigned long icrc;\n");
-    (void)fprintf(fd, "    unsigned char *icp;\n");
-    (void)fprintf(fd, "    int icnt;\n");
+    (void)fprintf(fd, "unsigned long %s_updcrc(unsigned long icrc, unsigned char *icp, int icnt)\n", name);
     (void)fprintf(fd, "{\n");
     if(bits == 16) {
 	(void)fprintf(fd, "#define M1 0xff\n");
