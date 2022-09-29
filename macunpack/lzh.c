@@ -368,7 +368,7 @@ int method;
     int rsrcLength, dataLength;
     int doit;
     char *mname;
-    unsigned long crc;
+    uint32_t crc;
 
     if(filehdr->upsize > lzh_filesize) {
 	if(lzh_filesize == 0) {
@@ -557,7 +557,7 @@ int method;
 	}
     }
     if(doit) {
-	crc = (*updcrc)(INIT_CRC, lzh_file, filehdr->upsize);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)lzh_file, filehdr->upsize);
 	if(filehdr->crc != crc) {
 	    (void)fprintf(stderr,
 		    "CRC error on file: need 0x%04x, got 0x%04x\n",

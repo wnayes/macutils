@@ -122,10 +122,10 @@ void pit()
 	start_info(info, filehdr.rlen, filehdr.dlen);
 	start_data();
 	pit_wrfile(filehdr.dlen, decode);
-	data_crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.dlen);
+	data_crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.dlen);
 	start_rsrc();
 	pit_wrfile(filehdr.rlen, decode);
-	data_crc = (*updcrc)(data_crc, out_buffer, filehdr.rlen);
+	data_crc = (*updcrc)(data_crc, (unsigned char*)out_buffer, filehdr.rlen);
 	if(decode == nocomp) {
 	    crc = getb(infp);
 	    crc = (crc << 8) | getb(infp);
@@ -164,7 +164,7 @@ struct pit_header *f;
 int compr;
 {
     register int i;
-    unsigned long crc;
+    uint32_t crc;
     int n;
     char hdr[HDRBYTES];
     char ftype[5], fauth[5];
@@ -182,7 +182,7 @@ int compr;
 	}
     }
     crc = INIT_CRC;
-    crc = (*updcrc)(crc, hdr, HDRBYTES - 2);
+    crc = (*updcrc)(crc, (unsigned char*)hdr, HDRBYTES - 2);
 
     f->hdrCRC = get2(hdr + H_HDRCRC);
     if(f->hdrCRC != crc) {

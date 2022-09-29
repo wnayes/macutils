@@ -151,7 +151,7 @@ void dd_arch(bin_hdr)
 unsigned char *bin_hdr;
 {
     unsigned long data_size;
-    unsigned long crc, filecrc;
+    uint32_t crc, filecrc;
     struct fileHdr f;
     struct fileCHdr cf;
     char locname[64];
@@ -322,7 +322,7 @@ struct fileCHdr *cf;
 int skip;
 {
     register int i;
-    unsigned long crc;
+    uint32_t crc;
     int n, to_uncompress;
     unsigned char *hdr;
     char ftype[5], fauth[5];
@@ -428,7 +428,7 @@ int skip;
 static void dd_cfilehdr(f)
 struct fileCHdr *f;
 {
-    unsigned long crc;
+    uint32_t crc;
     unsigned char *hdr;
 
     hdr = dd_data_ptr;

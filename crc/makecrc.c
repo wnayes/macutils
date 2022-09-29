@@ -64,12 +64,13 @@ int poly, init, swapped, bits;
 	(void)fprintf(stderr, "Cannot open %s for writing\n", buf);
 	exit(1);
     }
-    (void)fprintf(fd, "unsigned long %s_crcinit = %d;\n", name, init);
+    (void)fprintf(fd, "#include \"crc.h\"\n");
+    (void)fprintf(fd, "uint32_t %s_crcinit = %d;\n", name, init);
     (void)fprintf(fd, "\n");
     if(bits == 16) {
-	(void)fprintf(fd, "static unsigned short crctab[256] = {\n");
+	(void)fprintf(fd, "static uint16_t crctab[256] = {\n");
     } else {
-	(void)fprintf(fd, "static unsigned long crctab[256] = {\n");
+	(void)fprintf(fd, "static uint32_t crctab[256] = {\n");
     }
     (void)fprintf(fd, "    ");
     if(bits == 16) {
@@ -109,7 +110,7 @@ int poly, init, swapped, bits;
     }
     (void)fprintf(fd, "};\n");
     (void)fprintf(fd, "\n");
-    (void)fprintf(fd, "unsigned long %s_updcrc(unsigned long icrc, unsigned char *icp, int icnt)\n", name);
+    (void)fprintf(fd, "uint32_t %s_updcrc(uint32_t icrc, unsigned char *icp, int32_t icnt)\n", name);
     (void)fprintf(fd, "{\n");
     if(bits == 16) {
 	(void)fprintf(fd, "#define M1 0xff\n");
@@ -118,9 +119,9 @@ int poly, init, swapped, bits;
 	(void)fprintf(fd, "#define M1 0xffffff\n");
 	(void)fprintf(fd, "#define M2 0xffffff00\n");
     }
-    (void)fprintf(fd, "    register unsigned long crc = icrc;\n");
+    (void)fprintf(fd, "    register uint32_t crc = icrc;\n");
     (void)fprintf(fd, "    register unsigned char *cp = icp;\n");
-    (void)fprintf(fd, "    register int cnt = icnt;\n");
+    (void)fprintf(fd, "    register int32_t cnt = icnt;\n");
     (void)fprintf(fd, "\n");
     (void)fprintf(fd, "    while(cnt--) {\n");
     if(bits == 16) {

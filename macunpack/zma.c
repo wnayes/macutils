@@ -274,7 +274,7 @@ struct fileHdr fhdr;
 static void zma_mooz(filehdr)
 struct fileHdr filehdr;
 {
-    unsigned long crc;
+    uint32_t crc;
 
     if(write_it) {
 	start_info(info, filehdr.rsrcLength, filehdr.dataLength);
@@ -287,7 +287,7 @@ struct fileHdr filehdr;
     }
     zma_wrfile(filehdr.compDLength, filehdr.dataLength, filehdr.what);
     if(write_it) {
-	crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.dataLength);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.dataLength);
 	if(filehdr.dataCRC != crc) {
 	    (void)fprintf(stderr,
 		"CRC error on data fork: need 0x%04x, got 0x%04x\n",
@@ -306,7 +306,7 @@ struct fileHdr filehdr;
     }
     zma_wrfile(filehdr.compRLength, filehdr.rsrcLength, filehdr.what);
     if(write_it) {
-	crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.rsrcLength);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.rsrcLength);
 	if(filehdr.rsrcCRC != crc) {
 	    (void)fprintf(stderr,
 		"CRC error on resource fork: need 0x%04x, got 0x%04x\n",

@@ -8,7 +8,7 @@
 
 extern void exit();
 
-unsigned long crc;
+uint32_t crc;
 
 #ifdef HQX
 void comp_q_crc(c)

@@ -92,11 +92,11 @@ void cpt()
 #endif /* SCAN */
 	exit(1);
     }
-    cpt_crc = (*updcrc)(cpt_crc, cptptr, cpthdr.commentsize);
+    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)cptptr, cpthdr.commentsize);
 
     for(i = 0; i < cpthdr.entries; i++) {
 	*cptptr = getc(infp);
-	cpt_crc = (*updcrc)(cpt_crc, cptptr, 1);
+	cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)cptptr, 1);
 	if(*cptptr & 0x80) {
 	    cptptr[F_FOLDER] = 1;
 	    *cptptr &= 0x3f;
@@ -110,7 +110,7 @@ void cpt()
 #endif /* SCAN */
 	    exit(1);
 	}
-	cpt_crc = (*updcrc)(cpt_crc, cptptr + 1, *cptptr);
+	cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(cptptr + 1), *cptptr);
 	if(cptptr[F_FOLDER]) {
 	    if(fread(cptptr + F_FOLDERSIZE, 1, 2, infp) != 2) {
 		(void)fprintf(stderr, "Can't read file header #%d\n", i+1);
@@ -119,7 +119,7 @@ void cpt()
 #endif /* SCAN */
 		exit(1);
 	    }
-	    cpt_crc = (*updcrc)(cpt_crc, cptptr + F_FOLDERSIZE, 2);
+	    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(cptptr + F_FOLDERSIZE), 2);
 	} else {
 	    if(fread(cptptr + F_VOLUME, 1, FILEHDRSIZE - F_VOLUME, infp) !=
 		FILEHDRSIZE - F_VOLUME) {
@@ -129,7 +129,7 @@ void cpt()
 #endif /* SCAN */
 		exit(1);
 	    }
-	    cpt_crc = (*updcrc)(cpt_crc, cptptr + F_VOLUME,
+	    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(cptptr + F_VOLUME),
 				FILEHDRSIZE - F_VOLUME);
 	}
 	cptptr += FILEHDRSIZE;
@@ -203,7 +203,7 @@ struct cptHdr *s;
 	return 0;
     }
 
-    cpt_crc = (*updcrc)(cpt_crc, temp + CPTHDRSIZE + C_ENTRIES, 3);
+    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)(temp + CPTHDRSIZE + C_ENTRIES), 3);
     s->hdrcrc = get4(temp + CPTHDRSIZE + C_HDRCRC);
     s->entries = get2(temp + CPTHDRSIZE + C_ENTRIES);
     s->commentsize = temp[CPTHDRSIZE + C_COMMENT];
@@ -415,7 +415,7 @@ unsigned short type;
     } else {
 	cpt_rle_lzh();
     }
-    cpt_crc = (*updcrc)(cpt_crc, out_buffer, obytes);
+    cpt_crc = (*updcrc)(cpt_crc, (unsigned char*)out_buffer, obytes);
 }
 
 void cpt_wrfile1(in_char, ibytes, obytes, type, blocksize)

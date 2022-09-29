@@ -157,7 +157,7 @@ static int readsithdr(sitHdr *s)
 static int sit_filehdr(struct fileHdr *f, int skip)
 {
     register int i;
-    unsigned long crc;
+    uint32_t crc;
     int n;
     char hdr[FILEHDRSIZE];
     char ftype[5], fauth[5];
@@ -170,7 +170,7 @@ static int sit_filehdr(struct fileHdr *f, int skip)
 	return -1;
     }
     crc = INIT_CRC;
-    crc = (*updcrc)(crc, hdr, FILEHDRSIZE - 2);
+    crc = (*updcrc)(crc, (unsigned char*)hdr, FILEHDRSIZE - 2);
 
     f->hdrCRC = get2(hdr + F_HDRCRC);
     if(f->hdrCRC != crc) {
@@ -390,7 +390,7 @@ char *name;
 static void sit_unstuff(filehdr)
 struct fileHdr filehdr;
 {
-    unsigned long crc;
+    uint32_t crc;
 
     if(write_it) {
 	start_info(info, filehdr.rsrcLength, filehdr.dataLength);
@@ -403,7 +403,7 @@ struct fileHdr filehdr;
     }
     sit_wrfile(filehdr.compRLength, filehdr.rsrcLength, filehdr.compRMethod);
     if(write_it) {
-	crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.rsrcLength);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.rsrcLength);
 	if(filehdr.rsrcCRC != crc) {
 	    (void)fprintf(stderr,
 		"CRC error on resource fork: need 0x%04x, got 0x%04x\n",
@@ -422,7 +422,7 @@ struct fileHdr filehdr;
     }
     sit_wrfile(filehdr.compDLength, filehdr.dataLength, filehdr.compDMethod);
     if(write_it) {
-	crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.dataLength);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.dataLength);
 	if(filehdr.dataCRC != crc) {
 	    (void)fprintf(stderr,
 		"CRC error on data fork: need 0x%04x, got 0x%04x\n",

@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include "../fileio/machdr.h"
 #include "../fileio/rdfile.h"
+#include "../crc/crc.h"
 
 extern int dorep;
-extern unsigned long binhex_crcinit;
-extern unsigned long binhex_updcrc();
 
 #define RUNCHAR 0x90
 
@@ -43,35 +42,35 @@ void dofile()
 
 void doheader()
 {
-unsigned long crc;
+uint32_t crc;
 int i, n;
 
     crc = binhex_crcinit;
     n = file_info[I_NAMEOFF];
-    crc = binhex_updcrc(crc, file_info + I_NAMEOFF, n + 1);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_NAMEOFF), n + 1);
     for(i = 0; i <= n; i++) {
 	outbyte(file_info[I_NAMEOFF + i]);
     }
     n = 0;
-    crc = binhex_updcrc(crc, (char *)&n, 1);
+    crc = binhex_updcrc(crc, (unsigned char *)&n, 1);
     outbyte(0);
-    crc = binhex_updcrc(crc, file_info + I_TYPEOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_TYPEOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_TYPEOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_AUTHOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_AUTHOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_AUTHOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_FLAGOFF, 2);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_FLAGOFF), 2);
     for(i = 0; i < 2; i++) {
 	outbyte(file_info[I_FLAGOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_DLENOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_DLENOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_DLENOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_RLENOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_RLENOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_RLENOFF + i]);
     }
@@ -83,10 +82,10 @@ void dofork(fork, size)
 char *fork;
 int size;
 {
-unsigned long crc;
+uint32_t crc;
 int i;
 
-    crc = binhex_updcrc(binhex_crcinit, fork, size);
+    crc = binhex_updcrc(binhex_crcinit, (unsigned char*)fork, size);
     for(i = 0; i < size; i++) {
 	outbyte(fork[i]);
     }
