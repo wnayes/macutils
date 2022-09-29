@@ -35,7 +35,7 @@ typedef struct fileHdr { /* 84 or 88 bytes */
 	unsigned long	size;
 	unsigned short	date;
 	unsigned short	time;
-	unsigend short	crc;
+	unsigned short	crc;
 	unsigned long	size2;	/* Identical to size; this is wrong for Arc! */
 };
 
