@@ -13,34 +13,35 @@
 #include "../fileio/fileglob.h"
 #include "../util/masks.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 
-static void dd_name();
-static int dd_filehdr();
-static void dd_cfilehdr();
-static int dd_valid();
-static int dd_valid1();
-static char *dd_methname();
-static uint32_t dd_checksum();
-static void dd_chksum();
-static uint32_t dd_checkor();
-static void dd_do_delta();
-static void dd_delta();
-static void dd_delta3();
-static void dd_copy();
-static void dd_copyfile();
-static void dd_expand();
-static void dd_expandfile();
-static void dd_nocomp();
-static void dd_lzc();
+static void dd_name(unsigned char *bin_hdr);
+static int dd_filehdr(struct dd_fileHdr *f, struct dd_fileCHdr *cf, int skip);
+static void dd_cfilehdr(struct dd_fileCHdr *f);
+static int dd_valid(int dmethod, int rmethod);
+static int dd_valid1(int method);
+static char *dd_methname(int n);
+static uint32_t dd_checksum(uint32_t init, char *buffer, uint32_t length);
+static void dd_chksum(struct dd_fileHdr hdr, unsigned char *data);
+static uint32_t dd_checkor(uint32_t init, char *buffer, uint32_t length);
+static void dd_do_delta(char *out_ptr, uint32_t nbytes, int kind);
+static void dd_delta(char *out_ptr, uint32_t nbytes);
+static void dd_delta3(char *out_ptr, uint32_t nbytes);
+static void dd_copy(struct dd_fileHdr hdr, unsigned char *data);
+static void dd_copyfile(uint32_t obytes, unsigned char *data);
+static void dd_expand(struct dd_fileCHdr hdr, unsigned char *data);
+static void dd_expandfile(uint32_t obytes, uint32_t ibytes, int method, int kind, unsigned char *data, uint32_t chksum);
+static void dd_nocomp(uint32_t obytes, unsigned char *data);
+static void dd_lzc(uint32_t ibytes, uint32_t obytes, unsigned char *data, int mb, uint32_t chksum, uint32_t ckinit);
 #ifdef UNTESTED
-static void dd_rle();
+static void dd_rle(uint32_t ibytes, unsigned char *data);
 #ifdef NOTIMPLEMENTED
-static void dd_huffman();
+static void dd_huffman(uint32_t ibytes, unsigned char *data);
 #endif /* NOTIMPLEMENTED */
-static void dd_lzss();
-static int dd_getbits();
+static void dd_lzss(unsigned char *data, uint32_t chksum);
+static int dd_getbits(int n);
 #endif /* UNTESTED */
-static void dd_cpt_compat();
+static void dd_cpt_compat(uint32_t ibytes, uint32_t obytes, unsigned char *data, int sub_method, uint32_t chksum);
 
 typedef struct methodinfo {
 	char *name;

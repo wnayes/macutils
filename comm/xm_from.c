@@ -10,9 +10,9 @@
 #include "protocol.h"
 #include "tty.h"
 
-static void receive_part();
-static int receive_sync();
-static int receive_rec();
+static void receive_part(char *info, int size, int more);
+static int receive_sync(void);
+static int receive_rec(char *buf, int bufsize, int recno);
 
 char info[INFOBYTES];
 

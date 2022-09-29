@@ -9,6 +9,7 @@
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "printhdr.h"
 
 static void get_header(void);

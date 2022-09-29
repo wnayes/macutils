@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef DIA
+#ifdef DIA_INTERNAL
+
 #define	IS_FOLDER	0x80
 #define	F_INFO		0x40
 #define VOLUME		0x30
@@ -20,3 +24,8 @@
 #define	NOCOMP		1
 #define COMP		2
 
+
+#endif
+void dia (unsigned char *bin_hdr);
+
+#endif

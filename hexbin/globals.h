@@ -2,14 +2,11 @@
 #include <stdint.h>
 #include <string.h>
 #ifdef BSD
-extern char *rindex();
+#include <strings.h>
 #define search_last rindex
 #else /* BSD */
-extern char *strrchr();
 #define search_last strrchr
 #endif /* BSD */
-
-extern void transname();
 
 extern char info[];
 extern char trname[];
@@ -36,5 +33,5 @@ extern int was_macbin;
 
 extern FILE *ifp;
 
-extern void do_error();
+extern void do_error(char *string);
 

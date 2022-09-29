@@ -1,17 +1,20 @@
 #include "macunpack.h"
 #ifdef JDW
+#define JDW_INTERNAL
 #include "jdw.h"
+
 #include "globals.h"
 #include "huffman.h"
 #include "de_huffman.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/machdr.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "../util/masks.h"
 
-static void jdw_wrfile();
-static void jdw_wrfork();
-static void jdw_block();
+static void jdw_wrfile(uint32_t rsrcLength, uint32_t dataLength);
+static void jdw_wrfork(uint32_t length);
+static void jdw_block(int olength);
 
 void 
 jdw (uint32_t ibytes)

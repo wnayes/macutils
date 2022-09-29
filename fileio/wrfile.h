@@ -8,7 +8,7 @@ extern void start_rsrc(void);
 extern void start_data(void);
 extern void end_file(void);
 #ifdef SCAN
-extern void do_idf();
+extern void do_idf(char *name, int kind);
 #endif /* SCAN */
 extern void do_mkdir(char *name, char *header);
 extern void enddir(void);

@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-extern void exit();
-extern void transname();
-
 extern char info[];
 extern char text[];
 

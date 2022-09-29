@@ -1,1 +1,1 @@
-void xm_to();
+void xm_to(void);

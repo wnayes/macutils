@@ -7,9 +7,9 @@
 #include "protocol.h"
 #include "tty.h"
 
-static void send_part();
-static int send_sync();
-static void send_rec();
+static void send_part(char *info, int size, int more);
+static int send_sync(void);
+static void send_rec(char *buf, int bufsize, int recno);
 
 void 
 xm_to (void)

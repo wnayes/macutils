@@ -1,15 +1,19 @@
+#include "macbinary.h"
+
 #include "globals.h"
+
+#include <stdlib.h>
+
 #include "../fileio/machdr.h"
 #include "../fileio/kind.h"
 #include "../util/util.h"
+#include "dir.h"
+#include "mcb.h"
 
-extern void dir();
-extern void mcb();
-extern void do_indent();
 
-static void skip_file();
+static void skip_file(int skip);
 #ifdef SCAN
-static void get_idf();
+static void get_idf(int kind);
 #endif /* SCAN */
 
 void 

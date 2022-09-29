@@ -1,3 +1,9 @@
+#include "macunpack.h"
+#ifdef PIT
+#ifdef PIT_INTERNAL
+
+#include <stdint.h>
+
 #define H_NAMELEN 63
 
 #define H_NLENOFF 0
@@ -30,3 +36,8 @@ struct pit_header {		/* Packit file header (92 bytes) */
 #define nocomp	0
 #define huffman	1
 
+#endif
+
+void pit (void);
+
+#endif

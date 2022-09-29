@@ -1,4 +1,7 @@
 #include "macunpack.h"
+
+#define LZH_INTERNAL
+
 #include <stdlib.h>
 #include <string.h>
 #include "globals.h"
@@ -7,8 +10,10 @@
 #include "../fileio/wrfile.h"
 #include "../fileio/machdr.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
 #include "bits_be.h"
+#include "de_lzah.h"
 
 #define LZ5LOOKAHEAD    18    /* look ahead buffer size for LArc */
 #define LZ5BUFFSIZE	8192
@@ -17,10 +22,6 @@
 #define LZSBUFFSIZE	4096
 #define LZSMASK		4095
 #define LZBUFFSIZE	8192	/* Max of above buffsizes */
-
-extern void de_lzah();
-extern unsigned char (*lzah_getbyte)();
-extern void de_lzh();
 
 typedef struct methodinfo {
 	char *name;
@@ -51,26 +52,26 @@ static char *lzh_current;
 static char *tmp_out_ptr;
 static char lzh_lzbuf[LZBUFFSIZE];
 
-static int lzh_filehdr();
-static int lzh_checkm();
-static char *lzh_methname();
-static void lzh_wrfile();
-static void lzh_skip();
-static void lzh_nocomp();
+static int lzh_filehdr(struct lzh_fileHdr *f);
+static int lzh_checkm(struct lzh_fileHdr *f);
+static char *lzh_methname(int n);
+static void lzh_wrfile(struct lzh_fileHdr *filehdr, int method);
+static void lzh_skip(struct lzh_fileHdr *filehdr);
+static void lzh_nocomp(uint32_t obytes);
 #ifdef UNTESTED
-static void lzh_lzss1();
-static void lzh_lzss2();
+static void lzh_lzss1(uint32_t obytes);
+static void lzh_lzss2(uint32_t obytes);
 #endif /* UNTESTED */
-static void lzh_lzah();
-static unsigned char lzh_getbyte();
+static void lzh_lzah(uint32_t obytes);
+static unsigned char lzh_getbyte(void);
 #ifdef UNDEF
-static void lzh_lh2();
-static void lzh_lh3();
+static void lzh_lh2(uint32_t obytes);
+static void lzh_lh3(uint32_t obytes);
 #endif /* UNDEF */
 #ifdef UNTESTED
-static void lzh_lzh12();
+static void lzh_lzh12(uint32_t obytes);
 #endif /* UNTESTED */
-static void lzh_lzh13();
+static void lzh_lzh13(uint32_t obytes);
 
 void 
 lzh (int kind)

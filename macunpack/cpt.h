@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef CPT
+#ifdef CPT_INTERNAL
+
 #include <stdint.h>
 
 #define C_SIGNATURE    0
@@ -93,9 +97,13 @@ typedef struct cpt_fileHdr {		/* 78 bytes */
 
 #define CIRCSIZE	8192
 
+#endif
 void 
 cpt_wrfile1 (unsigned char *in_char,
              uint32_t ibytes,
              uint32_t obytes,
              int type,
              uint32_t blocksize);
+void cpt (void);
+
+#endif

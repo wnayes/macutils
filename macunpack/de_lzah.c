@@ -79,13 +79,13 @@ static short HuffLength[] = {
     7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
     8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 
-unsigned char (*lzah_getbyte)();
+unsigned char (*lzah_getbyte)(void);
 
-static void lzah_inithuf();
-static void lzah_reorder();
+static void lzah_inithuf(void);
+static void lzah_reorder(void);
 static void lzah_move(int *p, int *q, int n);
-static void lzah_getbit();
-static void lzah_outchar();
+static void lzah_getbit(void);
+static void lzah_outchar(int ch);
 
 static char lzah_buf[4096];
 static int lzah_bufptr;

@@ -5,15 +5,19 @@
 #endif /* CPT */
 #endif /* DD */
 #ifdef CPT
+
+#define CPT_INTERNAL
+#include "cpt.h"
+
 #include <stdlib.h>
 #include "globals.h"
-#include "cpt.h"
 #include "crc.h"
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "huffman.h"
 
 #define	ESC1		0x81
@@ -22,7 +26,6 @@
 #define ESC1SEEN	1
 #define ESC2SEEN	2
 
-static void cpt_uncompact();
 static unsigned char *cpt_data;
 static uint32_t cpt_datamax;
 static uint32_t cpt_datasize;
@@ -42,17 +45,17 @@ static int cpt_blocksize;
 static node cpt_Hufftree[512 + SLACK], cpt_LZlength[128 + SLACK],
 	    cpt_LZoffs[256 + SLACK];
 
-static int readcpthdr();
-static int cpt_filehdr();
-static void cpt_folder();
-static void cpt_uncompact();
-static void cpt_wrfile();
-static void cpt_outch();
-static void cpt_rle();
-static void cpt_rle_lzh();
-static void cpt_readHuff();
-static int cpt_get6bits();
-static int cpt_getbit();
+static int readcpthdr(struct cptHdr *s);
+static int cpt_filehdr(struct cpt_fileHdr *f, char *hdr);
+static void cpt_folder(char *name, struct cpt_fileHdr fileh, char *cptptr);
+static void cpt_uncompact(struct cpt_fileHdr filehdr);
+static void cpt_wrfile(uint32_t ibytes, uint32_t obytes, int type);
+static void cpt_outch(int ch);
+static void cpt_rle(void);
+static void cpt_rle_lzh(void);
+static void cpt_readHuff(int size, struct node *Hufftree);
+static int cpt_get6bits(void);
+static int cpt_getbit(void);
 
 void 
 cpt (void)

@@ -16,13 +16,13 @@ static int savebits;
 static int rep_char;
 static int rep_count;
 
-void doheader();
-void dofork();
-void outbyte();
-void finish();
-void outbyte1();
-void out6bit();
-void outchar();
+static void doheader();
+static void dofork(char *fork, int size);
+static void outbyte(int b);
+static void finish(void);
+static void outbyte1(int b);
+static void out6bit(int c);
+static void outchar(int c);
 
 void 
 dofile (void)
@@ -42,7 +42,7 @@ dofile (void)
     (void)putchar('\n');
 }
 
-void 
+static void 
 doheader (void)
 {
 uint32_t crc;
@@ -95,7 +95,7 @@ int i;
     outbyte((int)(crc & 0xff));
 }
 
-void 
+static void 
 outbyte (int b)
 {
     b &= 0xff;
@@ -128,7 +128,7 @@ outbyte (int b)
     }
 }
 
-void 
+static void 
 finish (void)
 {
     if(rep_count > 0) {
@@ -153,7 +153,7 @@ finish (void)
     }
 }
 
-void 
+static void 
 outbyte1 (int b)
 {
     switch(state) {
@@ -177,13 +177,13 @@ outbyte1 (int b)
     }
 }
 
-void 
+static void 
 out6bit (int c)
 {
     outchar(codes[c & 0x3f]);
 }
 
-void 
+static void 
 outchar (int c)
 {
     (void)putchar(c);

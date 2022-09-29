@@ -1,6 +1,7 @@
 #include "macunpack.h"
 #include "bin.h"
 #ifdef BIN
+#include <stdlib.h>
 #include <string.h>
 #include "globals.h"
 #include "../fileio/machdr.h"

@@ -20,7 +20,7 @@
 
 extern char info[];
 
-static void usage();
+static void usage(void);
 
 static char options[128];
 static int multi_file = 0;

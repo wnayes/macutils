@@ -1,11 +1,14 @@
 #include "macunpack.h"
 #ifdef DIA
+#define DIA_INTERNAL
+#include "dia.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "globals.h"
-#include "dia.h"
 #include "../util/curtime.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
@@ -26,14 +29,14 @@ static int dia_LZtab[BCHUNKSIZE];
 static unsigned char *dia_bit_base;
 static int dia_imask;
 
-static void dia_folder();
-static void dia_file();
-static void dia_getlength();
-static void dia_skipfork();
-static void dia_getfork();
-static void dia_getblock();
-static int dia_decode();
-static int dia_prevbit();
+static void dia_folder(unsigned char *name);
+static void dia_file(int indicator, unsigned char *name);
+static void dia_getlength(int nblocks);
+static void dia_skipfork(int nblocks);
+static void dia_getfork(int nblocks);
+static void dia_getblock(unsigned char **archive_ptr, unsigned char **block_ptr);
+static int dia_decode(unsigned char *ibuff, unsigned char *obuff, int in_length);
+static int dia_prevbit(void);
 
 void 
 dia (unsigned char *bin_hdr)

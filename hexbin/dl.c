@@ -6,6 +6,7 @@
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "buffer.h"
 #include "printhdr.h"
 

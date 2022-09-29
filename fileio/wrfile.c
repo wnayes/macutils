@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #endif /* TYPES_H */
 #include <sys/stat.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -44,17 +45,17 @@ char *sprintf();
 #endif /* UNDEF */
 
 #ifdef AUFS
-static void check_aufs();
-static void aufs_namings();
-static void wr_aufs_info();
+static void check_aufs(void);
+static void aufs_namings(void);
+static void wr_aufs_info(FILE* fp);
 #endif /* AUFS */
 #ifdef APPLEDOUBLE
-static void check_appledouble();
-static void appledouble_namings();
-static void wr_appledouble_info();
+static void check_appledouble(void);
+static void appledouble_namings(void);
+static void wr_appledouble_info(FILE* fp);
 #endif /* APPLEDOUBLE */
 #ifdef APPLESHARE
-static void mk_share_name();
+static void mk_share_name(void);
 #endif /* APPLESHARE */
 
 #ifndef BSD
@@ -531,7 +532,7 @@ int i;
 
 #ifdef APPLESHARE
 #ifdef AUFS
-static void check_aufs()
+static void check_aufs(void)
 {
     /* check for .resource/ and .finderinfo/ */
     struct stat stbuf;
@@ -557,7 +558,7 @@ static void check_aufs()
     }
 }
 
-static void aufs_namings()
+static void aufs_namings(void)
 {
     mk_share_name();
     (void)sprintf(f_info_aufs, "%s/%s", infodir, share_name);
@@ -565,8 +566,7 @@ static void aufs_namings()
     (void)sprintf(f_data, "%s", share_name);
 }
 
-static void wr_aufs_info(fp)
-FILE *fp;
+static void wr_aufs_info(FILE* fp)
 {
     FileInfo theinfo;
     int n;
@@ -601,7 +601,7 @@ FILE *fp;
 #endif /* AUFS */
 
 #ifdef APPLEDOUBLE
-static void check_appledouble()
+static void check_appledouble(void)
 {
     /* check for .AppleDouble/ */
     struct stat stbuf;
@@ -620,15 +620,14 @@ static void check_appledouble()
     }
 }
 
-static void appledouble_namings()
+static void appledouble_namings(void)
 {
     mk_share_name();
     (void)snprintf(f_info_appledouble, sizeof(f_info_appledouble), "%s/%s", infodir, share_name);
     (void)snprintf(f_data, sizeof(f_data), "%s", share_name);
 }
 
-static void wr_appledouble_info(fp)
-FILE *fp;
+static void wr_appledouble_info(FILE* fp)
 {
     FileInfo theinfo;
     int n;
@@ -673,7 +672,7 @@ FILE *fp;
 }
 #endif /* APPLEDOUBLE */
 
-static void mk_share_name()
+static void mk_share_name(void)
 {
     int ch;
     char *mp, *up;
@@ -693,8 +692,7 @@ static void mk_share_name()
 }
 #endif /* APPLESHARE */
 
-int wrfileopt(c)
-char c;
+int wrfileopt(char c)
 {
     switch(c) {
     case 'b':
@@ -767,7 +765,7 @@ char c;
     return 1;
 }
 
-void give_wrfileopt()
+void give_wrfileopt(void)
 {
     (void)fprintf(stderr, "File output options:\n");
     (void)fprintf(stderr, "-b:\tMacBinary (default)\n");
@@ -810,7 +808,7 @@ void set_s_wrfileopt(int restricted)
     mode_s_restricted = restricted;
 }
 
-char *get_wrfileopt()
+char *get_wrfileopt(void)
 {
     static char options[20];
 

@@ -1,16 +1,16 @@
 #include "macunpack.h"
 #ifdef STF
 #include <string.h>
+#include <stdlib.h>
 #include "stf.h"
 #include "globals.h"
 #include "huffman.h"
 #include "../util/curtime.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/machdr.h"
+#include "../util/transname.h"
 #include "../util/util.h"
-
-extern void de_huffman();
-extern void set_huffman();
+#include "de_huffman.h"
 
 typedef struct{
     int num;
@@ -20,9 +20,9 @@ typedef struct{
 static table_struct table[511];
 static char length[256];
 
-static void stf_wrfile();
-static void stf_wrfork();
-static void stf_construct();
+static void stf_wrfile(uint32_t rsrcLength, uint32_t dataLength, uint32_t ibytes);
+static void stf_wrfork(uint32_t *num, uint32_t towrite, int offs);
+static void stf_construct(int n);
 
 void 
 stf (uint32_t ibytes)

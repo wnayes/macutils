@@ -23,15 +23,15 @@
 #include "huffman.h"
 #include "../util/util.h"
 
-int (*get_bit)();
+int (*get_bit)(void);
 int bytesread;
 /* 515 because StuffIt Classic needs more than the needed 511 */
 struct node nodelist[515];
-static int getbit_be();
-static int getbit_le();
-static int getdecodebyte();
+static int getbit_be(void);
+static int getbit_le(void);
+static int getdecodebyte(void);
 
-static node *nodeptr, *read_sub_tree();
+static node *nodeptr, *read_sub_tree(void);
 
 static int bit;
 
@@ -72,7 +72,7 @@ read_tree (void)
 
 /* This routine recursively reads the Huffman encoding table and builds
    a decoding tree. */
-static node *read_sub_tree()
+static node *read_sub_tree(void)
 {
     node *np;
 

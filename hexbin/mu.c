@@ -5,6 +5,7 @@
 #include "readline.h"
 #include "../util/masks.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "buffer.h"
@@ -12,9 +13,9 @@
 
 #include <stdlib.h>
 
-static void do_mu_fork();
-static int mu_comp_to_bin();
-static int mu_convert();
+static void do_mu_fork(void);
+static int mu_comp_to_bin(void);
+static int mu_convert(char *ibuf, char *obuf);
 
 /* mu format -- process .mu files */
 void 

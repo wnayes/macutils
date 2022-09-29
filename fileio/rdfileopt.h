@@ -1,5 +1,5 @@
-extern int rdfileopt();
-extern void give_rdfileopt();
-extern void set_norecurse();
-extern char *get_rdfileopt();
+extern int rdfileopt(int c);
+extern void give_rdfileopt(void);
+extern void set_norecurse(void);
+extern char *get_rdfileopt(void);
 

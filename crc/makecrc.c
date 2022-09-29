@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void initcrctab();
+static void initcrctab(char *name, int poly, int init, int swapped, int bits);
 
 int 
 main (void)

@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef LZH
+#ifdef LZH_INTERNAL
+
 #include <stdint.h>
 
 #define FILEHDRSIZE	22
@@ -59,3 +63,9 @@ typedef struct lzh_fileHdr { /* 58 bytes */
 #define lz4	6
 #define	lz5	7
 #define	lzs	8
+
+#endif
+
+void lzh (int kind);
+
+#endif

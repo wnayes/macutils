@@ -1,18 +1,22 @@
 #include "macunpack.h"
 #ifdef LZC
-#include <string.h>
-#include "globals.h"
+#define LZC_INTERNAL
 #include "lzc.h"
+
+#include <string.h>
+#include <stdlib.h>
+#include "globals.h"
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "de_compress.h"
 #include "mcb.h"
 
-static void lzc_zivm();
-static void lzc_wrfile();
-static void lzc_zivu();
+static void lzc_zivm(char *ohdr);
+static void lzc_wrfile(uint32_t obytes, uint32_t ibytes);
+static void lzc_zivu(char *ohdr);
 
 void 
 lzc (char *ohdr)

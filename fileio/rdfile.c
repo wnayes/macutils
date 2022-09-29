@@ -1,3 +1,5 @@
+#include "rdfile.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +9,6 @@
 #endif /* TYPES_H */
 #include <sys/stat.h>
 #include "machdr.h"
-#include "rdfile.h"
 #include "rdfileopt.h"
 #ifndef DIRENT_H
 #include <sys/dir.h>
@@ -46,11 +47,11 @@
 #define RSRC_FORMAT	2
 #define UNIX_FORMAT	3
 
-static void check_files();
-static void read_file();
-static void enter_dir();
-static void exit_dir();
-static int get_stdin_file();
+static void check_files(int initial);
+static void read_file(void);
+static void enter_dir(void);
+static void exit_dir(void);
+static int get_stdin_file(void);
 
 char file_info[INFOBYTES];
 char *data_fork, *rsrc_fork;
@@ -81,12 +82,12 @@ static char f_name[] = ".foldername";
 #include "aufs.h"
 static char infodir[] = ".finderinfo";
 static char rsrcdir[] = ".resource";
-static void read_aufs_info();
+static void read_aufs_info(FILE *fd);
 #endif /* AUFS */
 #ifdef APPLEDOUBLE
 #include "appledouble.h"
 static char infodir[] = ".AppleDouble";
-static void read_appledouble_info();
+static void read_appledouble_info(FILE *fd);
 #endif /* APPLEDOUBLE */
 #endif /* APPLESHARE */
 static char filename[255];

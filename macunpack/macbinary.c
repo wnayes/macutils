@@ -1,49 +1,38 @@
 #include "macunpack.h"
+#include "macbinary.h"
+
+#include <stdlib.h>
 #include <string.h>
-#include "globals.h"
+#include "../fileio/kind.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
-#include "../fileio/kind.h"
-#include "zmahdr.h"
 #include "../util/util.h"
-#include "stf.h"
-#include "mcb.h"
 #include "bin.h"
 #include "dd.h"
+#include "dir.h"
+#include "globals.h"
+#include "mcb.h"
 #include "sit.h"
+#include "stf.h"
+#include "zmahdr.h"
+#include "jdw.h"
+#include "lzc.h"
+#include "pit.h"
+#include "dia.h"
+#include "cpt.h"
+#include "zma.h"
+#include "lzh.h"
 
-extern void dir(char *hdr);
-#ifdef JDW
-extern void jdw();
-#endif /* JDW */
-#ifdef LZC
-extern void lzc();
-#endif /* LZC */
 #ifdef ASQ
 extern void asq();
 #endif /* ASQ */
 #ifdef ARC
 extern void arc();
 #endif /* ARC */
-#ifdef PIT
-extern void pit();
-#endif /* PIT */
-#ifdef DIA
-extern void dia();
-#endif /* DIA */
-#ifdef CPT
-extern void cpt();
-#endif /* CPT */
-#ifdef ZMA
-extern void zma();
-#endif /* ZMA */
-#ifdef LZH
-extern void lzh();
-#endif /* LZH */
 
-static void skip_file();
+static void skip_file(int skip);
 #ifdef SCAN
-static void get_idf();
+static void get_idf(int kind);
 #endif /* SCAN */
 
 #define Z	(ZMAHDRS2 + 1)

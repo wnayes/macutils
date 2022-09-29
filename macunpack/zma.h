@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef ZMA
+#ifdef ZMA_INTERNAL
+
 #include "zmahdr.h"
 
 #include <stdint.h>
@@ -53,3 +57,8 @@ typedef struct zma_fileHdr {		/* 78 bytes */
 #define	z_dir	3	/* directory */
 #define	z_plug	4	/* for plug in, not supported */
 
+#endif
+
+void  zma (char *start, uint32_t length);
+
+#endif

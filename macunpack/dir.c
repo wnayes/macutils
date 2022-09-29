@@ -1,9 +1,12 @@
+#include "dir.h"
+
 #include <stdlib.h>
 #include "globals.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/util.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 
 static char *dir_stack;
 static int dir_ptr = -64;

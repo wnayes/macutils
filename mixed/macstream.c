@@ -9,11 +9,9 @@
 #include "../util/transname.h"
 #include "../util/util.h"
 
-extern void do_indent();
-
 #define LOCALOPT	"ilqVH"
 
-static void usage();
+static void usage(void);
 
 static char options[128];
 static char *dir_stack;

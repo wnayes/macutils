@@ -1,22 +1,26 @@
 #include "macunpack.h"
 #ifdef PIT
+#define PIT_INTERNAL
+#include "pit.h"
+
+#include <stdlib.h>
 #include <string.h>
-#include "../fileio/wrfile.h"
 #include "../fileio/fileglob.h"
 #include "../fileio/kind.h"
-#include "globals.h"
-#include "pit.h"
 #include "../fileio/machdr.h"
-#include "crc.h"
+#include "../fileio/wrfile.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
-#include "huffman.h"
+#include "crc.h"
 #include "de_huffman.h"
+#include "globals.h"
+#include "huffman.h"
 
-static int pit_filehdr();
-static void pit_wrfile();
-static void pit_nocomp();
-static void pit_huffman();
+static int pit_filehdr(struct pit_header *f, int compr);
+static void pit_wrfile(uint32_t bytes, int type);
+static void pit_nocomp(uint32_t ibytes);
+static void pit_huffman(uint32_t obytes);
 
 void 
 pit (void)

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 
 typedef struct real_time {
 	int year;

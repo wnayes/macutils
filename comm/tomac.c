@@ -17,7 +17,7 @@
 
 #define LOCALOPT	"ilqxyzoTVH"
 
-static void usage();
+static void usage(void);
 
 static char options[128];
 static char *dir_stack;

@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef JDW
+#ifdef JDW_INTERNAL
+
 #include <stdint.h>
 
 #define	J_MAGIC		0
@@ -23,3 +27,6 @@ typedef struct jdw_fileHdr {
 	char		fname[32];	/* actually flength */
 } jdw_fileHdr;
 
+#endif
+void jdw (uint32_t ibytes);
+#endif

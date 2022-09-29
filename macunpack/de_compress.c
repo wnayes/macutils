@@ -1,4 +1,7 @@
 #include "de_compress.h"
+
+#include <stdlib.h>
+
 #include "macunpack.h"
 #ifdef SIT
 #define DECOMPRESS
@@ -32,7 +35,7 @@ static unsigned short codetab [HSIZE];
 
 static int32_t free_ent = 0;			/* first unused entry */
 
-static int32_t getcode();
+static int32_t getcode(void);
 
 static int clear_flg = 0;
 
@@ -121,8 +124,8 @@ static unsigned char rmask[9] =
 
 static int get_core_bytes;
 static char *core_ptr;
-static int file_bytes();
-static int core_bytes();
+static int file_bytes(char *buf, int length);
+static int core_bytes(char *buf, int length);
 
 static int32_t 
 getcode (void)

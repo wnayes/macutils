@@ -1,3 +1,7 @@
+#include "macunpack.h"
+#ifdef LZC
+#ifdef LZC_INTERNAL
+
 #include <stdint.h>
 
 #define HEADERBYTES 48
@@ -28,3 +32,6 @@ typedef struct lzc_fileHdr {
 	uint32_t	flag1;
 	uint32_t	flag2;
 } lzc_fileHdr;
+#endif
+void lzc (char *ohdr);
+#endif

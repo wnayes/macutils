@@ -4,6 +4,7 @@
 
 #ifdef SIT
 #include <string.h>
+#include <stdlib.h>
 #include "globals.h"
 #include "crc.h"
 #include "../util/util.h"
@@ -11,6 +12,7 @@
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "huffman.h"
 #include "de_compress.h"
 #include "de_huffman.h"
@@ -33,26 +35,26 @@ static struct methodinfo methods[] = {
 };
 static int sit_nodeptr;
 
-static int readsithdr();
-static int sit_filehdr();
-static int sit_valid();
-static int sit_checkm();
-static char *sit_methname();
-static void sit_folder();
-static void sit_unstuff();
-static void sit_wrfile();
-static void sit_skip();
-static void sit_nocomp();
-static void sit_rle();
-static void sit_lzc();
-static void sit_huffman();
-static void sit_lzah();
-static unsigned char sit_getbyte();
-static void sit_fixhuf();
-static void sit_dosplit();
-static void sit_mw();
-static void sit_mw_out();
-static int sit_mw_in();
+static int readsithdr(sitHdr *s);
+static int sit_filehdr(struct sit_fileHdr *f, int skip);
+static int sit_valid(struct sit_fileHdr f);
+static int sit_checkm(int f);
+static char *sit_methname(int n);
+static void sit_folder(char *name);
+static void sit_unstuff(struct sit_fileHdr filehdr);
+static void sit_wrfile(uint32_t ibytes, uint32_t obytes, int type);
+static void sit_skip(uint32_t ibytes);
+static void sit_nocomp(uint32_t ibytes);
+static void sit_rle(uint32_t ibytes);
+static void sit_lzc(uint32_t ibytes);
+static void sit_huffman(uint32_t obytes);
+static void sit_lzah(uint32_t obytes);
+static unsigned char sit_getbyte(void);
+static void sit_fixhuf(uint32_t ibytes);
+static void sit_dosplit(int ptr, int sum, int low, int upp);
+static void sit_mw(uint32_t ibytes);
+static void sit_mw_out(int ptr);
+static int sit_mw_in(int bits, uint32_t *ibytes);
 
 static short code6[258] = {
    1024,  512,  256,  256,  256,  256,  128,  128,

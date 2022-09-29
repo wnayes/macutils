@@ -19,9 +19,9 @@
 static int decoded;
 static int bitsused;
 static unsigned int blocksize;
-static unsigned int decode_c();
-static unsigned int decode_p();
-static void make_table();
+static unsigned int decode_c(void);
+static unsigned int decode_p(void);
+static void make_table(int nchar, unsigned char bitlen[], int tablebits, unsigned int table[]);
 
 /* lzh compression */
 void de_lzh(int32_t ibytes, int32_t obytes, char **data, int bits)

@@ -4,6 +4,7 @@
 #include "crc.h"
 #include "readline.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
@@ -12,13 +13,13 @@
 
 #include <stdlib.h>
 
-static void do_o_forks();
-static int32_t make_file();
-static void comp_c_crc();
-static void comp_e_crc();
-static int comp_to_bin();
-static int hex_to_bin();
-static int hexit();
+static void do_o_forks(void);
+static int32_t make_file(int compressed);
+static void comp_c_crc(int c);
+static void comp_e_crc(int c);
+static int comp_to_bin(void);
+static int hex_to_bin(void);
+static int hexit(int c);
 
 static int compressed;
 

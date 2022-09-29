@@ -1,12 +1,17 @@
+#include "mcb.h"
+
+#include <stdlib.h>
+
 #include "globals.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/masks.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 
 static int mcb_read;
 
-static void mcb_wrfile();
+static void mcb_wrfile(uint32_t ibytes);
 
 void 
 mcb (char *hdr, uint32_t rsrcLength, uint32_t dataLength, int toread)

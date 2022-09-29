@@ -1,5 +1,6 @@
 #include "printhdr.h"
 #include "globals.h"
+#include "../util/transname.h"
 
 /* print out header information in human-readable format */
 void print_header0(int skip)

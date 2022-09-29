@@ -1,3 +1,5 @@
+#include "machdr.h"
+
 #define	ISATEND		0
 #define	ISFILE		1
 #define	ISDIR		2

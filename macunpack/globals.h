@@ -1,8 +1,6 @@
 #include <stdio.h>
 
-extern void exit();
-extern void transname();
-extern void do_error();
+void do_error (char *string);
 
 extern char info[];
 extern char text[];

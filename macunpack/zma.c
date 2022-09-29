@@ -1,17 +1,20 @@
 #include "macunpack.h"
 #ifdef ZMA
+#define ZMA_INTERNAL
+#include "zma.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "globals.h"
-#include "zma.h"
+
 #include "crc.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
-
-extern void de_lzh();
+#include "de_lzah.h"
 
 /* We do allow for possible backpointing, so we allocate the archive in core */
 static char *zma_archive;
@@ -20,12 +23,12 @@ static char *zma_filestart;
 static uint32_t zma_length;
 static int32_t zma_archlength;
 
-static int zma_filehdr();
-static void zma_folder();
-static void zma_mooz();
-static void zma_wrfile();
-static void zma_nocomp();
-static void zma_lzh();
+static int zma_filehdr(struct zma_fileHdr *f, int skip);
+static void zma_folder(struct zma_fileHdr fhdr);
+static void zma_mooz(struct zma_fileHdr filehdr);
+static void zma_wrfile(uint32_t ibytes, uint32_t obytes, int type);
+static void zma_nocomp(uint32_t ibytes);
+static void zma_lzh(uint32_t ibytes);
 
 void 
 zma (char *start, uint32_t length)
