@@ -1,3 +1,11 @@
+#include "macunpack.h"
+
+#ifdef DD
+
+#include <stdint.h>
+
+#ifdef DD_INTERNAL
+
 #define	MAGIC1		"DDAR"
 #define	MAGIC2		"\253\315\000\124"
 
@@ -22,7 +30,7 @@
 #define D_DATACRC	118
 #define D_RSRCCRC	120
 #define D_HDRCRC	122
-#define FILEHDRSIZE	124
+#define DD_FILEHDRSIZE	124
 
 /* Compressed file header */
 #define	C_MAGIC		 0
@@ -47,21 +55,21 @@
 #define	C_FILL2		58
 #define C_DATACRC2	78
 #define C_RSRCCRC2	80
-#define	C_HDRCRC	82
-#define	CFILEHDRSIZE	84
+#define	DD_C_HDRCRC	82
+#define	CDD_FILEHDRSIZE	84
 
-typedef long OSType;
+typedef int32_t OSType;
 
-typedef struct fileHdr {		/* 124 bytes */
+typedef struct dd_fileHdr {		/* 124 bytes */
 	unsigned char	magic[4];	/* "DDAR" */
 	unsigned char	fill1[4];	/* ??? */
 	unsigned char	fName[64];	/* a STR63 */
 	unsigned char	isdir;		/* starts a directory? */
 	unsigned char	enddir;		/* terminates a directory? */
-	unsigned long	dataLength;	/* lengths */
-	unsigned long	rsrcLength;
-	unsigned long	creationDate;
-	unsigned long	modDate;
+	uint32_t	dataLength;	/* lengths */
+	uint32_t	rsrcLength;
+	uint32_t	creationDate;
+	uint32_t	modDate;
 	OSType	fType;			/* file type */
 	OSType	fCreator;		/* er... */
 	unsigned short FndrFlags;	/* copy of Finder flags.  For our
@@ -71,20 +79,20 @@ typedef struct fileHdr {		/* 124 bytes */
 	unsigned short	datacrc;	/* checksum */
 	unsigned short	rsrccrc;
 	unsigned short	hdrcrc;		/* true crc */
-} fileHdr;
+} dd_fileHdr;
 
-typedef struct fileCHdr {		/* 84 bytes */
+typedef struct dd_fileCHdr {		/* 84 bytes */
 	unsigned char	magic[4];	/* "\253\315\000\124" */
-	unsigned long	dataLength;	/* lengths */
-	unsigned long	dataCLength;
-	unsigned long	rsrcLength;
-	unsigned long	rsrcCLength;
+	uint32_t	dataLength;	/* lengths */
+	uint32_t	dataCLength;
+	uint32_t	rsrcLength;
+	uint32_t	rsrcCLength;
 	unsigned char	datamethod;	/* compression method used */
 	unsigned char	rsrcmethod;
 	unsigned char	info1;		/* flags ??? */
 	unsigned char	fill3;
-	unsigned long	modDate;
-	unsigned long	creationDate;
+	uint32_t	modDate;
+	uint32_t	creationDate;
 	OSType	fType;			/* file type */
 	OSType	fCreator;		/* er... */
 	unsigned short FndrFlags;	/* copy of Finder flags.  For our
@@ -101,7 +109,7 @@ typedef struct fileCHdr {		/* 84 bytes */
 	unsigned short	datacrc2;	/* other checksum */
 	unsigned short	rsrccrc2;
 	unsigned short	hdrcrc;		/* true crc */
-} fileCHdr;
+} dd_fileCHdr;
 
 #define	DD_FILE	0
 #define	DD_COPY	1
@@ -123,3 +131,7 @@ typedef struct fileCHdr {		/* 84 bytes */
 
 #define	ESC		0x144	/* Repeat packing escape */
 
+#endif
+void dd_file (unsigned char *bin_hdr);
+void dd_arch (unsigned char *bin_hdr);
+#endif

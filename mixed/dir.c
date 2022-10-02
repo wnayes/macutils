@@ -1,8 +1,11 @@
+#include "dir.h"
+
 #include <stdlib.h>
 #include "globals.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "../util/masks.h"
 
 static char *dir_stack;

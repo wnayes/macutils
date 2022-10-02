@@ -1,3 +1,9 @@
+#include "macunpack.h"
+#ifdef PIT
+#ifdef PIT_INTERNAL
+
+#include <stdint.h>
+
 #define H_NAMELEN 63
 
 #define H_NLENOFF 0
@@ -20,13 +26,18 @@ struct pit_header {		/* Packit file header (92 bytes) */
 	char auth[4];		/* file creator */
 	unsigned short flags;	/* file flags (?) */
 	unsigned short lock;	/* unknown */
-	unsigned long dlen;	/* number of bytes in data fork */
-	unsigned long rlen;	/* number of bytes in resource fork */
-	unsigned long ctim;	/* file creation time */
-	unsigned long mtim;	/* file modified time */
+	uint32_t dlen;	/* number of bytes in data fork */
+	uint32_t rlen;	/* number of bytes in resource fork */
+	uint32_t ctim;	/* file creation time */
+	uint32_t mtim;	/* file modified time */
 	unsigned short hdrCRC;	/* CRC */
 };
 
 #define nocomp	0
 #define huffman	1
 
+#endif
+
+void pit (void);
+
+#endif

@@ -1,65 +1,46 @@
 #include "macunpack.h"
+#include "macbinary.h"
+
+#include <stdlib.h>
 #include <string.h>
-#include "globals.h"
+#include "../fileio/kind.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
-#include "../fileio/kind.h"
-#include "zmahdr.h"
 #include "../util/util.h"
+#include "bin.h"
+#include "dd.h"
+#include "dir.h"
+#include "globals.h"
+#include "mcb.h"
+#include "sit.h"
+#include "stf.h"
+#include "zmahdr.h"
+#include "jdw.h"
+#include "lzc.h"
+#include "pit.h"
+#include "dia.h"
+#include "cpt.h"
+#include "zma.h"
+#include "lzh.h"
 
-extern void dir();
-extern void mcb();
-#ifdef BIN
-extern void bin();
-#endif /* BIN */
-#ifdef JDW
-extern void jdw();
-#endif /* JDW */
-#ifdef STF
-extern void stf();
-#endif /* STF */
-#ifdef LZC
-extern void lzc();
-#endif /* LZC */
 #ifdef ASQ
 extern void asq();
 #endif /* ASQ */
 #ifdef ARC
 extern void arc();
 #endif /* ARC */
-#ifdef PIT
-extern void pit();
-#endif /* PIT */
-#ifdef SIT
-extern void sit();
-#endif /* SIT */
-#ifdef DIA
-extern void dia();
-#endif /* DIA */
-#ifdef CPT
-extern void cpt();
-#endif /* CPT */
-#ifdef ZMA
-extern void zma();
-#endif /* ZMA */
-#ifdef LZH
-extern void lzh();
-#endif /* LZH */
-#ifdef DD
-extern void dd_file();
-extern void dd_arch();
-#endif /* DD */
 
-static void skip_file();
+static void skip_file(int skip);
 #ifdef SCAN
-static void get_idf();
+static void get_idf(int kind);
 #endif /* SCAN */
 
 #define Z	(ZMAHDRS2 + 1)
 
 static int info_given;
 
-void macbinary()
+void 
+macbinary (void)
 {
     char header[INFOBYTES];
     int c;
@@ -82,7 +63,7 @@ void macbinary()
 	    if(verbose) {
 		(void)fprintf(stderr, "This is a \"Zoom\" archive.\n");
 	    }
-	    zma(header, (unsigned long)0);
+	    zma(header, (uint32_t)0);
 	    exit(0);
 	}
 #endif /* ZMA */
@@ -175,7 +156,7 @@ void macbinary()
 #ifdef SCAN
 	    do_idf(header + I_NAMEOFF + 1, PACK_NAME);
 #endif /* SCAN */
-	    jdw((unsigned long)in_data_size);
+	    jdw((uint32_t)in_data_size);
 	    skip_file(ds_skip + in_rs);
 	    continue;
 	}
@@ -191,7 +172,7 @@ void macbinary()
 #ifdef SCAN
 	    do_idf(header + I_NAMEOFF + 1, PACK_NAME);
 #endif /* SCAN */
-	    stf((unsigned long)in_data_size);
+	    stf((uint32_t)in_data_size);
 	    skip_file(ds_skip + in_rs);
 	    continue;
 	}
@@ -397,7 +378,7 @@ void macbinary()
 #ifdef SCAN
 	    do_idf(header + I_NAMEOFF + 1, ARCH_NAME);
 #endif /* SCAN */
-	    zma((char *)NULL, (unsigned long)in_data_size);
+	    zma((char *)NULL, (uint32_t)in_data_size);
 	    skip_file(ds_skip + in_rs);
 	    continue;
 	}
@@ -411,7 +392,7 @@ void macbinary()
 #ifdef SCAN
 	    do_idf(header + I_NAMEOFF + 1, ARCH_NAME);
 #endif /* SCAN */
-	    zma((char *)NULL, (unsigned long)in_data_size);
+	    zma((char *)NULL, (uint32_t)in_data_size);
 	    skip_file(ds_skip + in_rs);
 	    continue;
 	}
@@ -507,8 +488,8 @@ void macbinary()
 	}
 #endif /* DD */
 	if(header[0] == 0 /* MORE CHECKS HERE! */) {
-	    mcb(header, (unsigned long)in_rsrc_size,
-			(unsigned long)in_data_size, in_ds + in_rs);
+	    mcb(header, (uint32_t)in_rsrc_size,
+			(uint32_t)in_data_size, in_ds + in_rs);
 	    continue;
 	} else {
 	    (void)fprintf(stderr, "Unrecognized archive type.\n");
@@ -517,8 +498,8 @@ void macbinary()
     }
 }
 
-static void skip_file(skip)
-int skip;
+static void 
+skip_file (int skip)
 {
     char buff[1024];
     int n;
@@ -537,8 +518,8 @@ int skip;
 }
 
 #ifdef SCAN
-static void get_idf(kind)
-int kind;
+static void 
+get_idf (int kind)
 {
     char filename[255];
 

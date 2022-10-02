@@ -1,23 +1,25 @@
 #include "macunpack.h"
 #ifdef LZC
-#include <string.h>
-#include "globals.h"
+#define LZC_INTERNAL
 #include "lzc.h"
+
+#include <string.h>
+#include <stdlib.h>
+#include "globals.h"
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
+#include "de_compress.h"
+#include "mcb.h"
 
-extern void de_compress();
-extern void core_compress();
-extern void mcb();
+static void lzc_zivm(char *ohdr);
+static void lzc_wrfile(uint32_t obytes, uint32_t ibytes);
+static void lzc_zivu(char *ohdr);
 
-static void lzc_zivm();
-static void lzc_wrfile();
-static void lzc_zivu();
-
-void lzc(ohdr)
-char *ohdr;
+void 
+lzc (char *ohdr)
 {
     core_compress((char *)NULL);
     if(!strncmp(ohdr + I_TYPEOFF, "ZIVM", 4)) {
@@ -27,11 +29,11 @@ char *ohdr;
     }
 }
 
-static void lzc_zivm(ohdr)
-char *ohdr;
+static void 
+lzc_zivm (char *ohdr)
 {
     char hdr[HEADERBYTES];
-    unsigned long dataLength, rsrcLength, dataCLength, rsrcCLength;
+    uint32_t dataLength, rsrcLength, dataCLength, rsrcCLength;
     char ftype[5], fauth[5];
 
     if(fread(hdr, 1, HEADERBYTES, infp) != HEADERBYTES) {
@@ -69,8 +71,8 @@ char *ohdr;
 	transname(hdr + C_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -109,8 +111,8 @@ char *ohdr;
     }
 }
 
-static void lzc_wrfile(obytes, ibytes)
-unsigned long obytes, ibytes;
+static void 
+lzc_wrfile (uint32_t obytes, uint32_t ibytes)
 {
     int n, nbits;
     char subheader[3];
@@ -183,12 +185,12 @@ unsigned long obytes, ibytes;
     }
 }
 
-static void lzc_zivu(ohdr)
-char *ohdr;
+static void 
+lzc_zivu (char *ohdr)
 {
     (void)fprintf(stderr,
 	    "\tMacCompress(Unix) not yet implemented, copied as MacBinary\n");
-    mcb(ohdr, (unsigned long)in_rsrc_size, (unsigned long)in_data_size,
+    mcb(ohdr, (uint32_t)in_rsrc_size, (uint32_t)in_data_size,
 	in_ds + in_rs);
 }
 #else /* LZC */

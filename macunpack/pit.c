@@ -1,32 +1,34 @@
 #include "macunpack.h"
 #ifdef PIT
+#define PIT_INTERNAL
+#include "pit.h"
+
+#include <stdlib.h>
 #include <string.h>
-#include "../fileio/wrfile.h"
 #include "../fileio/fileglob.h"
 #include "../fileio/kind.h"
-#include "globals.h"
-#include "pit.h"
 #include "../fileio/machdr.h"
-#include "crc.h"
+#include "../fileio/wrfile.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
+#include "crc.h"
+#include "de_huffman.h"
+#include "globals.h"
 #include "huffman.h"
 
-extern void read_tree();
-extern void de_huffman();
-extern void set_huffman();
+static int pit_filehdr(struct pit_header *f, int compr);
+static void pit_wrfile(uint32_t bytes, int type);
+static void pit_nocomp(uint32_t ibytes);
+static void pit_huffman(uint32_t obytes);
 
-static int pit_filehdr();
-static void pit_wrfile();
-static void pit_nocomp();
-static void pit_huffman();
-
-void pit()
+void 
+pit (void)
 {
     struct pit_header filehdr;
     char pithdr[4];
     int decode, synced, ch;
-    unsigned long data_crc, crc;
+    uint32_t data_crc, crc;
 
     updcrc = binhex_updcrc;
     crcinit = binhex_crcinit;
@@ -122,10 +124,10 @@ void pit()
 	start_info(info, filehdr.rlen, filehdr.dlen);
 	start_data();
 	pit_wrfile(filehdr.dlen, decode);
-	data_crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.dlen);
+	data_crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.dlen);
 	start_rsrc();
 	pit_wrfile(filehdr.rlen, decode);
-	data_crc = (*updcrc)(data_crc, out_buffer, filehdr.rlen);
+	data_crc = (*updcrc)(data_crc, (unsigned char*)out_buffer, filehdr.rlen);
 	if(decode == nocomp) {
 	    crc = getb(infp);
 	    crc = (crc << 8) | getb(infp);
@@ -159,12 +161,11 @@ void pit()
     }
 }
 
-static int pit_filehdr(f, compr)
-struct pit_header *f;
-int compr;
+static int 
+pit_filehdr (struct pit_header *f, int compr)
 {
     register int i;
-    unsigned long crc;
+    uint32_t crc;
     int n;
     char hdr[HDRBYTES];
     char ftype[5], fauth[5];
@@ -182,7 +183,7 @@ int compr;
 	}
     }
     crc = INIT_CRC;
-    crc = (*updcrc)(crc, hdr, HDRBYTES - 2);
+    crc = (*updcrc)(crc, (unsigned char*)hdr, HDRBYTES - 2);
 
     f->hdrCRC = get2(hdr + H_HDRCRC);
     if(f->hdrCRC != crc) {
@@ -210,8 +211,8 @@ int compr;
 	transname(hdr + H_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)f->dlen, (long)f->rlen);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)f->dlen, (int32_t)f->rlen);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -238,9 +239,8 @@ int compr;
     return 1;
 }
 
-static void pit_wrfile(bytes, type)
-unsigned long bytes;
-int type;
+static void 
+pit_wrfile (uint32_t bytes, int type)
 {
     if(bytes == 0) {
 	return;
@@ -257,8 +257,8 @@ int type;
 /*---------------------------------------------------------------------------*/
 /*	No compression							     */
 /*---------------------------------------------------------------------------*/
-static void pit_nocomp(ibytes)
-unsigned long ibytes;
+static void 
+pit_nocomp (uint32_t ibytes)
 {
     int n;
 
@@ -275,8 +275,8 @@ unsigned long ibytes;
 /*---------------------------------------------------------------------------*/
 /*	Huffman compression						     */
 /*---------------------------------------------------------------------------*/
-static void pit_huffman(obytes)
-unsigned long obytes;
+static void 
+pit_huffman (uint32_t obytes)
 {
     de_huffman(obytes);
 }

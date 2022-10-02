@@ -1,3 +1,5 @@
+#include "rdfile.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +9,6 @@
 #endif /* TYPES_H */
 #include <sys/stat.h>
 #include "machdr.h"
-#include "rdfile.h"
 #include "rdfileopt.h"
 #ifndef DIRENT_H
 #include <sys/dir.h>
@@ -46,11 +47,11 @@
 #define RSRC_FORMAT	2
 #define UNIX_FORMAT	3
 
-static void check_files();
-static void read_file();
-static void enter_dir();
-static void exit_dir();
-static int get_stdin_file();
+static void check_files(int initial);
+static void read_file(void);
+static void enter_dir(void);
+static void exit_dir(void);
+static int get_stdin_file(void);
 
 char file_info[INFOBYTES];
 char *data_fork, *rsrc_fork;
@@ -81,20 +82,19 @@ static char f_name[] = ".foldername";
 #include "aufs.h"
 static char infodir[] = ".finderinfo";
 static char rsrcdir[] = ".resource";
-static void read_aufs_info();
+static void read_aufs_info(FILE *fd);
 #endif /* AUFS */
 #ifdef APPLEDOUBLE
 #include "appledouble.h"
 static char infodir[] = ".AppleDouble";
-static void read_appledouble_info();
+static void read_appledouble_info(FILE *fd);
 #endif /* APPLEDOUBLE */
 #endif /* APPLESHARE */
 static char filename[255];
 static int filekind;
 
-void setup(argc, argv)
-int argc;
-char **argv;
+void 
+setup (int argc, char **argv)
 {
     if(argc == 0) {
 	read_stdin = 1;
@@ -109,8 +109,8 @@ char **argv;
     }
 }
 
-static void check_files(initial)
-int initial;
+static void 
+check_files (int initial)
 {
     struct stat stbuf;
     int i, j, n;
@@ -292,7 +292,8 @@ int initial;
     }
 }
 
-int nextfile()
+int 
+nextfile (void)
 {
     int i;
 
@@ -337,7 +338,8 @@ again:
     }
 }
 
-static void read_file()
+static void 
+read_file (void)
 {
     FILE *fd;
     int c, j, lname, skip;
@@ -357,8 +359,8 @@ static void read_file()
 	}
 	(void)strcpy(file_info + I_NAMEOFF + 1, filename);
 	file_info[I_NAMEOFF] = strlen(filename);
-	put4(file_info + I_CTIMOFF, (unsigned long)stbuf.st_ctime + TIMEDIFF);
-	put4(file_info + I_MTIMOFF, (unsigned long)stbuf.st_mtime + TIMEDIFF);
+	put4(file_info + I_CTIMOFF, (uint32_t)stbuf.st_ctime + TIMEDIFF);
+	put4(file_info + I_MTIMOFF, (uint32_t)stbuf.st_mtime + TIMEDIFF);
 	if(data_only == RSRC_FORMAT) {
 	    rsrc_size = stbuf.st_size;
 	    data_size = 0;
@@ -380,7 +382,7 @@ static void read_file()
 	    } else {
 		(void)strncpy(file_info + I_AUTHOFF, f_auth, 4);
 	    }
-	    put4(file_info + I_RLENOFF, (unsigned long)rsrc_size);
+	    put4(file_info + I_RLENOFF, (uint32_t)rsrc_size);
 	    if((fd = fopen(filename, "r")) == NULL) {
 		(void)fprintf(stderr, "Cannot open file %s\n", filename);
 		exit(1);
@@ -411,7 +413,7 @@ static void read_file()
 	    } else {
 		(void)strncpy(file_info + I_AUTHOFF, f_auth, 4);
 	    }
-	    put4(file_info + I_DLENOFF, (unsigned long)data_size);
+	    put4(file_info + I_DLENOFF, (uint32_t)data_size);
 	    if((fd = fopen(filename, "r")) == NULL) {
 		(void)fprintf(stderr, "Cannot open file %s\n", filename);
 		exit(1);
@@ -554,7 +556,7 @@ static void read_file()
 	(void)strcat(filename1, filename);
 	if(stat(filename1, &stbuf) >= 0) {
 	    rsrc_size = stbuf.st_size;
-	    put4(file_info + I_RLENOFF, (unsigned long)rsrc_size);
+	    put4(file_info + I_RLENOFF, (uint32_t)rsrc_size);
 	    if(rsrc_size > 0) {
 		if(rsrc_size > max_rsrc_size) {
 		    if(rsrc_fork == NULL) {
@@ -577,7 +579,7 @@ static void read_file()
 	}
 	if(stat(filename, &stbuf) >= 0) {
 	    data_size = stbuf.st_size;
-	    put4(file_info + I_DLENOFF, (unsigned long)data_size);
+	    put4(file_info + I_DLENOFF, (uint32_t)data_size);
 	    if(data_size > 0) {
 		if(data_size > max_data_size) {
 		    if(data_fork == NULL) {
@@ -625,7 +627,7 @@ static void read_file()
 	(void)fclose(fd);
 	if(stat(filename, &stbuf) >= 0) {
 	    data_size = stbuf.st_size;
-	    put4(file_info + I_DLENOFF, (unsigned long)data_size);
+	    put4(file_info + I_DLENOFF, (uint32_t)data_size);
 	    if(data_size > 0) {
 		if(data_size > max_data_size) {
 		    if(data_fork == NULL) {
@@ -652,7 +654,8 @@ static void read_file()
     }
 }
 
-static void enter_dir()
+static void 
+enter_dir (void)
 {
     DIR *directory;
     struct dirstruct *curentry;
@@ -746,7 +749,8 @@ static void enter_dir()
     check_files(0);
 }
 
-static void exit_dir()
+static void 
+exit_dir (void)
 {
     filelist *old_files;
     int i;
@@ -767,8 +771,8 @@ static void exit_dir()
 
 #ifdef APPLESHARE
 #ifdef AUFS
-static void read_aufs_info(fd)
-FILE *fd;
+static void 
+read_aufs_info (FILE *fd)
 {
     FileInfo theinfo;
     int i, n;
@@ -813,15 +817,15 @@ FILE *fd;
     } else {
 	if(fstat(fileno(fd), &stbuf) >= 0) {
 	    put4(file_info + I_CTIMOFF,
-		(unsigned long)stbuf.st_ctime + TIMEDIFF);
+		(uint32_t)stbuf.st_ctime + TIMEDIFF);
 	    put4(file_info + I_MTIMOFF,
-		(unsigned long)stbuf.st_mtime + TIMEDIFF);
+		(uint32_t)stbuf.st_mtime + TIMEDIFF);
 	}
     }
 #else /* AUFSPLUS */
     if(fstat(fileno(fd), &stbuf) >= 0) {
-	put4(file_info + I_CTIMOFF, (unsigned long)stbuf.st_ctime + TIMEDIFF);
-	put4(file_info + I_MTIMOFF, (unsigned long)stbuf.st_mtime + TIMEDIFF);
+	put4(file_info + I_CTIMOFF, (uint32_t)stbuf.st_ctime + TIMEDIFF);
+	put4(file_info + I_MTIMOFF, (uint32_t)stbuf.st_mtime + TIMEDIFF);
     }
 #endif /* AUFSPLUS */
 }
@@ -832,8 +836,8 @@ FILE *fd;
    size and format.  I have not yet seen something that will lead me to
    believe different.
 */
-static void read_appledouble_info(fd)
-FILE *fd;
+static void 
+read_appledouble_info (FILE *fd)
 {
     FileInfo theinfo;
     int i, n;
@@ -861,12 +865,13 @@ FILE *fd;
     put4(file_info + I_CTIMOFF, get4(theinfo.fi_ctime) + TIMEDIFF);
     put4(file_info + I_MTIMOFF, get4(theinfo.fi_mtime) + TIMEDIFF);
     rsrc_size = get4(theinfo.fi_rsrc);
-    put4(file_info + I_RLENOFF, (unsigned long)rsrc_size);
+    put4(file_info + I_RLENOFF, (uint32_t)rsrc_size);
 }
 #endif /* APPLEDOUBLE */
 #endif /* APPLESHARE */
 
-static int get_stdin_file()
+static int 
+get_stdin_file (void)
 {
     int i, skip;
 
@@ -934,10 +939,9 @@ static int get_stdin_file()
     return ISFILE;
 }
 
-int rdfileopt(c)
-char c;
+int 
+rdfileopt (int c)
 {
-extern char *optarg;
 char name[32];
 
     switch(c) {
@@ -965,7 +969,8 @@ char name[32];
     return 1;
 }
 
-void give_rdfileopt()
+void 
+give_rdfileopt (void)
 {
     (void)fprintf(stderr, "File input options:\n");
     (void)fprintf(stderr, "-r:\tread as resource files\n");
@@ -979,19 +984,22 @@ void give_rdfileopt()
 	"-t ty:\tfiletype if one of the above options is used\n");
 }
 
-void set_norecurse()
+void 
+set_norecurse (void)
 {
     no_recurse = 1;
 }
 
-char *get_rdfileopt()
+char *
+get_rdfileopt (void)
 {
     static char options[] = "rduUc:t:";
 
     return options;
 }
 
-char *get_minb()
+char *
+get_minb (void)
 {
 #ifdef APPLESHARE
 #ifdef AUFS

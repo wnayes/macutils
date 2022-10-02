@@ -1,3 +1,9 @@
+#include "macunpack.h"
+#ifdef LZC
+#ifdef LZC_INTERNAL
+
+#include <stdint.h>
+
 #define HEADERBYTES 48
 #define MAGIC1	"\253\315\000\060"
 #define MAGIC2	"\037\235"
@@ -12,17 +18,20 @@
 #define C_AUTHOFF	36
 #define C_FLAGOFF	40
 
-typedef struct fileHdr {
-	unsigned long	magic1;
-	unsigned long	dataLength;
-	unsigned long	dataCLength;
-	unsigned long	rsrcLength;
-	unsigned long	rsrcCLength;
-	unsigned long	unknown1;
-	unsigned long	mtime;
-	unsigned long	ctime;
-	unsigned long	filetype;
-	unsigned long	fileauth;
-	unsigned long	flag1;
-	unsigned long	flag2;
-} fileHdr;
+typedef struct lzc_fileHdr {
+	uint32_t	magic1;
+	uint32_t	dataLength;
+	uint32_t	dataCLength;
+	uint32_t	rsrcLength;
+	uint32_t	rsrcCLength;
+	uint32_t	unknown1;
+	uint32_t	mtime;
+	uint32_t	ctime;
+	uint32_t	filetype;
+	uint32_t	fileauth;
+	uint32_t	flag1;
+	uint32_t	flag2;
+} lzc_fileHdr;
+#endif
+void lzc (char *ohdr);
+#endif

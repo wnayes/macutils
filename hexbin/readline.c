@@ -6,7 +6,8 @@ char line[1024];	/* Allow a lot! */
 /* Read a line.  Allow termination by CR or LF or both.  Also allow for
    a non-terminated line at end-of-file.  Returns 1 if a line is read,
    0 otherwise. */
-int readline()
+int 
+readline (void)
 {
     int ptr = 0, c;
 

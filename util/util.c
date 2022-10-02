@@ -4,16 +4,16 @@
 #include "masks.h"
 #include "util.h"
 
-extern void exit();
+#include <stdlib.h>
 
 #define MACTIMOFFS    1904
 
 static int mlength[] = {0, 31, 61, 92, 122, 153, 184, 214, 245, 275, 306, 337};
 
-unsigned long get4(char *bp)
+uint32_t get4(char *bp)
 {
     register int i;
-    long value = 0;
+    int32_t value = 0;
 
     for(i = 0; i < 4; i++) {
 	value <<= 8;
@@ -24,10 +24,10 @@ unsigned long get4(char *bp)
 }
 
 /* For if integers are stored wrong-endian. */
-unsigned long get4i(char *bp)
+uint32_t get4i(char *bp)
 {
     register int i;
-    long value = 0;
+    int32_t value = 0;
 
     bp += 3;
     for (i = 0; i < 4; i++) {
@@ -38,7 +38,7 @@ unsigned long get4i(char *bp)
     return value;
 }
 
-unsigned long get2(char *bp)
+uint32_t get2(char *bp)
 {
     register int i;
     int value = 0;
@@ -52,10 +52,10 @@ unsigned long get2(char *bp)
 }
 
 /* For if integers are stored wrong-endian. */
-unsigned long get2i(char *bp)
+uint32_t get2i(char *bp)
 {
     register int i;
-    long value = 0;
+    int32_t value = 0;
 
     bp += 1;
     for(i = 0; i < 2; i++) {
@@ -66,8 +66,8 @@ unsigned long get2i(char *bp)
     return value;
 }
 
-unsigned char getb(fp)
-FILE *fp;
+unsigned char 
+getb (FILE *fp)
 {
     int c;
 
@@ -80,16 +80,16 @@ FILE *fp;
     return c & BYTEMASK;
 }
 
-void copy(d, s, n)
-char *d, *s;
-int n;
+void 
+copy (char *d, char *s, int n)
 {
     while(--n >= 0) {
 	*d++ = *s++;
     }
 }
 
-int do_query()
+int 
+do_query (void)
 {
     char *tp, temp[10];
 
@@ -108,9 +108,8 @@ int do_query()
     return 0;
 }
 
-void put4(dest, value)
-char *dest;
-unsigned long value;
+void 
+put4 (char *dest, uint32_t value)
 {
     *dest++ = (value >> 24) & BYTEMASK;
     *dest++ = (value >> 16) & BYTEMASK;
@@ -118,16 +117,15 @@ unsigned long value;
     *dest++ = value & BYTEMASK;
 }
 
-void put2(dest, value)
-char *dest;
-unsigned long value;
+void 
+put2 (char *dest, uint32_t value)
 {
     *dest++ = (value >> 8) & BYTEMASK;
     *dest++ = value & BYTEMASK;
 }
 
-void do_indent(indent)
-int indent;
+void 
+do_indent (int indent)
 {
     int i;
 
@@ -136,8 +134,8 @@ int indent;
     }
 }
 
-real_time set_time(year, month, day, hours, minutes, seconds)
-int year, month, day, hours, minutes, seconds;
+real_time 
+set_time (int year, int month, int day, int hours, int minutes, int seconds)
 {
     real_time toset;
 
@@ -150,10 +148,10 @@ int year, month, day, hours, minutes, seconds;
     return toset;
 }
 
-unsigned long tomactime(time)
-real_time time;
+uint32_t 
+tomactime (real_time time)
 {
-    long accum;
+    int32_t accum;
     int year;
 
     accum = time.month - 3;
@@ -168,10 +166,10 @@ real_time time;
     return (unsigned)accum;
 }
 
-real_time frommactime(accum)
-unsigned long accum;
+real_time 
+frommactime (uint32_t accum)
 {
-long tmp1, tmp2;
+int32_t tmp1, tmp2;
 real_time time;
 
     time.seconds = tmp1 = accum % 60;
@@ -180,7 +178,7 @@ real_time time;
     accum /= 60;
     time.hours = tmp1 = accum % 24;
     accum /= 24;
-    tmp1 = (long)accum - 60;
+    tmp1 = (int32_t)accum - 60;
     tmp2 = tmp1 % 1461;
     if(tmp2 < 0) {
 	tmp2 += 1461;

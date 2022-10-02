@@ -1,18 +1,23 @@
+#include "macbinary.h"
+
 #include "globals.h"
+
+#include <stdlib.h>
+
 #include "../fileio/machdr.h"
 #include "../fileio/kind.h"
 #include "../util/util.h"
+#include "dir.h"
+#include "mcb.h"
 
-extern void dir();
-extern void mcb();
-extern void do_indent();
 
-static void skip_file();
+static void skip_file(int skip);
 #ifdef SCAN
-static void get_idf();
+static void get_idf(int kind);
 #endif /* SCAN */
 
-void macbinary()
+void 
+macbinary (void)
 {
     char header[INFOBYTES];
     int c;
@@ -48,8 +53,8 @@ void macbinary()
 	}
 #endif /* SCAN */
 	if(header[0] == 0 /* MORE CHECKS HERE! */) {
-	    mcb(header, (unsigned long)in_rsrc_size,
-			(unsigned long)in_data_size, in_ds + in_rs);
+	    mcb(header, (uint32_t)in_rsrc_size,
+			(uint32_t)in_data_size, in_ds + in_rs);
 	    continue;
 	} else {
 	    (void)fprintf(stderr, "Unrecognized header.\n");
@@ -58,8 +63,8 @@ void macbinary()
     }
 }
 
-static void skip_file(skip)
-    int skip;
+static void 
+skip_file (int skip)
 {
     char buff[1024];
     int n;
@@ -75,8 +80,8 @@ static void skip_file(skip)
 }
 
 #ifdef SCAN
-static void get_idf(kind)
-    int kind;
+static void 
+get_idf (int kind)
 {
     char filename[1024], filename1[255];
 

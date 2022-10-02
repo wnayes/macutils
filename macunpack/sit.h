@@ -1,3 +1,9 @@
+#include "macunpack.h"
+#ifdef SIT
+
+#include <stdint.h>
+
+#ifdef SIT_INTERNAL
 #define S_SIGNATURE    0
 #define S_NUMFILES     4
 #define S_ARCLENGTH    6
@@ -22,19 +28,19 @@
 #define F_HDRCRC       110
 #define FILEHDRSIZE    112
 
-typedef long OSType;
+typedef int32_t OSType;
 
 typedef struct sitHdr {			/* 22 bytes */
 	OSType	signature;		/* = 'SIT!' -- for verification */
 	unsigned short	numFiles;	/* number of files in archive */
-	unsigned long	arcLength;	/* length of entire archive incl.
+	uint32_t	arcLength;	/* length of entire archive incl.
 						hdr. -- for verification */
 	OSType	signature2;		/* = 'rLau' -- for verification */
 	unsigned char	version;	/* version number */
 	char reserved[7];
 } sitHdr;
 
-typedef struct fileHdr {		/* 112 bytes */
+typedef struct sit_fileHdr {		/* 112 bytes */
 	unsigned char	compRMethod;	/* rsrc fork compression method */
 	unsigned char	compDMethod;	/* data fork compression method */
 	unsigned char	fName[64];	/* a STR63 */
@@ -43,17 +49,17 @@ typedef struct fileHdr {		/* 112 bytes */
 	unsigned short FndrFlags;	/* copy of Finder flags.  For our
 						purposes, we can clear:
 						busy,onDesk */
-	unsigned long	creationDate;
-	unsigned long	modDate;	/* !restored-compat w/backup prgms */
-	unsigned long	rsrcLength;	/* decompressed lengths */
-	unsigned long	dataLength;
-	unsigned long	compRLength;	/* compressed lengths */
-	unsigned long	compDLength;
+	uint32_t	creationDate;
+	uint32_t	modDate;	/* !restored-compat w/backup prgms */
+	uint32_t	rsrcLength;	/* decompressed lengths */
+	uint32_t	dataLength;
+	uint32_t	compRLength;	/* compressed lengths */
+	uint32_t	compDLength;
 	unsigned short rsrcCRC;		/* crc of rsrc fork */
 	unsigned short dataCRC;		/* crc of data fork */
 	char reserved[6];
 	unsigned short hdrCRC;		/* crc of file header */
-} fileHdr;
+} sit_fileHdr;
 
 /* file format is:
 	sitArchiveHdr
@@ -70,7 +76,6 @@ typedef struct fileHdr {		/* 112 bytes */
 			fileNRsrcFork
 			fileNDataFork
 */
-
 
 
 /* compression methods */
@@ -91,3 +96,9 @@ typedef struct fileHdr {		/* 112 bytes */
 /* all other numbers are reserved */
 
 #define	ESC	0x90	/* repeat packing escape */
+
+#endif
+
+void sit (void);
+
+#endif

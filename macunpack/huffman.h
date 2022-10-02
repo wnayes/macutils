@@ -6,10 +6,10 @@ typedef struct node {
     struct node *one, *zero;
 } node;
 
-extern int (*get_bit)();
-extern void clrhuff();
+extern int (*get_bit)(void);
+extern void clrhuff(void);
 int gethuffbyte(node *l_nodelist);
-int getihuffbyte();
+int getihuffbyte(void);
 
 extern struct node nodelist[];
 extern int bytesread;

@@ -1,3 +1,5 @@
+#include "de_lzah.h"
+
 #include "macunpack.h"
 #ifdef SIT
 #define DELZAH
@@ -77,13 +79,13 @@ static short HuffLength[] = {
     7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
     8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 
-unsigned char (*lzah_getbyte)();
+unsigned char (*lzah_getbyte)(void);
 
-static void lzah_inithuf();
-static void lzah_reorder();
-static void lzah_move();
-static void lzah_getbit();
-static void lzah_outchar();
+static void lzah_inithuf(void);
+static void lzah_reorder(void);
+static void lzah_move(int *p, int *q, int n);
+static void lzah_getbit(void);
+static void lzah_outchar(int ch);
 
 static char lzah_buf[4096];
 static int lzah_bufptr;
@@ -93,8 +95,7 @@ static int Frequ[1000];
 static int ForwTree[1000];
 static int BackTree[1000];
 
-void de_lzah(obytes)
-unsigned long obytes;
+void de_lzah(uint32_t obytes)
 {
     int i, i1, j, ch, byte, offs, skip;
 
@@ -180,7 +181,8 @@ unsigned long obytes;
     }
 }
 
-static void lzah_inithuf()
+static void 
+lzah_inithuf (void)
 {
     int i, j;
 
@@ -199,7 +201,8 @@ static void lzah_inithuf()
     BackTree[T - 1] = 0;
 }
 
-static void lzah_reorder()
+static void 
+lzah_reorder (void)
 {
     int i, j, k, l;
 
@@ -236,8 +239,8 @@ static void lzah_reorder()
     }
 }
 
-static void lzah_move(p, q, n)
-int *p, *q, n;
+static void lzah_move(int *p, int *q, int n)
+
 {
     if(p > q) {
 	while(n-- > 0) {
@@ -252,7 +255,8 @@ int *p, *q, n;
     }
 }
 
-static void lzah_getbit()
+static void 
+lzah_getbit (void)
 {
     if(lzah_bitsavail != 0) {
 	lzah_bits = lzah_bits + lzah_bits;
@@ -263,8 +267,8 @@ static void lzah_getbit()
     }
 }
 
-static void lzah_outchar(ch)
-char ch;
+static void 
+lzah_outchar (int ch)
 {
     *out_ptr++ = ch;
     lzah_buf[lzah_bufptr++] = ch;

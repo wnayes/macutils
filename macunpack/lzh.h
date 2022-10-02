@@ -1,3 +1,9 @@
+#include "macunpack.h"
+#ifdef LZH
+#ifdef LZH_INTERNAL
+
+#include <stdint.h>
+
 #define FILEHDRSIZE	22
 #define TOTALSIZE	64
 #define L_HSIZE		0
@@ -30,13 +36,13 @@
 #define L_EEXTENDSZ	0
 #define L_EEXTEND	1
 
-typedef struct fileHdr { /* 58 bytes */
+typedef struct lzh_fileHdr { /* 58 bytes */
 	unsigned char	hsize;
 	unsigned char	hcrc;
 	char		method[5];
-	unsigned long	psize;
-	unsigned long	upsize;
-	unsigned long	lastmod;
+	uint32_t	psize;
+	uint32_t	upsize;
+	uint32_t	lastmod;
 	unsigned short	attribute;
 	unsigned char	nlength;
 	char		name[32];
@@ -45,7 +51,7 @@ typedef struct fileHdr { /* 58 bytes */
 	unsigned char	extendsize;
 	char		*extend;
 	char		*data;
-} fileHdr;
+} lzh_fileHdr;
 
 /* Currently known methods: */
 #define	lh0	0
@@ -57,3 +63,9 @@ typedef struct fileHdr { /* 58 bytes */
 #define lz4	6
 #define	lz5	7
 #define	lzs	8
+
+#endif
+
+void lzh (int kind);
+
+#endif

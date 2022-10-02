@@ -10,19 +10,16 @@
 #include "protocol.h"
 #include "tty.h"
 
-extern int tgetc();
-extern int tgetrec();
-extern void tputc();
-
-static void receive_part();
-static int receive_sync();
-static int receive_rec();
+static void receive_part(char *info, int size, int more);
+static int receive_sync(void);
+static int receive_rec(char *buf, int bufsize, int recno);
 
 char info[INFOBYTES];
 
-void xm_from()
+void 
+xm_from (void)
 {
-unsigned long data_size, rsrc_size;
+uint32_t data_size, rsrc_size;
 char text[64];
 
     if(receive_sync() == ACK) {
@@ -40,11 +37,10 @@ char text[64];
     }
 }
 
-static void receive_part(info, size, more)
-char *info;
-int size, more;
+static void 
+receive_part (char *info, int size, int more)
 {
-int recno = 1, i, status, naks = 0;
+int recno = 1, status, naks = 0;
 
     status = 0;
     while(status != EOT) {
@@ -82,7 +78,8 @@ int recno = 1, i, status, naks = 0;
     }
 }
 
-static int receive_sync()
+static int 
+receive_sync (void)
 {
 int c;
 
@@ -109,9 +106,8 @@ int c;
     return ACK;
 }
 
-static int receive_rec(buf, bufsize, recno)
-char *buf;
-int bufsize, recno;
+static int 
+receive_rec (char *buf, int bufsize, int recno)
 {
 int i, cksum, c, rec, recbar;
 char *bp;

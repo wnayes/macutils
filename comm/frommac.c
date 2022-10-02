@@ -8,6 +8,7 @@
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "globals.h"
+#include "tty.h"
 #include "../fileio/fileglob.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/wrfileopt.h"
@@ -17,12 +18,9 @@
 
 #define LOCALOPT	"lmxyzoTVH"
 
-extern void setup_tty();
-extern void reset_tty();
-
 extern char info[];
 
-static void usage();
+static void usage(void);
 
 static char options[128];
 static int multi_file = 0;
@@ -30,8 +28,6 @@ static int listmode = 0;
 
 int main(int argc, char **argv)
 {
-    extern int optind;
-    extern char *optarg;
     int errflg;
     int c;
     char tname[64];
@@ -155,7 +151,7 @@ int main(int argc, char **argv)
 	    transname(info + I_AUTHOFF, fauth, 4);
 	    transname(info + I_TYPEOFF, ftype, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%u, rsrc=%u",
 		    tname, ftype, fauth,
 		    get4(info + I_DLENOFF), get4(info + I_RLENOFF));
 	    (void)fprintf(stderr, "\n");
@@ -165,7 +161,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     (void)fprintf(stderr, "Usage: frommac [-%s]\n", options);
     (void)fprintf(stderr, "Use \"frommac -H\" for help.\n");

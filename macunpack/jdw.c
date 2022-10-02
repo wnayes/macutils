@@ -1,24 +1,23 @@
 #include "macunpack.h"
 #ifdef JDW
+#define JDW_INTERNAL
 #include "jdw.h"
+
 #include "globals.h"
 #include "huffman.h"
+#include "de_huffman.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/machdr.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "../util/masks.h"
 
-extern void de_huffman();
-extern void set_huffman();
-extern void read_tree();
-extern void clrhuff();
+static void jdw_wrfile(uint32_t rsrcLength, uint32_t dataLength);
+static void jdw_wrfork(uint32_t length);
+static void jdw_block(int olength);
 
-static void jdw_wrfile();
-static void jdw_wrfork();
-static void jdw_block();
-
-void jdw(ibytes)
-unsigned long ibytes;
+void 
+jdw (uint32_t ibytes)
 {
     char fauth[5], ftype[5];
     int filel, i;
@@ -67,8 +66,8 @@ unsigned long ibytes;
 	transname(info + I_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -78,11 +77,11 @@ unsigned long ibytes;
 	    (void)fputc('\n', stderr);
 	}
     }
-    jdw_wrfile((unsigned long)rsrcLength, (unsigned long)dataLength);
+    jdw_wrfile((uint32_t)rsrcLength, (uint32_t)dataLength);
 }
 
-static void jdw_wrfile(rsrcLength, dataLength)
-unsigned long rsrcLength, dataLength;
+static void 
+jdw_wrfile (uint32_t rsrcLength, uint32_t dataLength)
 {
     if(write_it) {
 	define_name(text);
@@ -108,11 +107,11 @@ unsigned long rsrcLength, dataLength;
     }
 }
 
-static void jdw_wrfork(length)
-unsigned long length;
+static void 
+jdw_wrfork (uint32_t length)
 {
     int olength, ilength, i;
-    unsigned long origlength, comprlength;
+    uint32_t origlength, comprlength;
 
     if(length == 0) {
 	(void)fprintf(stderr, "empty");
@@ -141,8 +140,8 @@ unsigned long length;
     }
 }
 
-static void jdw_block(olength)
-int olength;
+static void 
+jdw_block (int olength)
 {
     bytesread = 0;
     read_tree();
@@ -152,7 +151,7 @@ int olength;
 	bytesread++;
     }
     clrhuff();
-    de_huffman((unsigned long)olength);
+    de_huffman((uint32_t)olength);
 }
 #else /* JDW */
 int jdw; /* keep lint and some compilers happy */

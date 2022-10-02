@@ -1,16 +1,17 @@
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
+
 #include "globals.h"
 #include "../util/patchlevel.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/wrfileopt.h"
 #include "../util/util.h"
+#include "macbinary.h"
 
 #define LOCALOPT	"ilqVH"
 
-void macbinary();
-
-static void usage();
+static void usage(void);
 
 static char options[128];
 
@@ -87,7 +88,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     (void)fprintf(stderr, "Usage: macsave [-%s]\n", options);
     (void)fprintf(stderr, "Use \"macsave -H\" for help.\n");

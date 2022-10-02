@@ -1,16 +1,16 @@
 #include "macunpack.h"
 #ifdef STF
 #include <string.h>
+#include <stdlib.h>
 #include "stf.h"
 #include "globals.h"
 #include "huffman.h"
 #include "../util/curtime.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/machdr.h"
+#include "../util/transname.h"
 #include "../util/util.h"
-
-extern void de_huffman();
-extern void set_huffman();
+#include "de_huffman.h"
 
 typedef struct{
     int num;
@@ -20,17 +20,17 @@ typedef struct{
 static table_struct table[511];
 static char length[256];
 
-static void stf_wrfile();
-static void stf_wrfork();
-static void stf_construct();
+static void stf_wrfile(uint32_t rsrcLength, uint32_t dataLength, uint32_t ibytes);
+static void stf_wrfork(uint32_t *num, uint32_t towrite, int offs);
+static void stf_construct(int n);
 
-void stf(ibytes)
-unsigned long ibytes;
+void 
+stf (uint32_t ibytes)
 {
     char magic[3], fauth[5], ftype[5];
     int filel, i;
     unsigned int rsrcLength, dataLength;
-    unsigned long curtime;
+    uint32_t curtime;
 
     set_huffman(HUFF_LE);
     for(i = 0; i < 3; i++) {
@@ -58,19 +58,19 @@ unsigned long ibytes;
     for(i = 0; i < 4; i++) {
 	info[I_AUTHOFF + i] = getb(infp);
     }
-    curtime = (unsigned long)time((time_t *)0) + TIMEDIFF;
+    curtime = (uint32_t)time((time_t *)0) + TIMEDIFF;
     put4(info + I_CTIMOFF, curtime);
     put4(info + I_MTIMOFF, curtime);
     rsrcLength = 0;
     for(i = 0; i < 4; i++) {
 	rsrcLength = (rsrcLength << 8) + getb(infp);
     }
-    put4(info + I_RLENOFF, (unsigned long)rsrcLength);
+    put4(info + I_RLENOFF, (uint32_t)rsrcLength);
     dataLength = 0;
     for(i = 0; i < 4; i++) {
 	dataLength = (dataLength << 8) + getb(infp);
     }
-    put4(info + I_DLENOFF, (unsigned long)dataLength);
+    put4(info + I_DLENOFF, (uint32_t)dataLength);
     ibytes -= filel + 20;
     write_it = 1;
     if(list) {
@@ -79,8 +79,8 @@ unsigned long ibytes;
 	transname(info + I_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -90,13 +90,13 @@ unsigned long ibytes;
 	    (void)fputc('\n', stderr);
 	}
     }
-    stf_wrfile((unsigned long)rsrcLength, (unsigned long)dataLength, ibytes);
+    stf_wrfile((uint32_t)rsrcLength, (uint32_t)dataLength, ibytes);
 }
 
-static void stf_wrfile(rsrcLength, dataLength, ibytes)
-unsigned long rsrcLength, dataLength, ibytes;
+static void 
+stf_wrfile (uint32_t rsrcLength, uint32_t dataLength, uint32_t ibytes)
 {
-    unsigned long num = 0;
+    uint32_t num = 0;
 
     if(write_it) {
 	define_name(text);
@@ -117,9 +117,8 @@ unsigned long rsrcLength, dataLength, ibytes;
     }
 }
 
-static void stf_wrfork(num, towrite, offs)
-unsigned long *num, towrite;
-int offs;
+static void 
+stf_wrfork (uint32_t *num, uint32_t towrite, int offs)
 {
     int c, k, max, i, i1;
     char *tmp_out_ptr;
@@ -158,7 +157,7 @@ int offs;
 	    stf_construct(32);
 	    tmp_out_ptr = out_ptr;
 	    out_ptr = length;
-	    de_huffman((unsigned long)256);
+	    de_huffman((uint32_t)256);
 	    out_ptr = tmp_out_ptr;
 	    for(i = 1; i < 257; i++) {
 		table[i].num = 0x40000000 >> length[i - 1];
@@ -182,13 +181,13 @@ int offs;
 	if(i > towrite - *num) {
 	    i = towrite - *num;
 	}
-	de_huffman((unsigned long)i);
+	de_huffman((uint32_t)i);
 	*num += i;
     }
 }
 
-static void stf_construct(n)
-int n;
+static void 
+stf_construct (int n)
 {
     int i, i1, i2, j1, k;
 

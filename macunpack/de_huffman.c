@@ -1,3 +1,5 @@
+#include "de_huffman.h"
+
 #include "macunpack.h"
 #ifdef JDW
 #define DEHUFFMAN
@@ -21,19 +23,19 @@
 #include "huffman.h"
 #include "../util/util.h"
 
-int (*get_bit)();
+int (*get_bit)(void);
 int bytesread;
 /* 515 because StuffIt Classic needs more than the needed 511 */
 struct node nodelist[515];
-static int getbit_be();
-static int getbit_le();
-static int getdecodebyte();
+static int getbit_be(void);
+static int getbit_le(void);
+static int getdecodebyte(void);
 
-static node *nodeptr, *read_sub_tree();
+static node *nodeptr, *read_sub_tree(void);
 
 static int bit;
 
-void de_huffman(unsigned long obytes)
+void de_huffman(uint32_t obytes)
 {
     while(obytes != 0) {
 	*out_ptr++ = gethuffbyte(nodelist);
@@ -60,7 +62,8 @@ void set_huffman(int endian)
     }
 }
 
-void read_tree()
+void 
+read_tree (void)
 {
     nodeptr = nodelist;
     bit = 0;		/* put us on a boundary */
@@ -69,7 +72,7 @@ void read_tree()
 
 /* This routine recursively reads the Huffman encoding table and builds
    a decoding tree. */
-static node *read_sub_tree()
+static node *read_sub_tree(void)
 {
     node *np;
 
@@ -86,7 +89,8 @@ static node *read_sub_tree()
 }
 
 /* This routine returns the next bit in the input stream (MSB first) */
-static int getbit_be()
+static int 
+getbit_be (void)
 {
     static int b;
 
@@ -100,7 +104,8 @@ static int getbit_be()
 }
 
 /* This routine returns the next bit in the input stream (LSB first) */
-static int getbit_le()
+static int 
+getbit_le (void)
 {
     static int b;
 
@@ -113,7 +118,8 @@ static int getbit_le()
     return (b >> (7 - bit)) & 1;
 }
 
-void clrhuff()
+void 
+clrhuff (void)
 {
     bit = 0;
 }
@@ -129,12 +135,14 @@ int gethuffbyte(node *l_nodelist)
     return np->byte;
 }
 
-int getihuffbyte()
+int 
+getihuffbyte (void)
 {
     return gethuffbyte(nodelist);
 }
 
-static int getdecodebyte()
+static int 
+getdecodebyte (void)
 {
     register int i, b;
 

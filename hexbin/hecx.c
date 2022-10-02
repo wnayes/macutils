@@ -4,27 +4,28 @@
 #include "crc.h"
 #include "readline.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "buffer.h"
 #include "printhdr.h"
 
-extern void exit();
+#include <stdlib.h>
 
-static void do_o_forks();
-static long make_file();
-static void comp_c_crc();
-static void comp_e_crc();
-static int comp_to_bin();
-static int hex_to_bin();
-static int hexit();
+static void do_o_forks(void);
+static int32_t make_file(int compressed);
+static void comp_c_crc(int c);
+static void comp_e_crc(int c);
+static int comp_to_bin(void);
+static int hex_to_bin(void);
+static int hexit(int c);
 
 static int compressed;
 
 /* old format -- process .hex and .hcx files */
-void hecx(macname, filename)
-char *macname, *filename;
+void 
+hecx (char *macname, char *filename)
 {
     int n;
 
@@ -86,19 +87,20 @@ char *macname, *filename;
     (void)strncpy(info + I_NAMEOFF + 1, mh.m_name, n);
     (void)strncpy(info + I_TYPEOFF, mh.m_type, 4);
     (void)strncpy(info + I_AUTHOFF, mh.m_author, 4);
-    put2(info + I_FLAGOFF, (unsigned long)mh.m_flags);
-    put4(info + I_DLENOFF, (unsigned long)mh.m_datalen);
-    put4(info + I_RLENOFF, (unsigned long)mh.m_rsrclen);
-    put4(info + I_CTIMOFF, (unsigned long)mh.m_createtime);
-    put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
+    put2(info + I_FLAGOFF, (uint32_t)mh.m_flags);
+    put4(info + I_DLENOFF, (uint32_t)mh.m_datalen);
+    put4(info + I_RLENOFF, (uint32_t)mh.m_rsrclen);
+    put4(info + I_CTIMOFF, (uint32_t)mh.m_createtime);
+    put4(info + I_MTIMOFF, (uint32_t)mh.m_modifytime);
     print_header2(0);
     end_put();
 }
 
-static void do_o_forks()
+static void 
+do_o_forks (void)
 {
     int forks = 0, found_crc = 0;
-    unsigned long calc_crc, file_crc;
+    uint32_t calc_crc, file_crc;
 
     crc = 0;    /* calculate a crc for both forks */
 
@@ -127,13 +129,13 @@ static void do_o_forks()
 	if(compressed && strncmp(line, "***CRC:", 7) == 0) {
 	    found_crc++;
 	    calc_crc = crc;
-	    (void)sscanf(&line[7], "%lx", &file_crc);
+	    (void)sscanf(&line[7], "%x", &file_crc);
 	    break;
 	}
 	if(!compressed && strncmp(line, "***CHECKSUM:", 12) == 0) {
 	    found_crc++;
 	    calc_crc = crc & BYTEMASK;
-	    (void)sscanf(&line[12], "%lx", &file_crc);
+	    (void)sscanf(&line[12], "%x", &file_crc);
 	    file_crc &= BYTEMASK;
 	    break;
 	}
@@ -150,10 +152,10 @@ static void do_o_forks()
     }
 }
 
-static long make_file(compressed)
-int compressed;
+static int32_t 
+make_file (int compressed)
 {
-    register long nbytes = 0L;
+    register int32_t nbytes = 0L;
 
     while(readline()) {
 	if(line[0] == 0) {
@@ -171,22 +173,23 @@ int compressed;
     return nbytes;
 }
 
-static void comp_c_crc(c)
-unsigned char c;
+static void 
+comp_c_crc (int c)
 {
     crc = (crc + c) & WORDMASK;
     crc = ((crc << 3) & WORDMASK) | (crc >> 13);
 }
 
-static void comp_e_crc(c)
-unsigned char c;
+static void 
+comp_e_crc (int c)
 {
     crc += c;
 }
 
 #define SIXB(c) (((c)-0x20) & 0x3f)
 
-static int comp_to_bin()
+static int 
+comp_to_bin (void)
 {
     char obuf[BUFSIZ];
     register char *ip = line;
@@ -217,7 +220,8 @@ static int comp_to_bin()
     return outcount;
 }
 
-static int hex_to_bin()
+static int 
+hex_to_bin (void)
 {
     register char *ip = line;
     register int n, outcount;
@@ -233,8 +237,8 @@ static int hex_to_bin()
     return outcount;
 }
 
-static int hexit(c)
-int c;
+static int 
+hexit (int c)
 {
     if('0' <= c && c <= '9') {
 	return c - '0';

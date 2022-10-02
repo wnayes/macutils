@@ -8,8 +8,10 @@ int bit_be_inbytes;
 static unsigned int bit_be_subbitbuf;
 static int bit_be_bitcount;
 
-void bit_be_fillbuf(n)  /* Shift bit_be_bitbuf n bits left, read n bits */
-int n;
+void 
+bit_be_fillbuf (  /* Shift bit_be_bitbuf n bits left, read n bits */
+    int n
+)
 {
     bit_be_bitbuf <<= n;
     while (n > bit_be_bitcount) {
@@ -26,8 +28,8 @@ int n;
     bit_be_bitbuf &= WORDMASK;
 }
 
-unsigned int bit_be_getbits(n)
-int n;
+unsigned int 
+bit_be_getbits (int n)
 {
     unsigned int x;
 
@@ -36,7 +38,8 @@ int n;
     return x;
 }
 
-void bit_be_init_getbits()
+void 
+bit_be_init_getbits (void)
 {
     bit_be_bitbuf = 0;
     bit_be_subbitbuf = 0;

@@ -1,17 +1,20 @@
+#include "mcb.h"
+
+#include <stdlib.h>
+
 #include "globals.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../util/masks.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 
 static int mcb_read;
 
-static void mcb_wrfile();
+static void mcb_wrfile(uint32_t ibytes);
 
-void mcb(hdr, rsrcLength, dataLength, toread)
-char *hdr;
-unsigned long rsrcLength, dataLength;
-int toread;
+void 
+mcb (char *hdr, uint32_t rsrcLength, uint32_t dataLength, int toread)
 {
     register int i;
     int n;
@@ -39,8 +42,8 @@ int toread;
 	transname(hdr + I_AUTHOFF, fauth, 4);
 	do_indent(indent);
 	(void)fprintf(stderr,
-		"name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		text, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		"name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		text, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	if(info_only) {
 	    write_it = 0;
 	}
@@ -66,8 +69,8 @@ int toread;
     }
 }
 
-static void mcb_wrfile(ibytes)
-unsigned long ibytes;
+static void 
+mcb_wrfile (uint32_t ibytes)
 {
     int n;
 

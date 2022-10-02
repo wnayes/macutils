@@ -1,5 +1,7 @@
 #include "macunpack.h"
+#include "bin.h"
 #ifdef BIN
+#include <stdlib.h>
 #include <string.h>
 #include "globals.h"
 #include "../fileio/machdr.h"
@@ -7,15 +9,13 @@
 #include "../fileio/kind.h"
 #include "../util/util.h"
 #include "../util/masks.h"
+#include "mcb.h"
 
-extern void mcb();
-
-void bin(header, data_size, UMcp)
-char *header;
-int data_size, UMcp;
+void 
+bin (char *header, int data_size, int UMcp)
 {
     char hdr[INFOBYTES];
-    unsigned long rsrcLength, dataLength;
+    uint32_t rsrcLength, dataLength;
 
     hdr[0] = getb(infp);
     (void)ungetc(hdr[0], infp);
@@ -39,7 +39,7 @@ int data_size, UMcp;
 #ifdef SCAN
 	do_idf("", COPY);
 #endif /* SCAN */
-	mcb(header, (unsigned long)in_data_size, (unsigned long)in_rsrc_size,
+	mcb(header, (uint32_t)in_data_size, (uint32_t)in_rsrc_size,
 	    in_ds + in_rs);
 	ds_skip = 0;
 	rs_skip = 0;

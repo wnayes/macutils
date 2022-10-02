@@ -1,11 +1,14 @@
 #include "macunpack.h"
 #ifdef DIA
+#define DIA_INTERNAL
+#include "dia.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "globals.h"
-#include "dia.h"
 #include "../util/curtime.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
@@ -26,17 +29,17 @@ static int dia_LZtab[BCHUNKSIZE];
 static unsigned char *dia_bit_base;
 static int dia_imask;
 
-static void dia_folder();
-static void dia_file();
-static void dia_getlength();
-static void dia_skipfork();
-static void dia_getfork();
-static void dia_getblock();
-static int dia_decode();
-static int dia_prevbit();
+static void dia_folder(unsigned char *name);
+static void dia_file(int indicator, unsigned char *name);
+static void dia_getlength(int nblocks);
+static void dia_skipfork(int nblocks);
+static void dia_getfork(int nblocks);
+static void dia_getblock(unsigned char **archive_ptr, unsigned char **block_ptr);
+static int dia_decode(unsigned char *ibuff, unsigned char *obuff, int in_length);
+static int dia_prevbit(void);
 
-void dia(bin_hdr)
-unsigned char *bin_hdr;
+void 
+dia (unsigned char *bin_hdr)
 {
     int i, folder, nlength;
     unsigned char hdr;
@@ -109,11 +112,11 @@ unsigned char *bin_hdr;
     free((char *)header);
 }
 
-static void dia_folder(name)
-unsigned char *name;
+static void 
+dia_folder (unsigned char *name)
 {
     unsigned char lname[32];
-    int i, length, doit;
+    int i, length, doit = 0;
     unsigned char indicator, *old_ptr;
 
     if(name != NULL) {
@@ -191,8 +194,8 @@ unsigned char *name;
     }
 }
 
-static void dia_file(indicator, name)
-unsigned char indicator, *name;
+static void 
+dia_file (int indicator, unsigned char *name)
 {
     unsigned char lname[32];
     int i, length, doit;
@@ -202,7 +205,7 @@ unsigned char indicator, *name;
     int dataLength, rsrcLength;
     int cdataLength, crsrcLength;
     int dataMethod, rsrcMethod;
-    unsigned long curtime;
+    uint32_t curtime;
 
     if(name != NULL) {
 	for(i = 0; i < INFOBYTES; i++) {
@@ -230,7 +233,7 @@ unsigned char indicator, *name;
 	    info[I_MTIMOFF + i] = *dia_header_ptr++;
 	}
     } else {
-	curtime = (unsigned long)time((time_t *)0) + TIMEDIFF;
+	curtime = (uint32_t)time((time_t *)0) + TIMEDIFF;
 	put4(info + I_CTIMOFF, curtime);
 	put4(info + I_MTIMOFF, curtime);
     }
@@ -266,16 +269,16 @@ unsigned char indicator, *name;
 	crsrcLength = dia_cforklength;
 	rsrcMethod = dia_method;
 	dia_archive_ptr = old_archive_ptr;
-	put4(info + I_DLENOFF, (unsigned long)dataLength);
-	put4(info + I_RLENOFF, (unsigned long)rsrcLength);
+	put4(info + I_DLENOFF, (uint32_t)dataLength);
+	put4(info + I_RLENOFF, (uint32_t)rsrcLength);
 	if(list) {
 	    transname(info + I_NAMEOFF + 1, (char *)lname, length);
 	    do_indent(indent);
 	    transname(info + I_TYPEOFF, ftype, 4);
 	    transname(info + I_AUTHOFF, fauth, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
-		    lname, ftype, fauth, (long)dataLength, (long)rsrcLength);
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
+		    lname, ftype, fauth, (int32_t)dataLength, (int32_t)rsrcLength);
 	    if(info_only) {
 		doit = 0;
 	    } else {
@@ -296,7 +299,7 @@ unsigned char indicator, *name;
     }
     if(doit) {
 	define_name((char *)lname);
-	start_info(info, (unsigned long)rsrcLength, (unsigned long)dataLength);
+	start_info(info, (uint32_t)rsrcLength, (uint32_t)dataLength);
     }
     if(verbose) {
 	(void)fprintf(stderr, "\tData: ");
@@ -346,8 +349,8 @@ unsigned char indicator, *name;
     }
 }
 
-static void dia_getlength(nblocks)
-int nblocks;
+static void 
+dia_getlength (int nblocks)
 {
     int length;
     unsigned char *arch_ptr, *block_ptr;
@@ -379,8 +382,8 @@ int nblocks;
     }
 }
 
-static void dia_skipfork(nblocks)
-int nblocks;
+static void 
+dia_skipfork (int nblocks)
 {
     int length;
 
@@ -393,16 +396,16 @@ int nblocks;
     }
 }
 
-static void dia_getfork(nblocks)
-int nblocks;
+static void 
+dia_getfork (int nblocks)
 {
     while(nblocks-- > 0) {
 	dia_getblock(&dia_archive_ptr, (unsigned char **)&out_ptr);
     }
 }
 
-static void dia_getblock(archive_ptr, block_ptr)
-unsigned char **archive_ptr, **block_ptr;
+static void 
+dia_getblock (unsigned char **archive_ptr, unsigned char **block_ptr)
 {
     int length, i;
     unsigned char *arch_ptr, *bl_ptr;
@@ -425,8 +428,8 @@ unsigned char **archive_ptr, **block_ptr;
     *archive_ptr += length + 2;
 }
 
-static int dia_decode(ibuff, obuff, in_length)
-unsigned char *ibuff, *obuff; int in_length;
+static int 
+dia_decode (unsigned char *ibuff, unsigned char *obuff, int in_length)
 {
     int nbits, set_zero, i, j;
     unsigned char *bitbuf_ptr;
@@ -539,7 +542,8 @@ unsigned char *ibuff, *obuff; int in_length;
     return out_ptr - obuff;
 }
 
-static int dia_prevbit()
+static int 
+dia_prevbit (void)
 {
     int c;
 

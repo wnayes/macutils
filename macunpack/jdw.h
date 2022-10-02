@@ -1,3 +1,9 @@
+#include "macunpack.h"
+#ifdef JDW
+#ifdef JDW_INTERNAL
+
+#include <stdint.h>
+
 #define	J_MAGIC		0
 #define J_TYPE		6
 #define J_AUTH		10
@@ -8,16 +14,19 @@
 #define	J_MTIME		34
 #define	J_FLENGTH	38
 
-typedef struct fileHdr {
+typedef struct jdw_fileHdr {
 	char		magic[6];
-	unsigned long	type;
-	unsigned long	auth;
+	uint32_t	type;
+	uint32_t	auth;
 	char		finfo[8];
-	unsigned long	dataLength;
-	unsigned long	rsrcLength;
-	unsigned long	ctime;
-	unsigned long	mtime;
+	uint32_t	dataLength;
+	uint32_t	rsrcLength;
+	uint32_t	ctime;
+	uint32_t	mtime;
 	char		flength;
 	char		fname[32];	/* actually flength */
-} fileHdr;
+} jdw_fileHdr;
 
+#endif
+void jdw (uint32_t ibytes);
+#endif

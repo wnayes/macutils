@@ -18,8 +18,8 @@ int was_macbin;
 FILE *ifp;
 
 #ifdef SCAN
-void do_error(string)
-char *string;
+void 
+do_error (char *string)
 {
     do_idf(string, ERROR);
 }

@@ -1,14 +1,16 @@
+#include "wrfile.h"
+
 #ifdef TYPES_H
 #include <sys/types.h>
 #endif /* TYPES_H */
 #include <sys/stat.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <unistd.h>
 #include "machdr.h"
-#include "wrfile.h"
 #include "wrfileopt.h"
 #include "../util/util.h"
 #ifdef AUFSPLUS
@@ -43,17 +45,17 @@ char *sprintf();
 #endif /* UNDEF */
 
 #ifdef AUFS
-static void check_aufs();
-static void aufs_namings();
-static void wr_aufs_info();
+static void check_aufs(void);
+static void aufs_namings(void);
+static void wr_aufs_info(FILE* fp);
 #endif /* AUFS */
 #ifdef APPLEDOUBLE
-static void check_appledouble();
-static void appledouble_namings();
-static void wr_appledouble_info();
+static void check_appledouble(void);
+static void appledouble_namings(void);
+static void wr_appledouble_info(FILE* fp);
 #endif /* APPLEDOUBLE */
 #ifdef APPLESHARE
-static void mk_share_name();
+static void mk_share_name(void);
 #endif /* APPLESHARE */
 
 #ifndef BSD
@@ -100,10 +102,10 @@ static char init_buffer[128];
 static char *buffer = &(init_buffer[0]);
 static char *rbuffer = NULL, *dbuffer = NULL;
 static char *ptr;
-static unsigned long rsz, dsz, totsize, maxsize;
+static uint32_t rsz, dsz, totsize, maxsize;
 
-void define_name(text)
-char *text;
+void 
+define_name (char *text)
 {
     (void)sprintf(f_info, "%s.info", text);
     (void)sprintf(f_rsrc, "%s.rsrc", text);
@@ -118,9 +120,8 @@ char *text;
 #endif /* APPLESHARE */
 }
 
-void start_info(info, rsize, dsize)
-char *info;
-unsigned long rsize, dsize;
+void 
+start_info (char *info, uint32_t rsize, uint32_t dsize)
 {
     int rs, ds;
 
@@ -158,17 +159,20 @@ unsigned long rsize, dsize;
 #endif /* APPLEDOUBLE */
 }
 
-void start_rsrc()
+void 
+start_rsrc (void)
 {
     out_buffer = out_ptr = rbuffer;
 }
 
-void start_data()
+void 
+start_data (void)
 {
     out_buffer = out_ptr = dbuffer;
 }
 
-void end_file()
+void 
+end_file (void)
 {
     FILE *fp;
     int i, c;
@@ -324,9 +328,8 @@ void end_file()
 }
 
 #ifdef SCAN
-void do_idf(name, kind)
-char *name;
-int kind;
+void 
+do_idf (char *name, int kind)
 {
     int n;
 
@@ -336,7 +339,7 @@ int kind;
     n = strlen(name);
     (void)bzero(buffer, INFOBYTES);
     buffer[I_NAMEOFF + 1] = kind;
-    put4(buffer + I_DLENOFF, (unsigned long)n);
+    put4(buffer + I_DLENOFF, (uint32_t)n);
     (void)fwrite(buffer, 1, INFOBYTES, stdout);
     if(n != 0) {
 	(void)fwrite(name, 1, n, stdout);
@@ -348,8 +351,8 @@ int kind;
 }
 #endif /* SCAN */
 
-void do_mkdir(name, header)
-char *name, *header;
+void 
+do_mkdir (char *name, char *header)
 {
 struct stat sbuf;
 FILE *fp;
@@ -507,7 +510,7 @@ char dirinfo[I_NAMELEN*3+INFOSZ+10];
 #endif /* APPLESHARE */
 }
 
-void enddir()
+void enddir(void)
 {
 char header[INFOBYTES];
 int i;
@@ -529,7 +532,7 @@ int i;
 
 #ifdef APPLESHARE
 #ifdef AUFS
-static void check_aufs()
+static void check_aufs(void)
 {
     /* check for .resource/ and .finderinfo/ */
     struct stat stbuf;
@@ -555,7 +558,7 @@ static void check_aufs()
     }
 }
 
-static void aufs_namings()
+static void aufs_namings(void)
 {
     mk_share_name();
     (void)sprintf(f_info_aufs, "%s/%s", infodir, share_name);
@@ -563,8 +566,7 @@ static void aufs_namings()
     (void)sprintf(f_data, "%s", share_name);
 }
 
-static void wr_aufs_info(fp)
-FILE *fp;
+static void wr_aufs_info(FILE* fp)
 {
     FileInfo theinfo;
     int n;
@@ -581,7 +583,7 @@ FILE *fp;
     theinfo.fi_datevalid = FI_CDATE | FI_MDATE;
     put4(theinfo.fi_ctime, get4(buffer + I_CTIMOFF) - TIMEDIFF);
     put4(theinfo.fi_mtime, get4(buffer + I_MTIMOFF) - TIMEDIFF);
-    put4(theinfo.fi_utime, (unsigned long)time((time_t *)0));
+    put4(theinfo.fi_utime, (uint32_t)time((time_t *)0));
 #endif /* AUFSPLUS */
     bcopy(buffer + I_TYPEOFF, theinfo.fi_fndr, 4);
     bcopy(buffer + I_AUTHOFF, theinfo.fi_fndr + 4, 4);
@@ -599,7 +601,7 @@ FILE *fp;
 #endif /* AUFS */
 
 #ifdef APPLEDOUBLE
-static void check_appledouble()
+static void check_appledouble(void)
 {
     /* check for .AppleDouble/ */
     struct stat stbuf;
@@ -618,35 +620,34 @@ static void check_appledouble()
     }
 }
 
-static void appledouble_namings()
+static void appledouble_namings(void)
 {
     mk_share_name();
-    (void)sprintf(f_info_appledouble, "%s/%s", infodir, share_name);
-    (void)sprintf(f_data, "%s", share_name);
+    (void)snprintf(f_info_appledouble, sizeof(f_info_appledouble), "%s/%s", infodir, share_name);
+    (void)snprintf(f_data, sizeof(f_data), "%s", share_name);
 }
 
-static void wr_appledouble_info(fp)
-FILE *fp;
+static void wr_appledouble_info(FILE* fp)
 {
     FileInfo theinfo;
     int n;
 
     bzero((char *) &theinfo, sizeof theinfo);
-    put4(theinfo.fi_magic, (unsigned long)FI_MAGIC);
-    put2(theinfo.fi_version, (unsigned long)FI_VERSION);
-    put4(theinfo.fi_fill5, (unsigned long)FI_FILL5);
-    put4(theinfo.fi_fill6, (unsigned long)FI_FILL6);
-    put4(theinfo.fi_hlen, (unsigned long)FI_HLEN);
-    put4(theinfo.fi_fill7, (unsigned long)FI_FILL7);
-    put4(theinfo.fi_namptr, (unsigned long)FI_NAMPTR);
-    put4(theinfo.fi_fill9, (unsigned long)FI_FILL9);
-    put4(theinfo.fi_commptr, (unsigned long)FI_COMMPTR);
-    put4(theinfo.fi_fill12, (unsigned long)FI_FILL12);
-    put4(theinfo.fi_timeptr, (unsigned long)FI_TIMEPTR);
-    put4(theinfo.fi_timesize, (unsigned long)FI_TIMESIZE);
-    put4(theinfo.fi_fill15, (unsigned long)FI_FILL15);
-    put4(theinfo.fi_infoptr, (unsigned long)FI_INFOPTR);
-    put4(theinfo.fi_infosize, (unsigned long)FI_INFOSIZE);
+    put4(theinfo.fi_magic, (uint32_t)FI_MAGIC);
+    put2(theinfo.fi_version, (uint32_t)FI_VERSION);
+    put4(theinfo.fi_fill5, (uint32_t)FI_FILL5);
+    put4(theinfo.fi_fill6, (uint32_t)FI_FILL6);
+    put4(theinfo.fi_hlen, (uint32_t)FI_HLEN);
+    put4(theinfo.fi_fill7, (uint32_t)FI_FILL7);
+    put4(theinfo.fi_namptr, (uint32_t)FI_NAMPTR);
+    put4(theinfo.fi_fill9, (uint32_t)FI_FILL9);
+    put4(theinfo.fi_commptr, (uint32_t)FI_COMMPTR);
+    put4(theinfo.fi_fill12, (uint32_t)FI_FILL12);
+    put4(theinfo.fi_timeptr, (uint32_t)FI_TIMEPTR);
+    put4(theinfo.fi_timesize, (uint32_t)FI_TIMESIZE);
+    put4(theinfo.fi_fill15, (uint32_t)FI_FILL15);
+    put4(theinfo.fi_infoptr, (uint32_t)FI_INFOPTR);
+    put4(theinfo.fi_infosize, (uint32_t)FI_INFOSIZE);
 
     bcopy(buffer + I_TYPEOFF, theinfo.fi_type, 4);
     bcopy(buffer + I_AUTHOFF, theinfo.fi_auth, 4);
@@ -657,13 +658,13 @@ FILE *fp;
     if((n = buffer[I_NAMEOFF] & 0xff) > F_NAMELEN) {
 	n = F_NAMELEN;
     }
-    put4(theinfo.fi_namlen, (unsigned long)n);
+    put4(theinfo.fi_namlen, (uint32_t)n);
     (void)strncpy((char *)theinfo.fi_name, buffer + I_NAMEOFF + 1,n);
     /* theinfo.fi_macfilename[n] = '\0'; */
     (void)strcpy((char *)theinfo.fi_comment,
 	"Converted by Unix utility to AppleDouble format");
-    put4(theinfo.fi_commsize, (unsigned long)strlen(theinfo.fi_comment));
-    put4(theinfo.fi_rsrc, (unsigned long)rsz);
+    put4(theinfo.fi_commsize, (uint32_t)strlen(theinfo.fi_comment));
+    put4(theinfo.fi_rsrc, (uint32_t)rsz);
     /*  Still TODO */
     /*  char	fi_ctime[4];	/* Creation time (Unix time) */
     /*  char	fi_mtime[4];	/* Modification time (Unix time) */
@@ -671,14 +672,14 @@ FILE *fp;
 }
 #endif /* APPLEDOUBLE */
 
-static void mk_share_name()
+static void mk_share_name(void)
 {
     int ch;
     char *mp, *up;
 
     mp = buffer + 2;
     up = &(share_name[0]);
-    while(ch = *mp++) {
+    while((ch = *mp++)) {
 	if(isascii(ch) && ! iscntrl(ch) && isprint(ch) && ch != '/') {
 	    *up++ = ch;
 	} else {
@@ -691,8 +692,7 @@ static void mk_share_name()
 }
 #endif /* APPLESHARE */
 
-int wrfileopt(c)
-char c;
+int wrfileopt(char c)
 {
     switch(c) {
     case 'b':
@@ -765,7 +765,7 @@ char c;
     return 1;
 }
 
-void give_wrfileopt()
+void give_wrfileopt(void)
 {
     (void)fprintf(stderr, "File output options:\n");
     (void)fprintf(stderr, "-b:\tMacBinary (default)\n");
@@ -808,7 +808,7 @@ void set_s_wrfileopt(int restricted)
     mode_s_restricted = restricted;
 }
 
-char *get_wrfileopt()
+char *get_wrfileopt(void)
 {
     static char options[20];
 
@@ -827,7 +827,7 @@ char *get_wrfileopt()
     return options;
 }
 
-char *get_mina()
+char *get_mina(void)
 {
 #ifdef APPLESHARE
 #ifdef AUFS

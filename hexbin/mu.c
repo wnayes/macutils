@@ -1,23 +1,25 @@
 #include "hexbin.h"
+#include "mu.h"
 #ifdef MU
 #include "globals.h"
 #include "readline.h"
 #include "../util/masks.h"
 #include "../util/util.h"
+#include "../util/transname.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "buffer.h"
 #include "printhdr.h"
 
-extern void exit();
+#include <stdlib.h>
 
-static void do_mu_fork();
-static int mu_comp_to_bin();
-static int mu_convert();
+static void do_mu_fork(void);
+static int mu_comp_to_bin(void);
+static int mu_convert(char *ibuf, char *obuf);
 
 /* mu format -- process .mu files */
-void mu(macname)
-char *macname;
+void 
+mu (char *macname)
 {
     int n;
 
@@ -135,17 +137,18 @@ char *macname;
     (void)strncpy(mh.m_type, info + I_TYPEOFF, 4);
     (void)strncpy(mh.m_author, info + I_AUTHOFF, 4);
     print_header1(0, 0);
-    put4(info + I_DLENOFF, (unsigned long)mh.m_datalen);
-    put4(info + I_RLENOFF, (unsigned long)mh.m_rsrclen);
-    put4(info + I_CTIMOFF, (unsigned long)mh.m_createtime);
-    put4(info + I_MTIMOFF, (unsigned long)mh.m_modifytime);
+    put4(info + I_DLENOFF, (uint32_t)mh.m_datalen);
+    put4(info + I_RLENOFF, (uint32_t)mh.m_rsrclen);
+    put4(info + I_CTIMOFF, (uint32_t)mh.m_createtime);
+    put4(info + I_MTIMOFF, (uint32_t)mh.m_modifytime);
     print_header2(0);
     end_put();
 }
 
-static void do_mu_fork()
+static void 
+do_mu_fork (void)
 {
-    long newbytes;
+    int32_t newbytes;
 
     while(readline()) {
 	if(line[0] == 0) {
@@ -179,7 +182,8 @@ static void do_mu_fork()
     /*NOTREACHED*/
 }
 
-static int mu_comp_to_bin()
+static int 
+mu_comp_to_bin (void)
 {
     char obuf[BUFSIZ];
     int outcount, n;
@@ -193,8 +197,8 @@ static int mu_comp_to_bin()
 
 #define SIXB(c) (((c)-0x20) & 0x3f)
 
-static int mu_convert(ibuf, obuf)
-char *ibuf, *obuf;
+static int 
+mu_convert (char *ibuf, char *obuf)
 {
     register char *ip = ibuf;
     register char *op = obuf;

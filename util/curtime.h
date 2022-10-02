@@ -4,7 +4,6 @@
 
 #ifdef BSD
 #include <sys/time.h>
-extern time_t time();
 #else /* BSD */
 #include <time.h>
 #endif /* BSD */

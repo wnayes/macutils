@@ -1,3 +1,3 @@
 extern char line[];
 
-int readline();
+int readline(void);

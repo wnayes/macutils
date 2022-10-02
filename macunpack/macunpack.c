@@ -1,4 +1,7 @@
 #include "macunpack.h"
+
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "globals.h"
 #include "../util/patchlevel.h"
@@ -6,25 +9,15 @@
 #include "../fileio/wrfileopt.h"
 #include "../fileio/kind.h"
 #include "../util/util.h"
+#include "stf.h"
+#include "pit.h"
+#include "sit.h"
+#include "cpt.h"
+#include "macbinary.h"
 
 #define LOCALOPT	"ilvqVH"
 
-extern char *strcat();
-#ifdef STF
-extern void stf();
-#endif /* STF */
-#ifdef PIT
-extern void pit();
-#endif /* PIT */
-#ifdef SIT
-extern void sit();
-#endif /* SIT */
-#ifdef CPT
-extern void cpt();
-#endif /* CPT */
-void macbinary();
-
-static void usage();
+static void usage(void);
 
 static char options[128];
 
@@ -157,7 +150,7 @@ int main(int argc, char **argv)
 	if(verbose) {
 	    fprintf(stderr, "This is a \"ShrinkToFit\" packed file.\n");
 	}
-	stf(~(unsigned long)1);
+	stf(~(uint32_t)1);
 	break;
 #endif /* STF */
 #ifdef PIT
@@ -192,7 +185,8 @@ int main(int argc, char **argv)
     /* NOTREACHED */
 }
 
-static void usage()
+static void 
+usage (void)
 {
     fprintf(stderr, "Usage: macunpack [-%s] [filename]\n", options);
     fprintf(stderr, "Use \"macunpack -H\" for help.\n");

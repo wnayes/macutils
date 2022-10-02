@@ -31,12 +31,14 @@
 /* ZIP used by COMPACTOR						*/
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-static void initcrctab();
+static void initcrctab(char *name, int poly, int init, int swapped, int bits);
 
-int main()
+int 
+main (void)
 {
     initcrctab("ccitt", 0x1021, 0xffff, 0, 16);
     initcrctab("kermit", 0x8408, 0, 1, 16);
@@ -47,13 +49,12 @@ int main()
     exit(0);
 }
 
-static void initcrctab(name, poly, init, swapped, bits)
-char *name;
-int poly, init, swapped, bits;
+static void 
+initcrctab (char *name, int poly, int init, int swapped, int bits)
 {
     register  int b, i;
     unsigned short v;
-    unsigned long vv;
+    uint32_t vv;
     FILE *fd;
     char buf[20];
 
@@ -64,12 +65,13 @@ int poly, init, swapped, bits;
 	(void)fprintf(stderr, "Cannot open %s for writing\n", buf);
 	exit(1);
     }
-    (void)fprintf(fd, "unsigned long %s_crcinit = %d;\n", name, init);
+    (void)fprintf(fd, "#include \"crc.h\"\n");
+    (void)fprintf(fd, "uint32_t %s_crcinit = %d;\n", name, init);
     (void)fprintf(fd, "\n");
     if(bits == 16) {
-	(void)fprintf(fd, "static unsigned short crctab[256] = {\n");
+	(void)fprintf(fd, "static uint16_t crctab[256] = {\n");
     } else {
-	(void)fprintf(fd, "static unsigned long crctab[256] = {\n");
+	(void)fprintf(fd, "static uint32_t crctab[256] = {\n");
     }
     (void)fprintf(fd, "    ");
     if(bits == 16) {
@@ -109,10 +111,7 @@ int poly, init, swapped, bits;
     }
     (void)fprintf(fd, "};\n");
     (void)fprintf(fd, "\n");
-    (void)fprintf(fd, "unsigned long %s_updcrc(icrc, icp, icnt)\n", name);
-    (void)fprintf(fd, "    unsigned long icrc;\n");
-    (void)fprintf(fd, "    unsigned char *icp;\n");
-    (void)fprintf(fd, "    int icnt;\n");
+    (void)fprintf(fd, "uint32_t %s_updcrc(uint32_t icrc, unsigned char *icp, int32_t icnt)\n", name);
     (void)fprintf(fd, "{\n");
     if(bits == 16) {
 	(void)fprintf(fd, "#define M1 0xff\n");
@@ -121,9 +120,9 @@ int poly, init, swapped, bits;
 	(void)fprintf(fd, "#define M1 0xffffff\n");
 	(void)fprintf(fd, "#define M2 0xffffff00\n");
     }
-    (void)fprintf(fd, "    register unsigned long crc = icrc;\n");
+    (void)fprintf(fd, "    register uint32_t crc = icrc;\n");
     (void)fprintf(fd, "    register unsigned char *cp = icp;\n");
-    (void)fprintf(fd, "    register int cnt = icnt;\n");
+    (void)fprintf(fd, "    register int32_t cnt = icnt;\n");
     (void)fprintf(fd, "\n");
     (void)fprintf(fd, "    while(cnt--) {\n");
     if(bits == 16) {

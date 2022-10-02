@@ -1,3 +1,4 @@
+#include "tty.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
@@ -12,10 +13,7 @@
 #include "protocol.h"
 #include "globals.h"
 
-void cleanup();
-void timedout();
-int tgetc();
-void tputc();
+void timedout(int);
 
 static jmp_buf timobuf;
 
@@ -27,7 +25,8 @@ static struct termios otty, ntty;
 static int ttyfd;
 static int signal_set;
 
-void setup_tty()
+void 
+setup_tty (void)
 {
     ttyfd = fileno(stderr);
     if(!signal_set) {
@@ -58,7 +57,8 @@ void setup_tty()
 #endif /* TERMIOS_H */
 }
 
-void reset_tty()
+void 
+reset_tty (void)
 {
     (void)sleep(1); /* Wait for output to drain */
 #ifndef TERMIOS_H
@@ -74,14 +74,15 @@ void cleanup(int sig)
     exit(sig);
 }
 
-void timedout()
+void 
+timedout (int)
 {
     (void)signal(SIGALRM, timedout);
     longjmp(timobuf, 1);
 }
 
-int tgetc(timeout)
-int timeout;
+int 
+tgetc (int timeout)
 {
 char c;
 int i;
@@ -136,9 +137,8 @@ void tputc(int c)
     (void)write(ttyfd, &cc, 1);
 }
 
-void tputrec(buf, count)
-char *buf;
-int count;
+void 
+tputrec (char *buf, int count)
 {
     (void)write(ttyfd, buf, count);
 }

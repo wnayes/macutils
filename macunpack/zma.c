@@ -1,37 +1,39 @@
 #include "macunpack.h"
 #ifdef ZMA
+#define ZMA_INTERNAL
+#include "zma.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "globals.h"
-#include "zma.h"
+
 #include "crc.h"
 #include "../fileio/machdr.h"
 #include "../fileio/wrfile.h"
 #include "../fileio/kind.h"
 #include "../util/masks.h"
+#include "../util/transname.h"
 #include "../util/util.h"
-
-extern void de_lzh();
+#include "de_lzah.h"
 
 /* We do allow for possible backpointing, so we allocate the archive in core */
 static char *zma_archive;
 static char *zma_current;
 static char *zma_filestart;
-static unsigned long zma_length;
-static long zma_archlength;
+static uint32_t zma_length;
+static int32_t zma_archlength;
 
-static int zma_filehdr();
-static void zma_folder();
-static void zma_mooz();
-static void zma_wrfile();
-static void zma_nocomp();
-static void zma_lzh();
+static int zma_filehdr(struct zma_fileHdr *f, int skip);
+static void zma_folder(struct zma_fileHdr fhdr);
+static void zma_mooz(struct zma_fileHdr filehdr);
+static void zma_wrfile(uint32_t ibytes, uint32_t obytes, int type);
+static void zma_nocomp(uint32_t ibytes);
+static void zma_lzh(uint32_t ibytes);
 
-void zma(start, length)
-    char *start;
-    unsigned long length;
+void 
+zma (char *start, uint32_t length)
 {
-    struct fileHdr filehdr;
+    struct zma_fileHdr filehdr;
     int i, toread;
 
     if(length != 0) {
@@ -122,9 +124,8 @@ void zma(start, length)
     }
 }
 
-static int zma_filehdr(f, skip)
-struct fileHdr *f;
-int skip;
+static int 
+zma_filehdr (struct zma_fileHdr *f, int skip)
 {
     register int i;
     int n;
@@ -177,9 +178,9 @@ int skip;
 	    transname(zma_current + Z_TYPE, ftype, 4);
 	    transname(zma_current + Z_AUTH, fauth, 4);
 	    (void)fprintf(stderr,
-		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%ld, rsrc=%ld",
+		    "name=\"%s\", type=%4.4s, author=%4.4s, data=%d, rsrc=%d",
 		    text, ftype, fauth,
-		    (long)f->dataLength, (long)f->rsrcLength);
+		    (int32_t)f->dataLength, (int32_t)f->rsrcLength);
 	}
 	switch(f->what) {
 	case z_plug:
@@ -228,12 +229,12 @@ int skip;
     return 1;
 }
 
-static void zma_folder(fhdr)
-struct fileHdr fhdr;
+static void 
+zma_folder (struct zma_fileHdr fhdr)
 {
     int i;
     char loc_name[64];
-    struct fileHdr filehdr;
+    struct zma_fileHdr filehdr;
 
     for(i = 0; i < 64; i++) {
 	loc_name[i] = text[i];
@@ -271,10 +272,10 @@ struct fileHdr fhdr;
     }
 }
 
-static void zma_mooz(filehdr)
-struct fileHdr filehdr;
+static void 
+zma_mooz (struct zma_fileHdr filehdr)
 {
-    unsigned long crc;
+    uint32_t crc;
 
     if(write_it) {
 	start_info(info, filehdr.rsrcLength, filehdr.dataLength);
@@ -287,7 +288,7 @@ struct fileHdr filehdr;
     }
     zma_wrfile(filehdr.compDLength, filehdr.dataLength, filehdr.what);
     if(write_it) {
-	crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.dataLength);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.dataLength);
 	if(filehdr.dataCRC != crc) {
 	    (void)fprintf(stderr,
 		"CRC error on data fork: need 0x%04x, got 0x%04x\n",
@@ -306,7 +307,7 @@ struct fileHdr filehdr;
     }
     zma_wrfile(filehdr.compRLength, filehdr.rsrcLength, filehdr.what);
     if(write_it) {
-	crc = (*updcrc)(INIT_CRC, out_buffer, filehdr.rsrcLength);
+	crc = (*updcrc)(INIT_CRC, (unsigned char*)out_buffer, filehdr.rsrcLength);
 	if(filehdr.rsrcCRC != crc) {
 	    (void)fprintf(stderr,
 		"CRC error on resource fork: need 0x%04x, got 0x%04x\n",
@@ -323,9 +324,8 @@ struct fileHdr filehdr;
     }
 }
 
-static void zma_wrfile(ibytes, obytes, type)
-unsigned long ibytes, obytes;
-char type;
+static void 
+zma_wrfile (uint32_t ibytes, uint32_t obytes, int type)
 {
     if(ibytes == 0) {
 	if(verbose) {
@@ -363,8 +363,8 @@ char type;
 /*---------------------------------------------------------------------------*/
 /*	No compression							     */
 /*---------------------------------------------------------------------------*/
-static void zma_nocomp(ibytes)
-unsigned long ibytes;
+static void 
+zma_nocomp (uint32_t ibytes)
 {
     int n = ibytes;
     char *ptr = out_buffer;
@@ -377,11 +377,11 @@ unsigned long ibytes;
 /*---------------------------------------------------------------------------*/
 /*	LZ compression plus Huffman encoding				     */
 /*---------------------------------------------------------------------------*/
-static void zma_lzh(ibytes)
-unsigned long ibytes;
+static void 
+zma_lzh (uint32_t ibytes)
 {
     /* Controlled by ibutes only */
-    de_lzh((long)ibytes, (long)(-1), &zma_filestart, 13);
+    de_lzh((int32_t)ibytes, (int32_t)(-1), &zma_filestart, 13);
 }
 #else /* ZMA */
 int zma; /* keep lint and some compilers happy */

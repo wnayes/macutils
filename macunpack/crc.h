@@ -1,13 +1,6 @@
 #define INIT_CRC crcinit
 
-extern unsigned long arc_crcinit;
-extern unsigned long binhex_crcinit;
-extern unsigned long zip_crcinit;
+#include "../crc/crc.h"
 
-extern unsigned long arc_updcrc();
-extern unsigned long binhex_updcrc();
-extern unsigned long zip_updcrc();
-
-extern unsigned long crcinit;
-extern unsigned long (*updcrc)();
-
+extern uint32_t crcinit;
+extern uint32_t (*updcrc)(uint32_t icrc, unsigned char *icp, int32_t icnt);

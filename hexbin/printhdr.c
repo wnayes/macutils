@@ -1,5 +1,6 @@
 #include "printhdr.h"
 #include "globals.h"
+#include "../util/transname.h"
 
 /* print out header information in human-readable format */
 void print_header0(int skip)
@@ -37,7 +38,7 @@ void print_header2(int skip)
 		if (skip) {
 			(void)fprintf(stderr, "\t");
 		}
-		(void)fprintf(stderr, "data=%ld, rsrc=%ld\n",
+		(void)fprintf(stderr, "data=%d, rsrc=%d\n",
 			mh.m_datalen, mh.m_rsrclen);
     }
 }

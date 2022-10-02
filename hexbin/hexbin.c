@@ -16,38 +16,26 @@
 #include "../fileio/machdr.h"
 #include "../fileio/kind.h"
 #include "../util/curtime.h"
+#include "../util/backtrans.h"
 #include "hexbin.h"
+#include "dl.h"
+#include "hecx.h"
+#include "hqx.h"
+#include "mu.h"
 
 #define LOCALOPT	"ilvcn:qVH"
 
-extern void backtrans();
-#ifdef DL
-extern void dl();
-#endif /* DL */
-#ifdef HECX
-extern void hecx();
-#endif /* HECX */
-#ifdef HQX
-extern void hqx();
-#endif /* HQX */
-#ifdef MU
-extern void mu();
-#endif /* MU */
-
-static void usage();
-static void do_files();
-static int find_header();
+static void usage(void);
+static void do_files(char *filename, char *macname);
+static int find_header(int again);
 
 static char options[128];
 
-int main(argc, argv)
-int argc;
-char **argv;
+int 
+main (int argc, char **argv)
 {
     char *filename;
     char macname[32];
-    extern int optind;
-    extern char *optarg;
     int errflg;
     int c;
 
@@ -162,14 +150,16 @@ static char *extensions[] = {
     NULL
 };
 
-static void do_files(filename, macname)
-char *filename;	/* input file name -- extension optional */
-char *macname;	/* name to use on the mac side of things */
+static void 
+do_files (
+    char *filename,	/* input file name -- extension optional */
+    char *macname	/* name to use on the mac side of things */
+)
 {
     char namebuf[256];
     char **ep;
     struct stat stbuf;
-    long curtime;
+    int32_t curtime;
     int qformat;
     int again;
 
@@ -197,7 +187,7 @@ char *macname;	/* name to use on the mac side of things */
     again = 0;
 nexttry:
     if(ifp == stdin) {
-	curtime = (long)time((time_t *)0) + TIMEDIFF;
+	curtime = (int32_t)time((time_t *)0) + TIMEDIFF;
 	mh.m_createtime = curtime;
 	mh.m_modifytime = curtime;
     } else {
@@ -237,8 +227,8 @@ nexttry:
 }
 
 /* eat characters until header detected, return which format */
-static int find_header(again)
-int again;
+static int 
+find_header (int again)
 {
     int c, dl_start, llen;
     char *cp;
@@ -356,7 +346,8 @@ int again;
     return form_none;
 }
 
-static void usage()
+static void 
+usage (void)
 {
     (void)fprintf(stderr, "Usage: hexbin [-%s] [filenames]\n", options);
     (void)fprintf(stderr, "Use \"hexbin -H\" for help.\n");

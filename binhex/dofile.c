@@ -1,10 +1,10 @@
+#include "dofile.h"
 #include <stdio.h>
 #include "../fileio/machdr.h"
 #include "../fileio/rdfile.h"
+#include "../crc/crc.h"
 
 extern int dorep;
-extern unsigned long binhex_crcinit;
-extern unsigned long binhex_updcrc();
 
 #define RUNCHAR 0x90
 
@@ -16,15 +16,16 @@ static int savebits;
 static int rep_char;
 static int rep_count;
 
-void doheader();
-void dofork();
-void outbyte();
-void finish();
-void outbyte1();
-void out6bit();
-void outchar();
+static void doheader();
+static void dofork(char *fork, int size);
+static void outbyte(int b);
+static void finish(void);
+static void outbyte1(int b);
+static void out6bit(int c);
+static void outchar(int c);
 
-void dofile()
+void 
+dofile (void)
 {
     (void)printf("(This file must be converted; you knew that already.)\n");
     (void)printf("\n");
@@ -41,37 +42,38 @@ void dofile()
     (void)putchar('\n');
 }
 
-void doheader()
+static void 
+doheader (void)
 {
-unsigned long crc;
+uint32_t crc;
 int i, n;
 
     crc = binhex_crcinit;
     n = file_info[I_NAMEOFF];
-    crc = binhex_updcrc(crc, file_info + I_NAMEOFF, n + 1);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_NAMEOFF), n + 1);
     for(i = 0; i <= n; i++) {
 	outbyte(file_info[I_NAMEOFF + i]);
     }
     n = 0;
-    crc = binhex_updcrc(crc, (char *)&n, 1);
+    crc = binhex_updcrc(crc, (unsigned char *)&n, 1);
     outbyte(0);
-    crc = binhex_updcrc(crc, file_info + I_TYPEOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_TYPEOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_TYPEOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_AUTHOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_AUTHOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_AUTHOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_FLAGOFF, 2);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_FLAGOFF), 2);
     for(i = 0; i < 2; i++) {
 	outbyte(file_info[I_FLAGOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_DLENOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_DLENOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_DLENOFF + i]);
     }
-    crc = binhex_updcrc(crc, file_info + I_RLENOFF, 4);
+    crc = binhex_updcrc(crc, (unsigned char*)(file_info + I_RLENOFF), 4);
     for(i = 0; i < 4; i++) {
 	outbyte(file_info[I_RLENOFF + i]);
     }
@@ -79,14 +81,13 @@ int i, n;
     outbyte((int)(crc & 0xff));
 }
 
-void dofork(fork, size)
-char *fork;
-int size;
+void 
+dofork (char *fork, int size)
 {
-unsigned long crc;
+uint32_t crc;
 int i;
 
-    crc = binhex_updcrc(binhex_crcinit, fork, size);
+    crc = binhex_updcrc(binhex_crcinit, (unsigned char*)fork, size);
     for(i = 0; i < size; i++) {
 	outbyte(fork[i]);
     }
@@ -94,8 +95,8 @@ int i;
     outbyte((int)(crc & 0xff));
 }
 
-void outbyte(b)
-int b;
+static void 
+outbyte (int b)
 {
     b &= 0xff;
     if(dorep && (b == rep_char)) {
@@ -127,7 +128,8 @@ int b;
     }
 }
 
-void finish()
+static void 
+finish (void)
 {
     if(rep_count > 0) {
 	if(rep_count > 3) {
@@ -151,8 +153,8 @@ void finish()
     }
 }
 
-void outbyte1(b)
-int b;
+static void 
+outbyte1 (int b)
 {
     switch(state) {
     case 0:
@@ -175,14 +177,14 @@ int b;
     }
 }
 
-void out6bit(c)
-char c;
+static void 
+out6bit (int c)
 {
     outchar(codes[c & 0x3f]);
 }
 
-void outchar(c)
-char c;
+static void 
+outchar (int c)
 {
     (void)putchar(c);
     if(++pos_ptr > 64) {
